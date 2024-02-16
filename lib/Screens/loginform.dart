@@ -11,26 +11,21 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log In')
-      ),
+      appBar: AppBar(title: const Text('Log In')),
+      backgroundColor: const Color.fromARGB(255, 139, 140, 242),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-          // width: double.infinity,
-          // height: double.infinity,
           color: const Color.fromARGB(255, 139, 140, 242),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 10.0
-                ),
+                const SizedBox(height: 10.0),
                 Image.asset(
                   'assets/images/logo.png',
-                  height: 150.0,
-                  width: 150.0,
+                  height: 100.0,
+                  width: 100.0,
                 ),
                 const Text(
                   'se connecter',
@@ -45,16 +40,13 @@ class _LoginFormState extends State<LoginForm> {
                   child: TextFormField(
                     decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30.0),),
-                          borderSide: BorderSide(color: Colors.transparent)
-
-                      ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(30.0),
+                          ),
+                          borderSide: BorderSide(color: Colors.transparent)),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30.0)),
-                          borderSide: BorderSide(color: Colors.blue)
-                      ),
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          borderSide: BorderSide(color: Colors.blue)),
                       prefixIcon: Icon(Icons.person),
                       hintText: 'user name',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
@@ -69,23 +61,42 @@ class _LoginFormState extends State<LoginForm> {
                     obscureText: true,
                     decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30.0),),
-                          borderSide: BorderSide(color: Colors.transparent)
-
-                      ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(30.0),
+                          ),
+                          borderSide: BorderSide(color: Colors.transparent)),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30.0)),
-                          borderSide: BorderSide(color: Colors.blue)
-                      ),
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          borderSide: BorderSide(color: Colors.blue)),
                       prefixIcon: Icon(Icons.lock),
                       hintText: 'password',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
                   ),
-                )
+                ),
+                Container(
+                  child:const Center(child: Text('mot de pass oublié')),
+                ),
+                Container(
+                  margin:const EdgeInsets.all(30.0),
+                  width: double.infinity,
+                  
+                  decoration: BoxDecoration(
+                      color:const Color.fromARGB(255, 76, 77, 166),
+                      borderRadius: BorderRadius.circular(30.0)
+                      ),
+                      child: TextButton(
+                      onPressed: () {},
+                      child:const Text(
+                        'connexion',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 197, 198, 243)),
+                      ))
+                ),
+                Container(
+                  child:const Center(child: Text('inscrivez-vous')),
+                ),
               ],
             ),
           ),
