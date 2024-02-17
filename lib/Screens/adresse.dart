@@ -1,16 +1,14 @@
-import 'package:activmind_app/Screens/adresse.dart';
 import 'package:activmind_app/Screens/loginform.dart';
 import 'package:flutter/material.dart';
-import 'package:activmind_app/Screens/username.dart';
 
-class inscrire_form extends StatefulWidget {
-  const inscrire_form({super.key});
+class adresse_form extends StatefulWidget {
+  const adresse_form({super.key});
 
   @override
-  State<inscrire_form> createState() => _inscrire_formState();
+  State<adresse_form> createState() => _adresse_formState();
 }
 
-class _inscrire_formState extends State<inscrire_form> {
+class _adresse_formState extends State<adresse_form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +37,7 @@ class _inscrire_formState extends State<inscrire_form> {
                 ),
                 Container(
                   child: const Center(
-                      child: Text('vous avez déjà un compte ? connectez-vous')),
+                      child: Text('Adresse postale')),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -54,8 +52,8 @@ class _inscrire_formState extends State<inscrire_form> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           borderSide: BorderSide(color: Colors.blue)),
-                      prefixIcon: Icon(Icons.person),
-                      hintText: 'Prénom *',
+                      prefixIcon: Icon(Icons.numbers),
+                      hintText: 'Numéro',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
@@ -75,8 +73,8 @@ class _inscrire_formState extends State<inscrire_form> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           borderSide: BorderSide(color: Colors.blue)),
-                      prefixIcon: Icon(Icons.family_restroom_sharp),
-                      hintText: 'Nom de famille *',
+                      prefixIcon: Icon(Icons.streetview),
+                      hintText: 'Rue',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
@@ -101,8 +99,8 @@ class _inscrire_formState extends State<inscrire_form> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           borderSide: BorderSide(color: Colors.blue)),
-                      prefixIcon: Icon(Icons.calendar_today),
-                      hintText: 'Date de naissance *',
+                      prefixIcon: Icon(Icons.location_city),
+                      hintText: 'Ville',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
@@ -122,16 +120,38 @@ class _inscrire_formState extends State<inscrire_form> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           borderSide: BorderSide(color: Colors.blue)),
-                      prefixIcon: Icon(Icons.admin_panel_settings),
-                      hintText: 'Type de compte *',
+                      prefixIcon: Icon(Icons.local_post_office),
+                      hintText: 'Code postal',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
                   ),
                 ),
-                // Container(
-                //   child:const Center(child: Text('mot de pass oublié')),
-                // ),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: TextFormField(
+                    //obscureText: true,
+                    decoration: const InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(30.0),
+                          ),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          borderSide: BorderSide(color: Colors.blue)),
+                      prefixIcon: Icon(Icons.mobile_friendly),
+                      hintText: 'Numéro de téléphone',
+                      fillColor: Color.fromARGB(255, 197, 198, 243),
+                      filled: true,
+                    ),
+                  ),
+                ),
+                Container(
+                  child:const Center(child: Text('vous pouvez ignorer cette partie pour l’instant')),
+                ),
 
                 ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -141,11 +161,11 @@ class _inscrire_formState extends State<inscrire_form> {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
-                            return const adresse_form();
+                            return const LoginForm();
                           }));
                           
                         },
-                        child: Text('suivant')),
+                        child: Text('terminer l’inscription')),
 
                 // Container(
                 //     margin: const EdgeInsets.all(30.0),
