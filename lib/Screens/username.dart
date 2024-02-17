@@ -1,14 +1,14 @@
-import 'package:activmind_app/Screens/username.dart';
+import 'package:activmind_app/Screens/inscrire.dart';
 import 'package:flutter/material.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class username_form extends StatefulWidget {
+  const username_form({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<username_form> createState() => _username_formState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _username_formState extends State<username_form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,11 +29,15 @@ class _LoginFormState extends State<LoginForm> {
                   width: 100.0,
                 ),
                 const Text(
-                  'se connecter',
+                  "s'inscrire",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 25.0),
+                ),
+                Container(
+                  child: const Center(
+                      child: Text('vous avez déjà un compte ? connectez-vous')),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -48,8 +52,8 @@ class _LoginFormState extends State<LoginForm> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           borderSide: BorderSide(color: Colors.blue)),
-                      prefixIcon: Icon(Icons.person),
-                      hintText: 'user name',
+                      prefixIcon: Icon(Icons.mail),
+                      hintText: 'mail *',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
@@ -70,15 +74,37 @@ class _LoginFormState extends State<LoginForm> {
                           borderRadius: BorderRadius.all(Radius.circular(30.0)),
                           borderSide: BorderSide(color: Colors.blue)),
                       prefixIcon: Icon(Icons.lock),
-                      hintText: 'password',
+                      hintText: 'mot de passe *',
                       fillColor: Color.fromARGB(255, 197, 198, 243),
                       filled: true,
                     ),
                   ),
                 ),
                 Container(
-                  child:const Center(child: Text('mot de pass oublié')),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: TextFormField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(30.0),
+                          ),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          borderSide: BorderSide(color: Colors.blue)),
+                      prefixIcon: Icon(Icons.lock),
+                      hintText: 'confirmer le mot de passe *',
+                      fillColor: Color.fromARGB(255, 197, 198, 243),
+                      filled: true,
+                    ),
+                  ),
                 ),
+                // Container(
+                //   child:const Center(child: Text('mot de pass oublié')),
+                // ),
+
                  ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           onPrimary: Colors.white,
@@ -87,30 +113,28 @@ class _LoginFormState extends State<LoginForm> {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
-                            return const username_form();
+                            return const inscrire_form();
                           }));
                           
                         },
                         child: Text('suivant')),
+
                 // Container(
-                //   margin:const EdgeInsets.all(30.0),
-                //   width: double.infinity,
-                  
-                //   decoration: BoxDecoration(
-                //       color:const Color.fromARGB(255, 76, 77, 166),
-                //       borderRadius: BorderRadius.circular(30.0)
-                //       ),
-                //       child: TextButton(
-                //       onPressed: () {},
-                //       child:const Text(
-                //         'connexion',
-                //         style: TextStyle(
-                //             color: Color.fromARGB(255, 197, 198, 243)),
-                //       ))
+                //     margin: const EdgeInsets.all(30.0),
+                //     width: double.infinity,
+                //     decoration: BoxDecoration(
+                //         color: const Color.fromARGB(255, 76, 77, 166),
+                //         borderRadius: BorderRadius.circular(30.0)),
+                //     child: TextButton(
+                //         onPressed: () {},
+                //         child: const Text(
+                //           'suivant',
+                //           style: TextStyle(
+                //               color: Color.fromARGB(255, 197, 198, 243)),
+                //         ))),
+                // Container(
+                //   child:const Center(child: Text('inscrivez-vous')),
                 // ),
-                Container(
-                  child:const Center(child: Text('inscrivez-vous')),
-                ),
               ],
             ),
           ),

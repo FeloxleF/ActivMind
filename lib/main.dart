@@ -1,6 +1,9 @@
+import 'package:activmind_app/Screens/inscrire.dart';
 import 'package:flutter/material.dart';
 
 import 'Screens/loginform.dart';
+import 'Screens/username.dart';
+import 'Screens/inscrire.dart';
 
 void main() {
   runApp(const MyApp());
