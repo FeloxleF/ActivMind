@@ -1,14 +1,14 @@
 import 'package:activmind_app/Screens/inscrire.dart';
 import 'package:flutter/material.dart';
 
-class username_form extends StatefulWidget {
-  const username_form({super.key});
+class signup_form extends StatefulWidget {
+  const signup_form({super.key});
 
   @override
-  State<username_form> createState() => _username_formState();
+  State<signup_form> createState() => _signup_formState();
 }
 
-class _username_formState extends State<username_form> {
+class _signup_formState extends State<signup_form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

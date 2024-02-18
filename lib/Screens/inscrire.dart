@@ -1,7 +1,7 @@
 import 'package:activmind_app/Screens/adresse.dart';
-import 'package:activmind_app/Screens/loginform.dart';
+import 'package:activmind_app/Screens/login_form.dart';
 import 'package:flutter/material.dart';
-import 'package:activmind_app/Screens/username.dart';
+import 'package:activmind_app/Screens/signup_form.dart';
 
 class inscrire_form extends StatefulWidget {
   const inscrire_form({super.key});
