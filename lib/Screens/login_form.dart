@@ -1,5 +1,8 @@
+import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/signup_form.dart';
+import 'package:activmind_app/common/comhelper.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
+import 'package:activmind_app/databaseHandler/Dbhelper.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -10,8 +13,42 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final _formkey = new GlobalKey<FormState>();
+  
   final _conemail = TextEditingController();
   final _conpassword = TextEditingController();
+  var dbHelper;
+
+
+  @override 
+  void initState() {
+    super.initState();
+    dbHelper = DbHelper();
+  }
+  
+
+  login() async{
+    String email = _conemail.text;
+    String password = _conpassword.text;
+    // if (_formkey.currentState!.validate()) {
+    if (email.isEmpty){
+      alterdialog(context, 'Veuillez entrer un email valid');
+    } else if(password.isEmpty){
+      alterdialog(context, 'Veuillez entrer le mot de passe');
+
+    }else{
+      await dbHelper.getLoginUser(email, password).then((userData){
+        Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => HomeForm()),
+                (Route<dynamic> route) => false);
+      }).catchError((error){
+          print(error);
+          alterdialog(context, 'Error login  faile');
+
+        });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +105,7 @@ class _LoginFormState extends State<LoginForm> {
                         color: const Color.fromARGB(255, 76, 77, 166),
                         borderRadius: BorderRadius.circular(30.0)),
                     child: TextButton(
-                        onPressed: () {},
+                        onPressed: login,
                         child: const Text(
                           'connexion',
                           style: TextStyle(
