@@ -4,21 +4,48 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
+import re
+from django.conf import settings    
+
+from django.db import models
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.conf import settings
+import re
+
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password= None, **extra_fields):
+        """ctreat and save new user"""
         if not email:
-            raise ValueError(_('The Email field must be set'))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+            raise ValueError("user must have an email")
+
+        if self.is_valid_password(password):
+            self.password = password
+        else:
+            raise ValueError("Invalid password format")      
+    
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
+    
+    def is_valid_password(self, password):
+            
+         
+            # min_length = 8
+            # regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*\d)[A-Za-z\d@$!%*?&]{" + str(int(min_length)) + r",}$"
+            regex = r"^[^\s]{8,}$"
+            password_regex = re.compile(regex)
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return self.create_user(email, password, **extra_fields)
+            return re.match(password_regex, password) is not None
+
+    def create_superuser(self,email,password,**extra_fields):
+         user = self.create_user(email=email,password=password,**extra_fields)
+         user.is_staff = True
+         user.is_superuser = True
+         user.save(using=self._db)
+         
+         return user
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
