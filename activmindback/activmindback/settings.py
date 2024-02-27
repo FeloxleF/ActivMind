@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'activmind',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'pedram6403'
+        'PASSWORD': 'root'
     }
 }
 
