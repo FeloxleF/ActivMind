@@ -32,6 +32,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+pubsec.lock
+pubsec.yaml
 
 # Symbolication related
 app.*.symbols
