@@ -48,7 +48,7 @@ class CustomUserManager(BaseUserManager):
          return user
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(_('email address'), unique=True)
+    email = models.EmailField(_('email address'), unique=True, max_length=100)
     type = models.IntegerField(null=True, blank=True )
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
