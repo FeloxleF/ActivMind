@@ -11,7 +11,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.conf import settings
 import re
-from activmindback.core.serializers import UserInfoSerializer
+from activmindback.core.serializers import UserInfoSerializer, UserSerializer
 
 from activmindback.users.models import UserInfo
 
@@ -21,52 +21,39 @@ class CustomUserManager(BaseUserManager):
     
     def create_user(self, email, password, first_name, last_name, date_of_birth, **extra_fields):
         
-        # etape 1: verification des données pour le User et creation du User
-        if not email:
-            raise ValueError("user must have an email")
+        # verification des données pour le User
+        if not self.is_valid_email(email):
+            raise ValueError("Invalid email")
         
-        if not password:
-            raise ValueError("user must have a password")
+        if not self.is_valid_password(password):
+            raise ValueError("Invalid password")
         
-        if self.is_valid_password(password):
-            self.password = password
-        else:
-            raise ValueError("Invalid password format")     
+        user_serializer = UserSerializer(data={'email': email, 'password': password})
         
-        if self.is_valid_email(email):
-            email = self.normalize_email(email)
-        else:
-            raise ValueError("Invalid email format") 
-    
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        
-        # etape 2 : verification du UserInfo et creation du UserInfo
-        user_info_data = {
-            'user': user,
-            'first_name': first_name,
-            'last_name': last_name,
-            'date_of_birth': date_of_birth,
-            **extra_fields
-        }
-        
-        user_info_serializer = UserInfoSerializer(data=user_info_data)
-        if user_info_serializer.is_valid():
-            user_info_serializer.save()
-        else:
-            raise ValueError("Invalid user info data")
-        
-        
+        # validation et creation d'un User et UserInfo
+        if user_serializer.is_valid():
+                user = user_serializer.save()
+                # creation data pour UserInfo
+                user_info_data = {
+                    'user': user,
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'date_of_birth': date_of_birth,
+                    **extra_fields
+                }
+                user_info_serializer = UserInfoSerializer(data=user_info_data)
+                
+                if user_info_serializer.is_valid():
+                    user_info_serializer.save()
+                else: raise ValueError("Invalid user info data")
+        else: raise ValueError("Invalid user mail or password")
         
         return user
     
-    
-    
     def is_valid_password(self, password):
-            regex = r"^[^\s]{8,}$"
-            password_regex = re.compile(regex)
-            return re.match(password_regex, password) is not None
+        regex = r"^[^\s]{8,}$"
+        password_regex = re.compile(regex)
+        return re.match(password_regex, password) is not None
     
     def is_valid_email(self, email):
         regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
