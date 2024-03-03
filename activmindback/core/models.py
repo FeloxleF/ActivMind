@@ -14,30 +14,38 @@ import re
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password= None, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         """creat and save new user"""
         if not email:
             raise ValueError("user must have an email")
+        
+        if not password:
+            raise ValueError("user must have a password")
 
         if self.is_valid_password(password):
             self.password = password
         else:
-            raise ValueError("Invalid password format")      
+            raise ValueError("Invalid password format")     
+        
+        if self.is_valid_email(email):
+            email = self.normalize_email(email)
+        else:
+            raise ValueError("Invalid email format") 
     
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
     
     def is_valid_password(self, password):
-            
-         
-            # min_length = 8
-            # regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*\d)[A-Za-z\d@$!%*?&]{" + str(int(min_length)) + r",}$"
             regex = r"^[^\s]{8,}$"
             password_regex = re.compile(regex)
-
             return re.match(password_regex, password) is not None
+    
+    def is_valid_email(self, email):
+        regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        email_regex = re.compile(regex)
+        return re.match(email_regex, email) is not None
 
     def create_superuser(self,email,password,**extra_fields):
          user = self.create_user(email=email,password=password,**extra_fields)
@@ -47,7 +55,7 @@ class CustomUserManager(BaseUserManager):
          
          return user
 
-class User(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True, max_length=100)
     type = models.IntegerField(null=True, blank=True)
@@ -67,7 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=CustomUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
