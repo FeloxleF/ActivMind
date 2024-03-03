@@ -47,9 +47,10 @@ class CustomUserManager(BaseUserManager):
          
          return user
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
+
     email = models.EmailField(_('email address'), unique=True, max_length=100)
-    type = models.IntegerField(null=True, blank=True )
+    type = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
@@ -66,7 +67,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
     
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
