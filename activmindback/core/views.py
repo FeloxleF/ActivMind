@@ -8,7 +8,7 @@ from core.models import CustomUserManager
 
 
 # cette methode enregistre toutes les infos sur l'utilisateur donc il faudra que le front envoie une seule requete une 
-#fois le formulaire rempli
+# fois le formulaire rempli
 @api_view(['POST'])
 def register_user(request):
     if request.method == 'POST':
