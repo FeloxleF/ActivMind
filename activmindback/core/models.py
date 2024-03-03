@@ -11,17 +11,23 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.conf import settings
 import re
+from activmindback.core.serializers import UserInfoSerializer
+
+from activmindback.users.models import UserInfo
+
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password, **extra_fields):
-        """creat and save new user"""
+    
+    def create_user(self, email, password, first_name, last_name, date_of_birth, **extra_fields):
+        
+        # etape 1: verification des données pour le User et creation du User
         if not email:
             raise ValueError("user must have an email")
         
         if not password:
             raise ValueError("user must have a password")
-
+        
         if self.is_valid_password(password):
             self.password = password
         else:
@@ -35,7 +41,27 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        
+        # etape 2 : verification du UserInfo et creation du UserInfo
+        user_info_data = {
+            'user': user,
+            'first_name': first_name,
+            'last_name': last_name,
+            'date_of_birth': date_of_birth,
+            **extra_fields
+        }
+        
+        user_info_serializer = UserInfoSerializer(data=user_info_data)
+        if user_info_serializer.is_valid():
+            user_info_serializer.save()
+        else:
+            raise ValueError("Invalid user info data")
+        
+        
+        
         return user
+    
+    
     
     def is_valid_password(self, password):
             regex = r"^[^\s]{8,}$"
