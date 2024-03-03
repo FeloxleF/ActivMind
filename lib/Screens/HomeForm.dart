@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HomeForm extends StatefulWidget {
+  const HomeForm({super.key});
+
   @override
   State<HomeForm> createState() => _HomeFormState();
 }
@@ -10,9 +12,9 @@ class _HomeFormState extends State<HomeForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
-      body: Center(child: Text('Log in successful')),
+      body: const Center(child: Text('Log in successful')),
     );
   }
 }

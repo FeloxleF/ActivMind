@@ -155,8 +155,7 @@ class _adresse_formState extends State<adresse_form> {
 
                 ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          onPrimary: Colors.white,
-                          primary: Color.fromARGB(255, 76, 77, 166),
+                          foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 76, 77, 166),
                         ),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -165,7 +164,7 @@ class _adresse_formState extends State<adresse_form> {
                           }));
                           
                         },
-                        child: Text('terminer l’inscription')),
+                        child: const Text('terminer l’inscription')),
 
                 // Container(
                 //     margin: const EdgeInsets.all(30.0),

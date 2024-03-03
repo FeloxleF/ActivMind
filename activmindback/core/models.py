@@ -15,7 +15,7 @@ import re
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password= None, **extra_fields):
-        """ctreat and save new user"""
+        """creat and save new user"""
         if not email:
             raise ValueError("user must have an email")
 

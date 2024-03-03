@@ -31,7 +31,7 @@ class _LoginFormState extends State<LoginForm> {
   );
 
   if (response.statusCode == 200) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeForm()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeForm()));
   } else {
     print('Failed to login');
   }
@@ -74,7 +74,7 @@ class _LoginFormState extends State<LoginForm> {
                   hintName: 'Email',
                   inputtype: TextInputType.text
                 ),
-                SizedBox(height: 5.0),
+                const SizedBox(height: 5.0),
                 GetTextFormField(
                   controller: _conpassword,
                   icon: Icons.lock,
@@ -107,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => SignupForm()));
+                                    builder: (_) => const SignupForm()));
                           },
                           child: const Text(
                             'Inscrivez-vous',

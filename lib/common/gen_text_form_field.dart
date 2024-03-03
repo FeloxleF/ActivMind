@@ -40,18 +40,18 @@ class GetTextFormField extends StatelessWidget {
             
         onSaved: (val)=> controller!.text=val!,
         decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(30.0),
               ),
               borderSide: BorderSide(color: Colors.transparent)),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
               borderSide: BorderSide(color: Colors.blue)),
           prefixIcon: Icon(icon),
           hintText: hintName,
           labelText: hintName,
-          fillColor: Color.fromARGB(255, 197, 198, 243),
+          fillColor: const Color.fromARGB(255, 197, 198, 243),
           filled: true,
         ),
       ),

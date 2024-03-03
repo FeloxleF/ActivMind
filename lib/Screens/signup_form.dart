@@ -1,4 +1,3 @@
-import 'package:activmind_app/Screens/inscrire.dart';
 import 'package:activmind_app/Screens/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
@@ -34,7 +33,7 @@ class _SignupFormState extends State<SignupForm> {
       Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => LoginForm(),
+                                  builder: (_) => const LoginForm(),
                                 ),
                                 (Route<dynamic> route) => false);
     } else {
@@ -70,48 +69,47 @@ class _SignupFormState extends State<SignupForm> {
                       color: Colors.white,
                       fontSize: 25.0),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 GetTextFormField(
                   controller: _conemail,
                   icon: Icons.person,
                   hintName: 'Email*',
                   inputtype: TextInputType.text,
                 ),
-                SizedBox(height: 5.0),
+                const SizedBox(height: 5.0),
                 GetTextFormField(
                   controller: _conpassword,
                   icon: Icons.lock,
                   hintName: 'mot de passe *',
                   isObscureText: true,
                 ),
-                SizedBox(height: 5.0),
+                const SizedBox(height: 5.0),
                 GetTextFormField(
                   controller: _conconfpassword,
                   icon: Icons.lock,
                   hintName: 'confirmer le mot de passe *',
                   isObscureText: true,
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    onPrimary: Colors.white,
-                    primary: Color.fromARGB(255, 76, 77, 166),
+                    foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 76, 77, 166),
                   ),
                   onPressed: signUp, 
-                  child: Text('soumettre'),
+                  child: const Text('soumettre'),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('vous avez une compte?'),
+                      const Text('vous avez une compte?'),
                       TextButton(
                           onPressed: () {
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => LoginForm(),
+                                  builder: (_) => const LoginForm(),
                                 ),
                                 (Route<dynamic> route) => false);
                           },

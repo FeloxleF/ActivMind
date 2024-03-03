@@ -1,7 +1,5 @@
 import 'package:activmind_app/Screens/adresse.dart';
-import 'package:activmind_app/Screens/login_form.dart';
 import 'package:flutter/material.dart';
-import 'package:activmind_app/Screens/signup_form.dart';
 
 class inscrire_form extends StatefulWidget {
   const inscrire_form({super.key});
@@ -135,8 +133,7 @@ class _inscrire_formState extends State<inscrire_form> {
 
                 ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          onPrimary: Colors.white,
-                          primary: Color.fromARGB(255, 76, 77, 166),
+                          foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 76, 77, 166),
                         ),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -145,7 +142,7 @@ class _inscrire_formState extends State<inscrire_form> {
                           }));
                           
                         },
-                        child: Text('suivant')),
+                        child: const Text('suivant')),
 
                 // Container(
                 //     margin: const EdgeInsets.all(30.0),
