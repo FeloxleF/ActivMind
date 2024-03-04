@@ -1,6 +1,8 @@
 import re
 from core.serializers import UserInfoSerializer, UserSerializer
 from django.contrib.auth.hashers import make_password
+
+
 # Service qui s'occuppe de l'enregistrement des données utilisateurs en base
 class UserManagementService:
 
@@ -34,8 +36,7 @@ class UserManagementService:
         if not self.is_valid_password(password):
             raise ValueError("Invalid password")
         
-        hached_password = make_password(password)
-        user_serializer = UserSerializer(data={'email': email, 'password': hached_password, 'type': account_type})
+        user_serializer = UserSerializer(data={'email': email, 'password': make_password(password), 'type': account_type})
         
         # validation et creation d'un User et UserInfo
         if user_serializer.is_valid():

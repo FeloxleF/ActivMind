@@ -4,6 +4,9 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login
 from core.services import UserManagementService
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # cette methode enregistre toutes les infos sur l'utilisateur donc il faudra que le front envoie une seule requete une 
@@ -12,10 +15,10 @@ from core.services import UserManagementService
 def register_user(request):
     if request.method == 'POST':
         try:
-            print(request.data)
             user_management_service = UserManagementService()
             user = user_management_service.create_user(user_data=request.data)
             token, _ = Token.objects.get_or_create(user=user)
+            logger.info(f"User {user.email} has been created")
             return Response({'token': token.key}, status=status.HTTP_201_CREATED)
         except Exception as e:
             # Handle exceptions
