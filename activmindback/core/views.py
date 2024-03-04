@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login
-from .serializers import UserSerializer
-from core.models import CustomUserManager
+from core.services import UserManagementService
 
 
 # cette methode enregistre toutes les infos sur l'utilisateur donc il faudra que le front envoie une seule requete une 
@@ -13,7 +12,9 @@ from core.models import CustomUserManager
 def register_user(request):
     if request.method == 'POST':
         try:
-            user = CustomUserManager.create_user(data=request.data)
+            print(request.data)
+            user_management_service = UserManagementService()
+            user = user_management_service.create_user(user_data=request.data)
             token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -31,3 +32,5 @@ def login_user(request):
             token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    
