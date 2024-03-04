@@ -64,6 +64,12 @@ class UserManagementService:
         
         return user
     
+    def reinit_password(self, user, new_password):
+        if self.is_valid_password(new_password): 
+            user.password = make_password(new_password)
+            user.save()
+        return user
+    
     def is_valid_password(self, password):
         regex = r"^[^\s]{8,}$"
         password_regex = re.compile(regex)
@@ -73,3 +79,4 @@ class UserManagementService:
         regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         email_regex = re.compile(regex)
         return re.match(email_regex, email) is not None
+    
