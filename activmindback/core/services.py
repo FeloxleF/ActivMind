@@ -1,6 +1,8 @@
 import re
 from core.serializers import UserInfoSerializer, UserSerializer
 from django.contrib.auth.hashers import make_password
+
+
 # Service qui s'occuppe de l'enregistrement des données utilisateurs en base
 class UserManagementService:
 
