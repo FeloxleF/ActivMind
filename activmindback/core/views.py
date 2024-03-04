@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login
+from core.models import CustomUser
 from core.services import UserManagementService
 import logging
 
@@ -35,5 +36,23 @@ def login_user(request):
             token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['PUT'])
+def update_password(request):
+    if request.method == 'PUT':
+        email = request.data.get('email')
+        try:
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        user_management_service = UserManagementService()
+        try:
+            user_management_service.reinit_password(user, request.data.get('password'))
+            logger.info(f"User {user.email} has updated his password")
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)  
+        
+    
     
     
