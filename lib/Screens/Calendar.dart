@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
-// import 'package:icons_flutter/icons_flutter.dart';
+import 'package:icons_flutter/icons_flutter.dart';
 
 class MyHomePage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    // Replace with your actual data and logic
     return Scaffold(
       appBar: AppBar(
-        title: Text('Activ\'Mind'),
+        title: const Center(
+          child: Text(
+            'Activ\'Mind',
+            style:
+                TextStyle(fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent,
+                fontSize : 24,
+                fontFamily: 'Arial',
+                ),
+                
+          ),
+        ),
+        
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(Icons.alarm),
           onPressed: () {},
         ),
         actions: <Widget>[
@@ -23,15 +34,21 @@ class MyHomePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            // Other widgets would go here
-            Text('Emploi du temps de la semaine'),
+            const Text(
+            'Emploi du temps de la semaine',
+            style:
+                TextStyle(fontWeight: FontWeight.bold,
+                fontSize : 20,
+                fontFamily: 'Arial',
+                ),
+                
+          ),
             SwitchListTile(
-              title: const Text('passer à votre emploi du temps de la journée'),
+              title: const Text('passer à votre emploi du \ntemps de la journée'),
               value: true,
               onChanged: (bool value) {},
               secondary: const Icon(Icons.lightbulb_outline),
             ),
-            // Calendar Widget
             FloatingActionButton(
               onPressed: () async {
                 await showDialog<void>(
@@ -87,7 +104,6 @@ class MyHomePage extends StatelessWidget {
               },
               child: Icon(Icons.add),
             ),
-            // Your Icons Row
           ],
         ),
       ),
@@ -116,7 +132,6 @@ class MyHomePage extends StatelessWidget {
             label: 'Setting',
           ),
 
-          
           // ...
         ],
       ),
