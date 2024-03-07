@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:icons_flutter/icons_flutter.dart';
+// import 'package:icons_flutter/icons_flutter.dart';
 
 class MyHomePage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  final List<Map<String, String>> items = [
+    {
+      "title": "médicament",
+      "description": "n'oubliez pas de prendre de médicament"
+    },
+    {
+      "title": "visit le médecin",
+      "description": "n'oubliez pas aller chez médecin"
+    },
+    {
+      "title": "médicament",
+      "description":
+          "n'oubliez pas de prendre de médicament, n'oubliez pas de prendre de médicament,n'oubliez pas de prendre de médicament,n'oubliez pas de prendre de médicament,n'oubliez pas de prendre de médicament,"
+    },
+    {
+      "title": "visit le médecin",
+      "description": "n'oubliez pas aller chez médecin"
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +59,7 @@ class MyHomePage extends StatelessWidget {
                 fontFamily: 'Arial',
               ),
             ),
+            
             SwitchListTile(
               title:
                   const Text('passer à votre emploi du \ntemps de la journée'),
@@ -47,136 +67,174 @@ class MyHomePage extends StatelessWidget {
               onChanged: (bool value) {},
               // secondary: const Icon(Icons.lightbulb_outline),
             ),
-            FloatingActionButton(
-              onPressed: () async {
-                await showDialog<void>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    backgroundColor: Color.fromARGB(255, 209, 193, 238),
-                    content: Stack(
-                      clipBehavior: Clip.none,
-                      children: <Widget>[
-                        Positioned(
-                          right: -40,
-                          top: -40,
-                          child: InkResponse(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const CircleAvatar(
-                              backgroundColor: Colors.red,
-                              child: Icon(Icons.close),
-                            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.all(5),
+                  child: ListTile(
+                    title: Text(items[index]["title"]!),
+                    subtitle: Text(items[index]["description"]!),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(items[index]["title"]!),
+                        content: Text(items[index]["description"]!),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Modifier'),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                        ),
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text(
-                                  'Nom de l’activité',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Color.fromARGB(255, 23, 79, 124),
-                                  ),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: TextField(
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        'Veuillez entrer un nom de l\'activité ',
-                                    border: OutlineInputBorder(),
-                                    fillColor:
-                                        Color.fromARGB(255, 232, 217, 255),
-                                    filled: true,
-                                  ),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text(
-                                  'Description (optionnel)',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Color.fromARGB(255, 23, 79, 124),
-                                  ),
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: TextField(
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: 3,
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
-                                    border: OutlineInputBorder(),
-                                    fillColor:
-                                        Color.fromARGB(255, 232, 217, 255),
-                                    filled: true,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, top: 10),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary:
-                                            Color.fromARGB(255, 65, 64, 155),
-                                        onPrimary:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          _formKey.currentState!.save();
-                                        }
-                                      },
-                                      child: const Text('Annuler'),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 140, top: 10),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary:
-                                            Color.fromARGB(255, 255, 181, 70),
-                                        onPrimary:
-                                            Color.fromARGB(255, 44, 41, 223),
-                                      ),
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          _formKey.currentState!.save();
-                                        }
-                                      },
-                                      child: const Text('Enregistrer'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          TextButton(
+                            child: Text('ّFermer'),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
               },
-              child: Icon(Icons.add),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FloatingActionButton(
+                onPressed: () async {
+                  await showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: Color.fromARGB(255, 209, 193, 238),
+                      content: Stack(
+                        clipBehavior: Clip.none,
+                        children: <Widget>[
+                          Positioned(
+                            right: -40,
+                            top: -40,
+                            child: InkResponse(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const CircleAvatar(
+                                backgroundColor: Colors.red,
+                                child: Icon(Icons.close),
+                              ),
+                            ),
+                          ),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Nom de l’activité',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Color.fromARGB(255, 23, 79, 124),
+                                    ),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: TextField(
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          'Veuillez entrer un nom de l\'activité ',
+                                      border: OutlineInputBorder(),
+                                      fillColor:
+                                          Color.fromARGB(255, 232, 217, 255),
+                                      filled: true,
+                                    ),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Description (optionnel)',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Color.fromARGB(255, 23, 79, 124),
+                                    ),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: TextField(
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 3,
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
+                                      border: OutlineInputBorder(),
+                                      fillColor:
+                                          Color.fromARGB(255, 232, 217, 255),
+                                      filled: true,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, top: 10),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary:
+                                              Color.fromARGB(255, 65, 64, 155),
+                                          onPrimary: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                        ),
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            _formKey.currentState!.save();
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: const Text('Annuler'),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 140, top: 10),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary:
+                                              Color.fromARGB(255, 255, 181, 70),
+                                          onPrimary:
+                                              Color.fromARGB(255, 44, 41, 223),
+                                        ),
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            _formKey.currentState!.save();
+                                          }
+                                        },
+                                        child: const Text('Enregistrer'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                child: Icon(Icons.add),
+              ),
             ),
           ],
         ),
