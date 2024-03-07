@@ -12,7 +12,7 @@ class _inscrire_formState extends State<inscrire_form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      appBar: AppBar(title: const Text('Inscrir')),
       backgroundColor: const Color.fromARGB(255, 139, 140, 242),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

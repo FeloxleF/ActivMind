@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:activmind_app/Screens/HomeForm.dart';
 // import 'package:activmind_app/Screens/home.dart';
 import 'package:activmind_app/Screens/signup_form.dart';
@@ -30,11 +32,25 @@ class _LoginFormState extends State<LoginForm> {
     }),
   );
 
+  final BuildContext currentContext = context;
   if (response.statusCode == 200) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeForm()));
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
   } else {
-    print('Failed to login');
+    // print('Failed to login');
+    ScaffoldMessenger.of(currentContext).showSnackBar(
+    SnackBar(
+      content: Text('Please enter a valid username.'),
+      backgroundColor: Colors.red,
+    ),
+  );
   }
+
+  // if (response.statusCode == 200) {
+  //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeForm()));
+  // } else {
+  //   print('Failed to login');
+  // }
   }
 
   @override

@@ -13,3 +13,9 @@ validateemail(String email) {
       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
   return emailReg.hasMatch(email);
 }
+
+validatepass(String password) {
+  final passReg = RegExp(
+      r"^[^\s]{8,}$");
+  return passReg.hasMatch(password);
+}
