@@ -45,7 +45,7 @@ class MyHomePage extends StatelessWidget {
                   const Text('passer à votre emploi du \ntemps de la journée'),
               value: true,
               onChanged: (bool value) {},
-              secondary: const Icon(Icons.lightbulb_outline),
+              // secondary: const Icon(Icons.lightbulb_outline),
             ),
             FloatingActionButton(
               onPressed: () async {
@@ -95,7 +95,8 @@ class MyHomePage extends StatelessWidget {
                                     hintText:
                                         'Veuillez entrer un nom de l\'activité ',
                                     border: OutlineInputBorder(),
-                                    fillColor: Color.fromARGB(255, 232, 217, 255),
+                                    fillColor:
+                                        Color.fromARGB(255, 232, 217, 255),
                                     filled: true,
                                   ),
                                 ),
@@ -103,7 +104,7 @@ class MyHomePage extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.all(8),
                                 child: Text(
-                                  'Nom de l’activité',
+                                  'Description (optionnel)',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontSize: 16.0,
@@ -120,7 +121,8 @@ class MyHomePage extends StatelessWidget {
                                     hintText:
                                         'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
                                     border: OutlineInputBorder(),
-                                    fillColor: Color.fromARGB(255, 232, 217, 255),
+                                    fillColor:
+                                        Color.fromARGB(255, 232, 217, 255),
                                     filled: true,
                                   ),
                                 ),
@@ -129,7 +131,8 @@ class MyHomePage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 10, top: 10),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, top: 10),
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         primary:
@@ -146,7 +149,8 @@ class MyHomePage extends StatelessWidget {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left :140, top: 10),
+                                    padding: const EdgeInsets.only(
+                                        left: 140, top: 10),
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         primary:
