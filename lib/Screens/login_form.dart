@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
               children: [
                 const SizedBox(height: 10.0),
                 Image.asset(
-                  'assets/images/logo.png',
+                  '././assets/images/logo.png',
                   height: 100.0,
                   width: 100.0,
                 ),
