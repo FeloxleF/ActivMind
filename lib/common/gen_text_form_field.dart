@@ -27,6 +27,7 @@ class GetTextFormField extends StatelessWidget {
         obscureText: isObscureText,
         keyboardType: inputtype,
 
+
         validator: (value) {
           if (value==null || value.isEmpty){
             return "Veuillez entrer $hintName";
@@ -35,7 +36,8 @@ class GetTextFormField extends StatelessWidget {
           if (hintName=='Email*' && !validateemail(value)){
             return 'Veuillez entrer un email valid';
           }
-          return null;
+          if (hintName=='mot de passe *' && !validatepass(value) )
+          return "Le format du mot de passe n'est pas correctle";
         },
             
         onSaved: (val)=> controller!.text=val!,
