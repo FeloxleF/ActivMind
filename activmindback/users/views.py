@@ -1,10 +1,15 @@
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
-from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-from django.contrib.auth import authenticate, login
+from rest_framework.viewsets import ViewSet
+from rest_framework.decorators import action
+
+from django.contrib.auth import authenticate, login, logout
+
 # from django.contrib.auth.tokens import default_token_generatorpipenv
 # from django.contrib.auth.models import User
 from django.views import View
@@ -44,15 +49,33 @@ from core.models import CustomUser as User
 #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
-class RegisterUser(APIView):
-    queryst = User.objects.all()
+class RegisterUserViewSet(ModelViewSet):
+    queryset = User.objects.all()
     serializer_class = UserSerializer
-    # def get_permissions(self):
-    #     if self.request.method == 'POST':
-    #         return [AllowAny()]
-    #     else:
-    #         return[IsAuthenticated()]
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [AllowAny()]
+        else:
+            return[IsAuthenticated()]
 
+
+class AuthViewSet(ViewSet):
+    @action(detail=False, methods=['post'])
+    def login(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(email=email, password=password)
+        if user:
+            login(request, user)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    @action(detail=False, methods=['post'])
+    def logout(self, request):
+        logout(request)
+        return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
 
 
 # @api_view(['POST'])

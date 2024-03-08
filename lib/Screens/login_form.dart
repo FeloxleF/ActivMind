@@ -22,7 +22,7 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> login() async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/login/'),
+      Uri.parse("http://127.0.0.1:8000/auth/login"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

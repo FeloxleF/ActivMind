@@ -3,14 +3,28 @@ from django.contrib.auth import get_user_model
 from core.models import CustomUser
 from core.models import UserInfo
 
-User = get_user_model()
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
+        model = get_user_model()
         fields = ('email', 'password', 'type') 
         extra_kwargs = {'password': {'write_only': True}}
+    def create(self,validate_data):
+        """create new user"""
+        return get_user_model().objects.create_user(**validate_data)
+    
+    def update(self, instance, validated_data):
+        """update user profile"""
+        password = validated_data.pop('password', None)
+        user = super().update(instance, validated_data)
 
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
+    
+    
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
