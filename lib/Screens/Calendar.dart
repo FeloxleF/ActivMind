@@ -31,118 +31,11 @@ class __CalendarState extends State<Calendar> {
     },
   ];
 
-  
-
-  void _onItemTapped(int index) {
-    setState(() {
-      if (index != _selectedIndex) {
-        _selectedIndex = index; 
-      }
-      
-    });
-  }
- 
-    
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Activ\'Mind',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.indigoAccent,
-              fontSize: 24,
-              fontFamily: 'Arial',
-            ),
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.alarm),
-          onPressed: () {},
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications_none),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const Text(
-              'Emploi du temps de la semaine',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: 'Arial',
-              ),
-            ),
-            Row(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0, left: 5),
-                  child: Text(
-                    'passer à votre emploi du temps de la journée',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 240, 169, 37),
-                      onPrimary: Color.fromARGB(255, 255, 255, 255),
-                    ),
-                    onPressed: () {},
-                    child: const Text('jour'),
-                  ),
-                ),
-              ],
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 5,
-                  margin: EdgeInsets.all(5),
-                  child: ListTile(
-                    title: Text(items[index]["title"]!),
-                    subtitle: Text(items[index]["description"]!),
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(items[index]["title"]!),
-                        content: Text(items[index]["description"]!),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('Modifier'),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                          TextButton(
-                            child: Text('ّFermer'),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: FloatingActionButton(
-                onPressed: () async {
-                  await showDialog<void>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      backgroundColor: Color.fromARGB(255, 209, 193, 238),
+  void showFormDialog(BuildContext context, GlobalKey<FormState> formKey) {
+  showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(backgroundColor: Color.fromARGB(255, 209, 193, 238),
                       content: Stack(
                         clipBehavior: Clip.none,
                         children: <Widget>[
@@ -266,9 +159,118 @@ class __CalendarState extends State<Calendar> {
                           ),
                         ],
                       ),
+                    );
+    },
+  );
+}
+
+
+  void _onItemTapped(int index) {
+    setState(() {
+      if (index != _selectedIndex) {
+        _selectedIndex = index; 
+      }
+      
+    });
+  }
+ 
+    
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            'Activ\'Mind',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.indigoAccent,
+              fontSize: 24,
+              fontFamily: 'Arial',
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.alarm),
+          onPressed: () {},
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.notifications_none),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const Text(
+              'Emploi du temps de la semaine',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'Arial',
+              ),
+            ),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0, left: 5),
+                  child: Text(
+                    'passer à votre emploi du temps de la journée',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 240, 169, 37),
+                      onPrimary: Color.fromARGB(255, 255, 255, 255),
                     ),
-                  );
-                },
+                    onPressed: () {},
+                    child: const Text('jour'),
+                  ),
+                ),
+              ],
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.all(5),
+                  child: ListTile(
+                    title: Text(items[index]["title"]!),
+                    subtitle: Text(items[index]["description"]!),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(items[index]["title"]!),
+                        content: Text(items[index]["description"]!),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Modifier'),
+                            onPressed: () => showFormDialog(context, _formKey),
+                          ),
+                          TextButton(
+                            child: Text('ّFermer'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FloatingActionButton(
+                onPressed: () => showFormDialog(context, _formKey),
                 child: Icon(Icons.add),
               ),
             ),
