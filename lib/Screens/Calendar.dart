@@ -59,13 +59,37 @@ class MyHomePage extends StatelessWidget {
                 fontFamily: 'Arial',
               ),
             ),
-            
-            SwitchListTile(
-              title:
-                  const Text('passer à votre emploi du \ntemps de la journée'),
-              value: true,
-              onChanged: (bool value) {},
-              // secondary: const Icon(Icons.lightbulb_outline),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0, left: 5),
+                  child: Text(
+                    'passer à votre emploi du temps de la journée',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary:
+                            Color.fromARGB(255, 240, 169, 37),
+                        onPrimary: Color.fromARGB(
+                            255, 255, 255, 255),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!
+                            .validate()) {
+                          _formKey.currentState!.save();
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: const Text('jour'),
+                    ),
+                
+
+
+
+
+              ],
             ),
             ListView.builder(
               shrinkWrap: true,
