@@ -44,7 +44,7 @@ class _SignupFormState extends State<SignupForm> {
       );
 
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
                                   context,
