@@ -9,6 +9,7 @@ class Calendar extends StatefulWidget {
 }
 
 class __CalendarState extends State<Calendar> {
+  int _selectedIndex = 1;
   final _formKey = GlobalKey<FormState>();
   final List<Map<String, String>> items = [
     {
@@ -29,6 +30,17 @@ class __CalendarState extends State<Calendar> {
       "description": "n'oubliez pas aller chez médecin"
     },
   ];
+
+  
+
+  void _onItemTapped(int index) {
+    setState(() {
+      if (index != _selectedIndex) {
+        _selectedIndex = index; 
+      }
+      
+    });
+  }
  
     
   @override
@@ -266,6 +278,8 @@ class __CalendarState extends State<Calendar> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt),
