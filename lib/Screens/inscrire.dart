@@ -1,14 +1,14 @@
 import 'package:activmind_app/Screens/adresse.dart';
 import 'package:flutter/material.dart';
 
-class inscrire_form extends StatefulWidget {
-  const inscrire_form({super.key});
+class InscrireForm extends StatefulWidget {
+  const InscrireForm({super.key});
 
   @override
-  State<inscrire_form> createState() => _inscrire_formState();
+  State<InscrireForm> createState() => _InscrireFormState();
 }
 
-class _inscrire_formState extends State<inscrire_form> {
+class _InscrireFormState extends State<InscrireForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

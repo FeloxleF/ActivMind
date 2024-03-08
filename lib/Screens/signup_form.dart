@@ -43,15 +43,19 @@ class _SignupFormState extends State<SignupForm> {
         }),
       );
 
+
       if (response.statusCode == 200) {
+        // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) => const LoginForm(),
                                   ),
                                   (Route<dynamic> route) => false);
-      } else {
+      }   else {
+        
 
+        // ignore: use_build_context_synchronously
         alterdialog(context, "La définition de l'utilisateur a rencontré une erreur");
       }
       }

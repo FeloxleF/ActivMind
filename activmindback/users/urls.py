@@ -10,9 +10,9 @@ router.register(r'auth', AuthViewSet, basename='auth')
 
 
 urlpatterns = router.urls
-# urlpatterns = [
+# urlpatterns = urlpatterns + [
 #     # path('register/', register_user, name='register'),
-#     path('register/', RegisterUser.as_view()),
-#     # path('login/', login_user, name='login'),
+#     # path('register/', RegisterUser.as_view()),
+#     path('login/', login_user, name='login'),
 #     # path('updatepwd/', update_password, name='update-password'),
 # ]   

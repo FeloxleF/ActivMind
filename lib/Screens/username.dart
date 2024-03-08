@@ -112,7 +112,7 @@ class _signup_formState extends State<signup_form> {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
-                            return const inscrire_form();
+                            return const InscrireForm();
                           }));
                           
                         },

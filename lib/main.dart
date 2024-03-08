@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'Screens/login_form.dart';
 // import 'Screens/username.dart';
-import 'Screens/inscrire.dart';
-import 'Screens/adresse.dart';
+// import 'Screens/inscrire.dart';
+// import 'Screens/adresse.dart';
 
 void main() {
   runApp(const MyApp());
