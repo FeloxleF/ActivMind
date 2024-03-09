@@ -32,14 +32,12 @@ class GetTextFormField extends StatelessWidget {
           if (value==null || value.isEmpty){
             return "Veuillez entrer $hintName";
 
-          }
+          }else
           if (hintName=='Email*' && !validateemail(value)){
             return 'Veuillez entrer un email valid';
           }
-          if (hintName=='mot de passe *' && !validatepass(value) ) {
-            return "Le format du mot de passe n'est pas correctle";
-          }
-          return null;
+          if (hintName=='mot de passe *' && !validatepass(value) )
+          return "Le format du mot de passe n'est pas correctle";
         },
             
         onSaved: (val)=> controller!.text=val!,

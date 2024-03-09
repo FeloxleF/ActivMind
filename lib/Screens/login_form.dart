@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -22,7 +24,7 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> login() async {
     final response = await http.post(
-      Uri.parse("http://127.0.0.1:8000/auth/login/"),
+      Uri.parse("http://10.0.2.2:8000/auth/login/"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -34,6 +36,10 @@ class _LoginFormState extends State<LoginForm> {
 
     final BuildContext currentContext = context;
     if (response.statusCode == 200) {
+      // Save token to local storage
+    final token = jsonDecode(response.body)['token'];
+    await saveToken(token);
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
@@ -53,6 +59,12 @@ class _LoginFormState extends State<LoginForm> {
     //   print('Failed to login');
     // }
   }
+
+  
+  Future<void> saveToken(String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+}
 
   @override
   Widget build(BuildContext context) {

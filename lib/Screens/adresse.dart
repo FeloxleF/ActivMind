@@ -1,4 +1,5 @@
 import 'package:activmind_app/Screens/login_form.dart';
+import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
 
 class adresse_form extends StatefulWidget {
@@ -9,10 +10,21 @@ class adresse_form extends StatefulWidget {
 }
 
 class _adresse_formState extends State<adresse_form> {
+  int _selectedIndex = 1;
+  void _onItemTapped(int index) {
+    setState(() {
+      if (index != _selectedIndex) {
+        _selectedIndex = index; 
+      }
+      
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      // appBar: AppBar(title: const Text('Log In')),
+      appBar: MyAppBar(),
+
       backgroundColor: const Color.fromARGB(255, 139, 140, 242),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -189,6 +201,10 @@ class _adresse_formState extends State<adresse_form> {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: MyFooter(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
