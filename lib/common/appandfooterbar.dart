@@ -32,10 +32,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
+
 class MyFooter extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onItemTapped;
-  
 
   const MyFooter({
     required this.selectedIndex,
@@ -74,3 +74,55 @@ class MyFooter extends StatelessWidget {
     );
   }
 }
+
+// class MyFooter extends StatelessWidget {
+  
+//   final int selectedIndex;
+//   final ValueChanged<int> onItemTapped;
+  
+//   void _onItemTapped(int index) {
+//     setState(() {
+//       if (index != _selectedIndex) {
+//         _selectedIndex = index; 
+//       }
+      
+//     });
+//   }
+
+//   const MyFooter({
+//     required this.selectedIndex,
+//     required this.onItemTapped,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return BottomNavigationBar(
+//       type: BottomNavigationBarType.fixed,
+//       backgroundColor: Colors.white,
+//       currentIndex: selectedIndex,
+//       onTap: onItemTapped,
+//       items: const <BottomNavigationBarItem>[
+//         BottomNavigationBarItem(
+//           icon: Icon(Icons.list_alt),
+//           label: 'List',
+//         ),
+//         BottomNavigationBarItem(
+//           icon: Icon(Icons.calendar_month),
+//           label: 'Calendar',
+//         ),
+//         BottomNavigationBarItem(
+//           icon: Icon(Icons.home),
+//           label: 'Home',
+//         ),
+//         BottomNavigationBarItem(
+//           icon: Icon(Icons.gamepad_outlined),
+//           label: 'Game',
+//         ),
+//         BottomNavigationBarItem(
+//           icon: Icon(Icons.settings_outlined),
+//           label: 'Setting',
+//         ),
+//       ],
+//     );
+//   }
+// }
