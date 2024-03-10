@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
     // }
   }
 
-  
+
   Future<void> saveToken(String token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);

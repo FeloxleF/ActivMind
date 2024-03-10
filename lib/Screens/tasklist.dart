@@ -1,18 +1,18 @@
+import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/tasklist.dart';
-import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
+import 'package:activmind_app/common/appandfooterbar.dart';
 
 
-class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+class TaskList extends StatefulWidget {
+  const TaskList({super.key});
 
   @override
-  State<Calendar> createState() => __CalendarState();
+  State<TaskList> createState() => _TaskListState();
 }
 
-class __CalendarState extends State<Calendar> {
-  int _selectedIndex = 1;
+class _TaskListState extends State<TaskList> {
+ 
   final _formKey = GlobalKey<FormState>();
   final List<Map<String, String>> items = [
     {
@@ -168,9 +168,9 @@ class __CalendarState extends State<Calendar> {
 }
 
 
-  int _currentIndex = 2;
+  int _currentIndex = 0;
 
- void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
@@ -197,11 +197,12 @@ class __CalendarState extends State<Calendar> {
     });
   }
 
+
  
     
   @override
   Widget build(BuildContext context) {
-     Widget currentPage;
+    Widget currentPage;
     switch (_currentIndex) {
       case 0:
         currentPage = const TaskList();
@@ -220,29 +221,7 @@ class __CalendarState extends State<Calendar> {
     }
     return Scaffold(
       appBar: MyAppBar(),
-      // appBar: AppBar(
-      //   title: const Center(
-      //     child: Text(
-      //       'Activ\'Mind',
-      //       style: TextStyle(
-      //         fontWeight: FontWeight.bold,
-      //         color: Colors.indigoAccent,
-      //         fontSize: 24,
-      //         fontFamily: 'Arial',
-      //       ),
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(Icons.alarm),
-      //     onPressed: () {},
-      //   ),
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(Icons.notifications_none),
-      //       onPressed: () {},
-      //     ),
-      //   ],
-      // ),
+      
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -323,36 +302,7 @@ class __CalendarState extends State<Calendar> {
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-      //   backgroundColor: Colors.white,
-      //   currentIndex: _selectedIndex,
-      //   onTap: _onItemTapped,
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.list_alt),
-      //       label: 'List',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_month),
-      //       label: 'Calendar',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.gamepad_outlined),
-      //       label: 'Game',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.settings_outlined),
-      //       label: 'Setting',
-      //     ),
-
-      //     // ...
-      //   ],
-      // ),
+      
     );
   }
   

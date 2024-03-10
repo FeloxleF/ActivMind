@@ -38,6 +38,7 @@ class GetTextFormField extends StatelessWidget {
           }
           if (hintName=='mot de passe *' && !validatepass(value) )
           return "Le format du mot de passe n'est pas correctle";
+          return null;
         },
             
         onSaved: (val)=> controller!.text=val!,

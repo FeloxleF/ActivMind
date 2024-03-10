@@ -1,5 +1,6 @@
+import 'package:activmind_app/Screens/Calendar.dart';
+import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
-import 'package:activmind_app/common/defftappages.dart';
 import 'package:flutter/material.dart';
 
 class HomeForm extends StatefulWidget {
@@ -10,30 +11,60 @@ class HomeForm extends StatefulWidget {
 }
 
 class _HomeFormState extends State<HomeForm> {
-  int _selectedIndex = 0;
-
-  static List<Widget> _widgetOptions = <Widget>[
-    ListPage(),
-    CalendarPage(),
-    HomePage(),
-    GamePage(),
-    SettingsPage(),
-  ];
+  int _currentIndex = 2;
 
   void _onItemTapped(int index) {
+    if (index == 0) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => TaskList()),
+      );
+      return; // Return here to prevent further execution
+    }
+    if (index == 1) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Calendar()),
+      );
+      return; // Return here to prevent further execution
+    }
+    if (index == 2) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeForm()),
+      );
+      return; // Return here to prevent further execution
+    }
     setState(() {
-      _selectedIndex = index;
+      _currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+     final Widget currentPage;
+    switch (_currentIndex) {
+      case 0:
+        currentPage = const TaskList();
+        break;
+      case 1:
+        currentPage = const Calendar();
+        break;
+      case 2:
+        currentPage = const HomeForm();
+        break;
+      case 3:
+        // currentPage = SettingsPage();
+        break;
+      default:
+        currentPage = const TaskList(); // Default to the first page
+    }
     return Scaffold(
       appBar: MyAppBar(), // Use MyAppBar for header
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: MyFooter(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+      body: Text('welcom to ActivMind'),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
       ), // Use MyFooter for footer
     );
   }

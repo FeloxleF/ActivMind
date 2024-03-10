@@ -10,13 +10,11 @@ class adresse_form extends StatefulWidget {
 }
 
 class _adresse_formState extends State<adresse_form> {
-  int _selectedIndex = 1;
+  int _currentIndex = 3;
+
   void _onItemTapped(int index) {
     setState(() {
-      if (index != _selectedIndex) {
-        _selectedIndex = index; 
-      }
-      
+      _currentIndex = index;
     });
   }
   @override
@@ -202,9 +200,9 @@ class _adresse_formState extends State<adresse_form> {
           ),
         ),
       ),
-      bottomNavigationBar: MyFooter(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
