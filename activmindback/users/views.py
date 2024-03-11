@@ -11,8 +11,7 @@ from rest_framework.decorators import action, api_view, authentication_classes, 
 
 from django.contrib.auth import authenticate, login, logout
 
-# from django.contrib.auth.tokens import default_token_generatorpipenv
-# from django.contrib.auth.models import User
+
 from django.views import View
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
@@ -20,35 +19,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-# from activmindback.core.services import UserManagementService
 from .serializers import UserSerializer
 from core.models import CustomUser as User
 
-# def get_csrf_token(request):
-#     csrf_token = get_token(request)
-#     return JsonResponse({'csrf_token': csrf_token})
-
-
-# @api_view(['POST'])
-# def register_user(request):
-#     if request.method == 'POST':
-#         serializer = UserSerializer(data=request.data)
-#         if serializer.is_valid():
-#             try:
-#                 user = serializer.save()
-#                 token, _ = Token.objects.get_or_create(user=user)
-#                 return Response({'token': token.key}, status=status.HTTP_201_CREATED)
-#             except Exception as e:
-#                 if 'password' in serializer.errors:
-#                     # Handle the case where the password format is invalid
-#                     error_message = "Invalid password format: " + ", ".join(serializer.errors['password'])
-#                     return Response({'error': error_message}, status=status.HTTP_400_BAD_REQUEST)
-#                 else:
-#                     # Handle other exceptions
-#                     return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
 
 class RegisterUserViewSet(ModelViewSet):
     queryset = User.objects.all()

@@ -121,3 +121,33 @@ class UserInfo(models.Model):
         self.save()
 
 
+class Task(models.Model):
+    title = models.CharField(max_length=100)
+    discription = models.CharField(max_length=200)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    do_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField(null=True, blank=True)
+    repetation = models.BooleanField(default=False)
+    alarm = models.BooleanField(default= True)
+    user = models.ForeignKey(CustomUser, on_delete= models.CASCADE, related_name='user_id')
+    
+
+class Sport(models.Model):
+    Sporttype = models.CharField(max_length=20)
+    repeatation_number = models.IntegerField()
+    info = models.CharField(max_length=100)
+    task= models.ForeignKey(Task,on_delete=models.CASCADE)
+
+
+class Activity(models.Model):
+    location = models.CharField(max_length=50)
+    text = models.CharField(max_length=100)
+    task= models.ForeignKey(Task,on_delete=models.CASCADE)
+
+
+class Medicament(models.Model):
+    dosage = models.CharField(max_length=100)
+    infosupport = models.CharField(max_length=100)
+
+
