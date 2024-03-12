@@ -24,7 +24,6 @@ class UserManagementService:
         address_country = user_data.get('address_country')
         phone_number = user_data.get('phone_number')   
         
-        print(email, password, account_type)
         # verification des données obligatoires
         if not email or not password or not account_type or not first_name or not last_name or not date_of_birth:
             raise ValueError("Missing required fields")
