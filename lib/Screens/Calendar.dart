@@ -12,7 +12,7 @@ class Calendar extends StatefulWidget {
 }
 
 class __CalendarState extends State<Calendar> {
-  int _selectedIndex = 1;
+ 
   final _formKey = GlobalKey<FormState>();
   final List<Map<String, String>> items = [
     {
@@ -168,7 +168,7 @@ class __CalendarState extends State<Calendar> {
 }
 
 
-  int _currentIndex = 2;
+  int _currentIndex = 1;
 
  void _onItemTapped(int index) {
     if (index == 0) {

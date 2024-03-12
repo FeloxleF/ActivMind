@@ -20,13 +20,11 @@ class TasksViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def get_queryset(self):
-        return Task.objects.filter(user_id=self.request.user.id).order_by('do_date').order_by('start_time')
+        return Task.objects.filter(user_id=self.request.user.id).order_by('do_date','start_time')
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateTaskSerializer
-        elif self.request.method =='patch':
-            return TaskSerializer
         else:
             return TaskSerializer
 
