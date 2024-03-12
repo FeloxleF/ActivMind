@@ -8,8 +8,9 @@ import 'package:http/http.dart' as http;
 class MyFormDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final Map<String, dynamic>? taskData;
+  final bool create; 
 
-  MyFormDialog({required this.formKey, required this.taskData});
+  MyFormDialog({required this.formKey, required this.taskData, required this.create});
 
   @override
   _MyFormDialogState createState() => _MyFormDialogState();
@@ -32,6 +33,33 @@ late TextEditingController titleController;
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; // Update the URL with your API endpoint
 
     final response = await http.put(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+      },
+      body: jsonEncode(taskData), // Convert task data to JSON format
+    );
+
+    if (response.statusCode == 200) {
+      // Task updated successfully
+      print('Task updated successfully');
+    } else {
+      // Task update failed
+      print('Failed to update task. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    // Exception occurred while updating task
+    print('Error updating task: $error');
+  }
+}
+Future<void> createTask(Map<String, dynamic>? taskData) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final String apiUrl = 'http://10.0.2.2:8000/tasks/'; // Update the URL with your API endpoint
+
+    final response = await http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -269,11 +297,17 @@ late TextEditingController titleController;
                           if (widget.formKey.currentState!.validate()) {
                             widget.formKey.currentState!.save();
                             // Update taskData with the new values
+                            
                             widget.taskData?["alarm"] = alarm;
                             widget.taskData?["repetation"] = repetation;
                             widget.taskData?["done"] = done;
-                            // Call your API to update the task here
-                            updateTask(widget.taskData);
+                            // Call your API to update the task 
+                            if (widget.create){
+                              createTask(widget.taskData);
+                            }
+                            else{
+                              updateTask(widget.taskData);
+                            }
                             Navigator.of(context).pop();
                           }
                         },

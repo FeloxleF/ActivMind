@@ -19,22 +19,23 @@ class _TaskListState extends State<TaskList> {
   
   Map<String, dynamic>? currentTask;
   
-  // void modifyTask(Map<String, dynamic> task) {
-  //   setState(() {
-  //     currentTask = Map.from(task); // Make a copy of the task data
-  //   });
-  //   // Open the form dialog to modify the task
-  //   showFormDialog(context, _formKey, currentTask);
-  // }
 
   void modifyTask(Map<String, dynamic> task) {
   setState(() {
     currentTask = Map.from(task); // Make a copy of the task data
   });
   // Open the form dialog to modify the task
-  _openFormDialog(context, _formKey, currentTask);
+  _openFormDialog(context, _formKey, currentTask,false);
 }
 
+void createtask({Map<String, dynamic>? task}) {
+  Map<String, dynamic> initialTaskData = task ?? {}; // Use provided task, or empty map if task is null
+  setState(() {
+    currentTask = Map.from(initialTaskData); // Make a copy of the task data
+  });
+  // Open the form dialog to modify the task
+  _openFormDialog(context, _formKey, currentTask,true);
+}
 
 
   Future<void> updateTask(Map<String, dynamic>? taskData) async {
@@ -87,14 +88,26 @@ class _TaskListState extends State<TaskList> {
       throw Exception('Failed to load data');
     }
   }
-  void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData) {
+  // void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData) {
+  //   showDialog<void>(
+  //     context: context,
+      
+  //     builder: (BuildContext context) {
+  //       return MyFormDialog(formKey: formKey, taskData: taskData);
+  //     },
+  //   );
+  // }
+
+  void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData, bool create) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return MyFormDialog(formKey: formKey, taskData: taskData);
+        return MyFormDialog(formKey: formKey, taskData: taskData, create: create);
       },
     );
   }
+
+
   final _formKey = GlobalKey<FormState>();
   
   int _currentIndex = 0;
@@ -223,10 +236,7 @@ class _TaskListState extends State<TaskList> {
                             ],
                           ),
                             actions: <Widget>[
-                              // TextButton(
-                              //   child: Text('Modifier'),
-                              //   onPressed: () => showFormDialog(context, _formKey),
-                              // ),
+
                               TextButton(
                                 child: Text('Modify'),
                                 onPressed: () => modifyTask(task),
@@ -245,6 +255,14 @@ class _TaskListState extends State<TaskList> {
                     );
                   },
                 ),
+                Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FloatingActionButton(
+                onPressed: () => createtask(),
+                // onPressed: () => showFormDialog(context, _formKey),
+                child: Icon(Icons.add),
+              ),
+            ),
                 
               ],
             ),
