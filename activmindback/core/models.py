@@ -129,8 +129,8 @@ class Task(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField(null=True, blank=True)
     repetation = models.BooleanField(default=False)
-    alarm = models.BooleanField(default= True)
-    done = models.BooleanField(default= True)
+    alarm = models.BooleanField(default= False)
+    done = models.BooleanField(default= False)
     user = models.ForeignKey(CustomUser, on_delete= models.CASCADE, related_name='user_id')
     
 

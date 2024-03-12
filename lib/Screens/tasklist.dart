@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:http/http.dart' as http;
@@ -18,13 +19,23 @@ class _TaskListState extends State<TaskList> {
   
   Map<String, dynamic>? currentTask;
   
+  // void modifyTask(Map<String, dynamic> task) {
+  //   setState(() {
+  //     currentTask = Map.from(task); // Make a copy of the task data
+  //   });
+  //   // Open the form dialog to modify the task
+  //   showFormDialog(context, _formKey, currentTask);
+  // }
+
   void modifyTask(Map<String, dynamic> task) {
-    setState(() {
-      currentTask = Map.from(task); // Make a copy of the task data
-    });
-    // Open the form dialog to modify the task
-    showFormDialog(context, _formKey, currentTask);
-  }
+  setState(() {
+    currentTask = Map.from(task); // Make a copy of the task data
+  });
+  // Open the form dialog to modify the task
+  _openFormDialog(context, _formKey, currentTask);
+}
+
+
 
   Future<void> updateTask(Map<String, dynamic>? taskData) async {
   try {
@@ -76,263 +87,16 @@ class _TaskListState extends State<TaskList> {
       throw Exception('Failed to load data');
     }
   }
-
-  final _formKey = GlobalKey<FormState>();
-  void showFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData) {
-  final TextEditingController titleController = TextEditingController(text: taskData?["title"]);
-  final TextEditingController descriptionController = TextEditingController(text: taskData?["description"]);
-
-  showDialog<void>(
+  void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData) {
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 209, 193, 238),
-          content: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              Positioned(
-                right: -40,
-                top: -40,
-                child: InkResponse(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const CircleAvatar(
-                    backgroundColor: Colors.red,
-                    child: Icon(Icons.close),
-                  ),
-                ),
-              ),
-              Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: TextFormField(
-                        controller: titleController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                          hintText: 'Veuillez entrer un nom de l\'activité ',
-                          border: OutlineInputBorder(),
-                          fillColor: Color.fromARGB(255, 232, 217, 255),
-                          filled: true,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Veuillez entrer un nom de l\'activité';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          taskData?["title"] = value;
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: TextFormField(
-                        controller: descriptionController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText: 'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
-                          border: OutlineInputBorder(),
-                          fillColor: Color.fromARGB(255, 232, 217, 255),
-                          filled: true,
-                        ),
-                        onSaved: (value) {
-                          taskData?["description"] = value;
-                        },
-                      ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 10),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 65, 64, 155),
-                              onPrimary: Color.fromARGB(255, 255, 255, 255),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Annuler'),
-                          ),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 255, 181, 70),
-                              onPrimary: Color.fromARGB(255, 44, 41, 223),
-                            ),
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                formKey.currentState!.save();
-                                // Call your API to update the task here
-                                updateTask(taskData);
-                                Navigator.of(context).pop();
-                              }
-                            },
-                            child: const Text('Enregistrer'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+        return MyFormDialog(formKey: formKey, taskData: taskData);
       },
     );
   }
-
-
-
-  // void showFormDialog(BuildContext context, GlobalKey<FormState> formKey) {
-   
-  //   showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(backgroundColor: Color.fromARGB(255, 209, 193, 238),
-  //                       content: Stack(
-  //                         clipBehavior: Clip.none,
-  //                         children: <Widget>[
-  //                           Positioned(
-  //                             right: -40,
-  //                             top: -40,
-  //                             child: InkResponse(
-  //                               onTap: () {
-  //                                 Navigator.of(context).pop();
-  //                               },
-  //                               child: const CircleAvatar(
-  //                                 backgroundColor: Colors.red,
-  //                                 child: Icon(Icons.close),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                           Form(
-  //                             key: _formKey,
-  //                             child: Column(
-  //                               mainAxisSize: MainAxisSize.min,
-  //                               crossAxisAlignment: CrossAxisAlignment.start,
-  //                               children: <Widget>[
-  //                                 const Padding(
-  //                                   padding: EdgeInsets.all(8),
-  //                                   child: Text(
-  //                                     'Nom de l’activité',
-  //                                     textAlign: TextAlign.left,
-  //                                     style: TextStyle(
-  //                                       fontSize: 16.0,
-  //                                       color: Color.fromARGB(255, 23, 79, 124),
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 const Padding(
-  //                                   padding: EdgeInsets.all(8),
-  //                                   child: TextField(
-  //                                     keyboardType: TextInputType.multiline,
-  //                                     maxLines: null,
-  //                                     decoration: InputDecoration(
-  //                                       hintText:
-  //                                           'Veuillez entrer un nom de l\'activité ',
-  //                                       border: OutlineInputBorder(),
-  //                                       fillColor:
-  //                                           Color.fromARGB(255, 232, 217, 255),
-  //                                       filled: true,
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 const Padding(
-  //                                   padding: EdgeInsets.all(8),
-  //                                   child: Text(
-  //                                     'Description (optionnel)',
-  //                                     textAlign: TextAlign.left,
-  //                                     style: TextStyle(
-  //                                       fontSize: 16.0,
-  //                                       color: Color.fromARGB(255, 23, 79, 124),
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 const Padding(
-  //                                   padding: EdgeInsets.all(8),
-  //                                   child: TextField(
-  //                                     keyboardType: TextInputType.multiline,
-  //                                     maxLines: 3,
-  //                                     decoration: InputDecoration(
-  //                                       hintText:
-  //                                           'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
-  //                                       border: OutlineInputBorder(),
-  //                                       fillColor:
-  //                                           Color.fromARGB(255, 232, 217, 255),
-  //                                       filled: true,
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 Row(
-  //                                   crossAxisAlignment: CrossAxisAlignment.center,
-  //                                   children: [
-  //                                     Padding(
-  //                                       padding: const EdgeInsets.only(
-  //                                           left: 10, top: 10),
-  //                                       child: ElevatedButton(
-  //                                         style: ElevatedButton.styleFrom(
-  //                                           primary:
-  //                                               Color.fromARGB(255, 65, 64, 155),
-  //                                           onPrimary: Color.fromARGB(
-  //                                               255, 255, 255, 255),
-  //                                         ),
-  //                                         onPressed: () {
-  //                                           if (_formKey.currentState!
-  //                                               .validate()) {
-  //                                             _formKey.currentState!.save();
-  //                                             Navigator.of(context).pop();
-  //                                           }
-  //                                         },
-  //                                         child: const Text('Annuler'),
-  //                                       ),
-  //                                     ),
-  //                                     Spacer(),
-  //                                     Padding(
-  //                                       padding: const EdgeInsets.only(top: 10),
-  //                                       child: ElevatedButton(
-  //                                         style: ElevatedButton.styleFrom(
-  //                                           primary:
-  //                                               Color.fromARGB(255, 255, 181, 70),
-  //                                           onPrimary:
-  //                                               Color.fromARGB(255, 44, 41, 223),
-  //                                         ),
-  //                                         onPressed: () {
-  //                                           if (_formKey.currentState!
-  //                                               .validate()) {
-  //                                             _formKey.currentState!.save();
-  //                                           }
-  //                                         },
-  //                                         child: const Text('Enregistrer'),
-  //                                       ),
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     );
-  //     },
-  //   );
+  final _formKey = GlobalKey<FormState>();
   
-
-
   int _currentIndex = 0;
 
   void _onItemTapped(int index) {
@@ -448,12 +212,13 @@ class _TaskListState extends State<TaskList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text("Description: ${task["description"] ?? "No description"}"),
+                              Text("Description: ${task["discription"] ?? "No description"}"),
                               Text("Date: ${task["do_date"] ?? "No date"}"),
                               Text("Start Time: ${task["start_time"] ?? "No start time"}"),
+                              Text("End Time: ${task["end_time"] ?? "No end time"}"),
                               Text("Alarm: ${task["alarm"] == true ? 'Yes' : task["alarm"] == false ? 'No' : 'No'}"),
-                              Text("repetation: ${task["repetition"] == true ? 'Yes' : task["repetition"] == false ? 'No' : 'No'}"),
-                              Text("termine: ${task["done"] == true ? 'Yes' : task["repetition"] == false ? 'No' : 'No'}"),
+                              Text("repetation: ${task["repetation"] == true ? 'Yes' : task["repetation"] == false ? 'No' : 'No'}"),
+                              Text("termine: ${task["done"] == true ? 'Yes' : task["done"] == false ? 'No' : 'No'}"),
 
                             ],
                           ),

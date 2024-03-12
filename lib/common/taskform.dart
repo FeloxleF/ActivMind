@@ -1,0 +1,292 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+
+class MyFormDialog extends StatefulWidget {
+  final GlobalKey<FormState> formKey;
+  final Map<String, dynamic>? taskData;
+
+  MyFormDialog({required this.formKey, required this.taskData});
+
+  @override
+  _MyFormDialogState createState() => _MyFormDialogState();
+}
+
+class _MyFormDialogState extends State<MyFormDialog> {
+late TextEditingController titleController;
+  late TextEditingController descriptionController;
+  late TextEditingController dodateController;
+  late TextEditingController strtimeController;
+  late TextEditingController endtimeController;
+  late bool alarm;
+  late bool repetation;
+  late bool done;
+
+  Future<void> updateTask(Map<String, dynamic>? taskData) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; // Update the URL with your API endpoint
+
+    final response = await http.put(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+      },
+      body: jsonEncode(taskData), // Convert task data to JSON format
+    );
+    print(jsonEncode(taskData));
+    print(response.headers);
+
+    if (response.statusCode == 200) {
+      // Task updated successfully
+      print('Task updated successfully');
+    } else {
+      // Task update failed
+      print('Failed to update task. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    // Exception occurred while updating task
+    print('Error updating task: $error');
+  }
+}
+
+  
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize boolean variables based on taskData
+    
+    titleController = TextEditingController(text: widget.taskData?["title"]);
+    descriptionController = TextEditingController(text: widget.taskData?["discription"]);
+    dodateController = TextEditingController(text: widget.taskData?["do_date"]);
+    strtimeController = TextEditingController(text: widget.taskData?["start_time"]);
+    endtimeController = TextEditingController(text: widget.taskData?["end_time"]);
+    alarm = widget.taskData?["alarm"] ?? false;
+    repetation = widget.taskData?["repetation"] ?? false;
+    done = widget.taskData?["done"] ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Color.fromARGB(255, 209, 193, 238),
+      content: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Positioned(
+            right: -40,
+            top: -40,
+            child: InkResponse(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: const CircleAvatar(
+                backgroundColor: Colors.red,
+                child: Icon(Icons.close),
+              ),
+            ),
+          ),
+          Form(
+            key: widget.formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    controller: titleController,
+                    keyboardType: TextInputType.text,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      labelText: "title",
+                      hintText: 'Veuillez entrer un nom de l\'activité ',
+                      border: OutlineInputBorder(),
+                      fillColor: Color.fromARGB(255, 232, 217, 255),
+                      filled: true,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer un nom de l\'activité';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      widget.taskData?["title"] = value;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: "description",
+                      hintText: 'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
+                      border: OutlineInputBorder(),
+                      fillColor: Color.fromARGB(255, 232, 217, 255),
+                      filled: true,
+                    ),
+                    onSaved: (value) {
+                      widget.taskData?["discription"] = value;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    controller: dodateController,
+                    keyboardType: TextInputType.datetime,
+                    // maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: "date de fair",
+                      hintText: 'Veuillez entrer un date de fair ',
+                      border: OutlineInputBorder(),
+                      fillColor: Color.fromARGB(255, 232, 217, 255),
+                      filled: true,
+                    ),
+                    onSaved: (value) {
+                      widget.taskData?["do_date"] = value;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    controller: strtimeController,
+                    keyboardType: TextInputType.datetime,
+                    // maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: "Heure de début",
+                      hintText: 'Veuillez entrer une heure de début ',
+                      border: OutlineInputBorder(),
+                      fillColor: Color.fromARGB(255, 232, 217, 255),
+                      filled: true,
+                    ),
+                    onSaved: (value) {
+                      widget.taskData?["start_time"] = value;
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    controller: endtimeController,
+                    keyboardType: TextInputType.datetime,
+                    // maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: "Heure de fin",
+                      hintText: 'Veuillez entrer une heure de fin ',
+                      border: OutlineInputBorder(),
+                      fillColor: Color.fromARGB(255, 232, 217, 255),
+                      filled: true,
+                    ),
+                    onSaved: (value) {
+                      widget.taskData?["end_time"] = value;
+                    },
+                  ),
+                ),
+
+
+
+                Row(
+                  children: [
+                    Checkbox(
+                      value: alarm,
+                      onChanged: (value) {
+                        setState(() {
+                          alarm = value ?? false; // Update the state variable
+                        });
+                      },
+                    ),
+                    Text("Alarm"),
+                  ],
+                ),
+                // Other form fields...
+                Row(
+                  children: [
+                    Checkbox(
+                      value: repetation,
+                      onChanged: (value) {
+                        setState(() {
+                          repetation = value ?? false; // Update the state variable
+                        });
+                      },
+                    ),
+                    Text("Repetation"),
+                  ],
+                ),
+                // Other form fields...
+                Row(
+                  children: [
+                    Checkbox(
+                      value: done,
+                      onChanged: (value) {
+                        setState(() {
+                          done = value ?? false; // Update the state variable
+                        });
+                      },
+                    ),
+                    Text("Done"),
+                  ],
+                ),
+                // Other form fields...
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 10),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(255, 65, 64, 155),
+                          onPrimary: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Annuler'),
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(255, 255, 181, 70),
+                          onPrimary: Color.fromARGB(255, 44, 41, 223),
+                        ),
+                        onPressed: () {
+                          if (widget.formKey.currentState!.validate()) {
+                            widget.formKey.currentState!.save();
+                            // Update taskData with the new values
+                            widget.taskData?["alarm"] = alarm;
+                            widget.taskData?["repetation"] = repetation;
+                            widget.taskData?["done"] = done;
+                            // Call your API to update the task here
+                            updateTask(widget.taskData);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: const Text('Enregistrer'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
