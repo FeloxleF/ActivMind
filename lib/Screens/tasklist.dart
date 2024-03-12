@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/common/taskform.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -42,7 +43,7 @@ void createtask({Map<String, dynamic>? task}) {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}'; // Update the URL with your API endpoint
+    final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.put(
       Uri.parse(apiUrl),
@@ -67,6 +68,44 @@ void createtask({Map<String, dynamic>? task}) {
   }
 }
 
+Future<void> deleteTask(Map<String, dynamic>? taskData) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
+
+    final response = await http.delete(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+        
+      },
+      // body: jsonEncode(taskData), // Convert task data to JSON format
+    );
+
+    if (response.statusCode == 204) {
+      // Task delete successfully
+      print('Task delete successfully');
+      Fluttertoast.showToast(
+        msg: 'Task deleted successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } else {
+      // Task update failed
+      print('Failed to delete task. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    // Exception occurred while updating task
+    print('Error delete task: $error');
+  }
+}
+
 
   Future<List<dynamic>> fetchData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -88,15 +127,7 @@ void createtask({Map<String, dynamic>? task}) {
       throw Exception('Failed to load data');
     }
   }
-  // void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData) {
-  //   showDialog<void>(
-  //     context: context,
-      
-  //     builder: (BuildContext context) {
-  //       return MyFormDialog(formKey: formKey, taskData: taskData);
-  //     },
-  //   );
-  // }
+
 
   void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey, Map<String, dynamic>? taskData, bool create) {
     showDialog<void>(
@@ -206,7 +237,7 @@ void createtask({Map<String, dynamic>? task}) {
                 
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: AlwaysScrollableScrollPhysics(),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     var task = items[index];
@@ -240,6 +271,11 @@ void createtask({Map<String, dynamic>? task}) {
                               TextButton(
                                 child: Text('Modify'),
                                 onPressed: () => modifyTask(task),
+                              ),
+
+                              TextButton(
+                                child: Text('Supprimer'),
+                                onPressed: () => deleteTask(task),
                               ),
 
 

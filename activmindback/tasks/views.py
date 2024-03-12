@@ -5,7 +5,11 @@ from rest_framework.response import Response
 from core.models import Task
 from .serializers import TaskSerializer, CreateTaskSerializer
 
+from datetime import datetime
+
+
 class TasksViewSet(ModelViewSet):
+    date = datetime.now()
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
     permission_classes = [IsAuthenticated]
 
