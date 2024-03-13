@@ -92,6 +92,7 @@ DATABASES = {
         'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': 'pedram6403'
+        
     }
 }
 
