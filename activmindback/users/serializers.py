@@ -8,7 +8,7 @@ from core.models import UserInfo
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'type') 
+        fields = ('email', 'password', 'user_type') 
         extra_kwargs = {'password': {'write_only': True}}
     def create(self,validate_data):
         """create new user"""

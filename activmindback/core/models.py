@@ -59,8 +59,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
        (SUPPORT, 'support'),
        (ASSITANT, 'assistent')
     ]
-    email = models.EmailField(_('email address'), unique=True)
-    type = models.IntegerField(null=True, blank=True )
+    email = models.EmailField(_('email address'),max_length=100, unique=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
@@ -96,29 +95,12 @@ class UserInfo(models.Model):
     address_postal_code = models.CharField(max_length=100, blank=True)
     address_country = models.CharField(max_length=100, blank=True)
     phone_number = models.CharField(max_length=100, blank=True)
+    
+    class Meta:
+        db_table = 'users_userinfo'
 
     def __str__(self):
         return f"{self.user.email}'s info"
-    
-    def update_first_name(self, new_first_name):
-        self.first_name = new_first_name
-        self.save()
-        
-    def update_last_name(self, new_last_name):
-        self.last_name = new_last_name
-        self.save()
-
-    def update_date_of_birth(self, new_date_of_birth):
-        self.date_of_birth = new_date_of_birth
-        self.save()
-
-    def update_address_number(self, new_address_number):
-        self.address_number = new_address_number
-        self.save()
-
-    def update_address_street(self, new_address_street):
-        self.address_street = new_address_street
-        self.save()
 
 
 class Task(models.Model):

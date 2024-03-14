@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,18 +20,31 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .serializers import UserSerializer
+from .serializers import UserInfoSerializer, UserSerializer
 from core.models import CustomUser as User
 
 
 class RegisterUserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
         else:
             return[IsAuthenticated()]
+        
+    def create(self, request, *args, **kwargs):
+        user_serializer = UserSerializer(data=request.data)
+        user_info_serializer = UserInfoSerializer(data=request.data)
+
+        if user_serializer.is_valid(): 
+            if user_info_serializer.is_valid():
+                user_instance = user_serializer.save()
+                user_info_serializer.save(user=user_instance)
+                return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                raise ValidationError(user_info_serializer.errors)
+        else:
+            raise ValidationError(user_serializer.errors)
 
 
 class AuthViewSet(ViewSet):
