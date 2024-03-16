@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'activmindback.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
+MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost', '127.0.0.1')
 
 DATABASES = {
     # 'default': {
