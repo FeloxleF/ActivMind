@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:latest
+        image: mysql:8.0.31
         env:
           MYSQL_ROOT_PASSWORD: root  # Remplacez ceci par votre mot de passe root MySQL
           MYSQL_DATABASE: test_activmind  # Remplacez ceci par le nom de votre base de données
