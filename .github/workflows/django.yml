@@ -10,7 +10,7 @@ jobs:
   build:
       defaults:
         run:
-          working-directory: ./activmindback
+          working-directory: activmindback/
 
       runs-on: ubuntu-latest
       strategy:
