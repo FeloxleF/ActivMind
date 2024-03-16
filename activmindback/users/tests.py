@@ -1,9 +1,11 @@
 from django.test import TestCase
+from rest_framework.authtoken.models import Token
 # Create your tests here.
 
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
+from users.data_structures.user_structures import Adresse
 from core.models import CustomUser as User
 
 class CreateUserTest(TestCase):
@@ -57,3 +59,20 @@ class CreateUserTest(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'Logged out successfully')
+        
+    def test_check_token_authenticated(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        response = self.client.get('/check_token/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {'message': 'Token is valid'})
+
+    def test_check_token_unauthenticated(self):
+        response = self.client.get('/check_token/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    
+    def test_adresse_creation(self):
+        adresse = Adresse(123, "Main St", "City", "12345")
+        self.assertEqual(adresse.number, 123)
+        self.assertEqual(adresse.street, "Main St")
+        self.assertEqual(adresse.city, "City")
+        self.assertEqual(adresse.postal_code, "12345")
