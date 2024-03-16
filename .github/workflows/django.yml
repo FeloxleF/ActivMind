@@ -14,7 +14,7 @@ jobs:
         image: mysql:8.0.31
         env:
           MYSQL_ROOT_PASSWORD: root  # Remplacez ceci par votre mot de passe root MySQL
-          MYSQL_DATABASE: test_activmind  # Remplacez ceci par le nom de votre base de données
+          MYSQL_DATABASE: activmind  # Remplacez ceci par le nom de votre base de données
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       max-parallel: 4
