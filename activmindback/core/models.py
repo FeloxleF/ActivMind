@@ -67,6 +67,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+    
+    @property
+    def user_info(self):
+        return self.userinfo_set.first()
 
     class Meta:
         verbose_name = _('user')
@@ -82,7 +86,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserInfo(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True, related_name='user_info')
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
