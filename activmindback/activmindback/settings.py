@@ -91,8 +91,12 @@ DATABASES = {
         'NAME': 'activmind',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'root'
-        
+        'PASSWORD': 'root',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET default_storage_engine=INNODB",
+            'collation': 'utf8mb4_general_ci',
+        },
     }
 }
 

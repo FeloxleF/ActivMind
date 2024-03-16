@@ -29,15 +29,13 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def is_valid_password(self, password):
-            
-         
-            min_length = 8
-            # regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*\d)[A-Za-z\d@$!%*?&]{" + str(int(min_length)) + r",}$"
-            regex = r"^[^\s]{8,}$"
-            password_regex = re.compile(regex)
+    def is_valid_password(self, password):      
+        #min_length = 8
+        # regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*\d)[A-Za-z\d@$!%*?&]{" + str(int(min_length)) + r",}$"
+        regex = r"^[^\s]{8,}$"
+        password_regex = re.compile(regex)
 
-            return re.match(password_regex, password) is not None
+        return re.match(password_regex, password) is not None
 
     def create_superuser(self,email,password,**extra_fields):
          user = self.create_user(email=email,password=password,**extra_fields)
@@ -69,6 +67,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+    
+    @property
+    def user_info(self):
+        return self.userinfo_set.first()
 
     class Meta:
         verbose_name = _('user')
@@ -84,7 +86,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserInfo(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True, related_name='user_info')
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -95,9 +97,6 @@ class UserInfo(models.Model):
     address_postal_code = models.CharField(max_length=100, blank=True)
     address_country = models.CharField(max_length=100, blank=True)
     phone_number = models.CharField(max_length=100, blank=True)
-    
-    class Meta:
-        db_table = 'users_userinfo'
 
     def __str__(self):
         return f"{self.user.email}'s info"
