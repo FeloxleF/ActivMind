@@ -35,17 +35,10 @@ jobs:
       run: 
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    # - name: Set up MySQL Database
+    # - name: Run database migrations
     #   working-directory: ./activmindback
     #   run: |
-    #     python -m pip install mysql-connector-python
-    #     python -c "import mysql.connector; conn = mysql.connector.connect(user='root', password='root', host='localhost', port='3306', database='activmind'); cursor = conn.cursor(); cursor.execute('CREATE DATABASE IF NOT EXISTS activmind')"
-    #     python manage.py makemigrations
-    #     python manage.py migrate
-    - name: Run database migrations
-      working-directory: ./activmindback
-      run: |
-          python manage.py migrate --database=test
+    #       python manage.py migrate --database=test
     - name: Run Tests
       working-directory: ./activmindback
       run: python manage.py test
