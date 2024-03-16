@@ -18,6 +18,8 @@ jobs:
           MYSQL_DATABASE: activmind_test
           MYSQL_PASSWORD: root
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 3306:3306
 
     strategy:
       max-parallel: 4
@@ -26,7 +28,7 @@ jobs:
 
     
     env:
-      MYSQL_HOST: mysql
+      MYSQL_HOST: mysql.host.docker.internal. # This is the host name for the mysql service
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
