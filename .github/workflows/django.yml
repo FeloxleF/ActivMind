@@ -10,6 +10,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.3
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: activmind_test
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     strategy:
       max-parallel: 4
       matrix:
@@ -33,6 +43,9 @@ jobs:
     #     python -c "import mysql.connector; conn = mysql.connector.connect(user='root', password='root', host='localhost', port='3306', database='activmind'); cursor = conn.cursor(); cursor.execute('CREATE DATABASE IF NOT EXISTS activmind')"
     #     python manage.py makemigrations
     #     python manage.py migrate
+    - name: Run database migrations
+      run: |
+          python manage.py migrate --database=test
     - name: Run Tests
       working-directory: ./activmindback
       run: python manage.py test
