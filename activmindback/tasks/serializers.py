@@ -20,4 +20,4 @@ class CreateTaskSerializer(serializers.Serializer):
     
 
     def save(self, **kwargs):
-        task = Task.objects.create(user_id= self.context['user_id'], **self.validated_data) 
+        Task.objects.create(user_id= self.context['user_id'], **self.validated_data)

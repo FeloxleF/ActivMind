@@ -2,7 +2,7 @@ name: Django CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "felix_sprint-2" ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,7 +15,7 @@ jobs:
         image: mysql:8.3
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: activmind_test
+          MYSQL_DATABASE: activmind
           MYSQL_PASSWORD: root
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         ports:
@@ -24,7 +24,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9]
+        python-version: [3.10.11]
 
     steps:
     - uses: actions/checkout@v3
@@ -37,10 +37,13 @@ jobs:
       run: 
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    # - name: Create activmind database
+    #   run: |
+    #     mysql -h localhost -u root -p root -e "CREATE DATABASE activmind;"
     - name: Run database migrations
       working-directory: ./activmindback
       run: |
-          python manage.py migrate --database=test
+        python manage.py migrate
     - name: Run Tests
       working-directory: ./activmindback
       run: python manage.py test
