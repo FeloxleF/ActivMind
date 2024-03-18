@@ -1,6 +1,5 @@
 django==5.0.2
 mysqlclient
 djangorestframework
-django-debug-toolbar
 drf-nested-routers
 django-cors-headers
