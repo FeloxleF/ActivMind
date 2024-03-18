@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import CustomUser, UserInfo, Task, Sport, Activity, Medicament
+from core.models import CustomUser, UserInfo
 
 # Register your models here.
 
