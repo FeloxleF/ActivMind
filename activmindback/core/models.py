@@ -119,7 +119,7 @@ class Sport(models.Model):
     Sporttype = models.CharField(max_length=20)
     repeatation_number = models.IntegerField()
     info = models.CharField(max_length=100)
-    task= models.ForeignKey(Task,on_delete=models.CASCADE)
+    task= models.ForeignKey(Task,on_delete=models.CASCADE, related_name='task_id')
 
 
 class Activity(models.Model):
