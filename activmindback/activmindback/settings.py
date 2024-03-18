@@ -100,18 +100,6 @@ DATABASES = {
             'init_command': "SET default_storage_engine=INNODB",
             'collation': 'utf8mb4_general_ci',
         },
-    },
-    'test': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'activmind_test',
-        'HOST': MYSQL_HOST,
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET default_storage_engine=INNODB",
-            'collation': 'utf8mb4_general_ci',
-        },
     }
 }
 
