@@ -40,7 +40,6 @@ jobs:
     - name: Run database migrations
       working-directory: ./activmindback
       run: |
-          python manage.py makemigrations
           python manage.py migrate
     - name: Run Tests
       working-directory: ./activmindback
