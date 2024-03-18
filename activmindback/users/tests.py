@@ -5,8 +5,10 @@ from rest_framework.authtoken.models import Token
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
+from users.serializers import UserSerializer
 from users.data_structures.user_structures import Adresse
 from core.models import CustomUser as User
+from core.models import UserInfo
 
 class CreateUserTest(TestCase):
     def setUp(self):
@@ -76,3 +78,5 @@ class CreateUserTest(TestCase):
         self.assertEqual(adresse.street, "Main St")
         self.assertEqual(adresse.city, "City")
         self.assertEqual(adresse.postal_code, "12345")
+        
+    
