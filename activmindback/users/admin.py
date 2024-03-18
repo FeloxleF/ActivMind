@@ -6,6 +6,5 @@ from core.models import CustomUser, UserInfo
 
 
 # Register CustomUser and UserInfo models
-admin.site.register(CustomUser)
 admin.site.register(UserInfo)
 
