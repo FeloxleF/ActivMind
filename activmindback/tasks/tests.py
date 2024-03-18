@@ -15,7 +15,7 @@ class TasksViewSetTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(email='test2@example.com', password='password12345', user_type='P')
         self.user_info = UserInfo.objects.create(user=self.user, first_name='John', last_name='Doe', date_of_birth='1990-01-01')
-        # self.client.force_login(self.user)
+        self.client.force_login(self.user)
         self.task = Task.objects.create(user_id=self.user.id, title='Test Task 1', discription='Test Description 1', do_date='2024-03-22', start_time='10:00:00', end_time='12:00:00', repetation=False, alarm=True)
         print(" prems le id est" + str(self.task.id))
         
