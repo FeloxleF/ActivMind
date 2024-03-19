@@ -26,6 +26,7 @@ from core.models import CustomUser as User
 
 class RegisterUserViewSet(ModelViewSet):
     queryset = User.objects.all()
+    
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
@@ -45,7 +46,14 @@ class RegisterUserViewSet(ModelViewSet):
                 raise ValidationError(user_info_serializer.errors)
         else:
             raise ValidationError(user_serializer.errors)
-
+    
+    # redefinition de update pour permettre de mettre à jour les informations de l'utilisateur
+        
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
+    
+    def get_serializer_class(self):
+        return UserSerializer
 
 class AuthViewSet(ViewSet):
     @action(detail=False, methods=['post'])

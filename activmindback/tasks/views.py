@@ -26,9 +26,6 @@ class TasksViewSet(ModelViewSet):
             serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-    
     def get_queryset(self):
         date_param = self.request.query_params.get('date')
         if date_param:
