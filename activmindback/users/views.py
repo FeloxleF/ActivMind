@@ -81,8 +81,6 @@ class AuthViewSet(ViewSet):
 def check_token(request):
     return Response({'message': 'Token is valid'}, status=200)
 
-
-
 # class ForgotPasswordView(View):
 #     def post(self, request):
 #         email = request.POST.get('email')
