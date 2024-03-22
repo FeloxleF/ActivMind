@@ -14,12 +14,18 @@ class CreateUserTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(email='test1@example.com', password='password1234')
+        self.user_info = UserInfo.objects.create(user=self.user, first_name='John', last_name='Doe', date_of_birth='1990-01-01')
+        self.user1 = User.objects.create_user( email='test2@example.coml', password='password1234', user_type='A')
+        self.user_info1 = UserInfo.objects.create(user=self.user1, first_name='John', last_name='Doe', date_of_birth='1990-01-01')
         
     def test_first(self):
         self.assertEqual(1, 1)
         
     def test_create_user(self):
-    # Pour l'instant on ne teste que la création d'un utilisateur pas du user_info
+    
+        associated_users_ids = [self.user.id, self.user1.id]
+        print(associated_users_ids)
+        # Pour l'instant on ne teste que la création d'un utilisateur pas du user_info
         user_data = {
             'email': 'test@example.com',
             'password': 'password123',
@@ -27,6 +33,7 @@ class CreateUserTest(TestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'date_of_birth': '1990-01-01',
+            'associated_user': associated_users_ids
             # Autres champs requis pour la création de l'utilisateur...
         }
 
@@ -41,10 +48,12 @@ class CreateUserTest(TestCase):
         self.assertEqual(response.data['email'], user.email)            
         self.assertTrue(user.check_password('password123'))
         self.assertEqual(user.user_type, 'A')
+        self.assertEqual(user.associated_user, [1,2])
         self.assertEqual(user.user_info.first_name, 'John')
         self.assertEqual(user.user_info.last_name , 'Doe')
         self.assertEqual(str(user.user_info.date_of_birth), '1990-01-01')
         # TODO: Add more assertions to test additional fields in user_info
+
         
 
     def test_login(self):
