@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from core.models import Task
+from core.models import Sport, Task
 
 class TaskSerializer(serializers.ModelSerializer):
 
@@ -21,3 +21,8 @@ class CreateTaskSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         Task.objects.create(user_id= self.context['user_id'], **self.validated_data)
+        
+class SportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sport
+        fields = ('Sporttype', 'repeatation_number', 'info', 'task_id')

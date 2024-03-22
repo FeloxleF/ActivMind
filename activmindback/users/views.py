@@ -26,6 +26,7 @@ from core.models import CustomUser as User
 
 class RegisterUserViewSet(ModelViewSet):
     queryset = User.objects.all()
+    
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
@@ -45,7 +46,14 @@ class RegisterUserViewSet(ModelViewSet):
                 raise ValidationError(user_info_serializer.errors)
         else:
             raise ValidationError(user_serializer.errors)
-
+    
+    # redefinition de update pour permettre de mettre à jour les informations de l'utilisateur
+        
+    def get_queryset(self):
+            return User.objects.filter(id=self.request.user.id)
+    
+    def get_serializer_class(self):
+        return UserSerializer
 
 class AuthViewSet(ViewSet):
     @action(detail=False, methods=['post'])
@@ -55,7 +63,7 @@ class AuthViewSet(ViewSet):
         user = authenticate(email=email, password=password)
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -72,8 +80,6 @@ class AuthViewSet(ViewSet):
 @permission_classes([IsAuthenticated])
 def check_token(request):
     return Response({'message': 'Token is valid'}, status=200)
-
-
 
 # class ForgotPasswordView(View):
 #     def post(self, request):

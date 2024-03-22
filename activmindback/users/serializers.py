@@ -8,7 +8,7 @@ from core.models import UserInfo
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'user_type') 
+        fields = ('email', 'password', 'user_type', 'associated_user') 
         extra_kwargs = {'password': {'write_only': True}}
         
     def create(self,validate_data):
@@ -24,7 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
         return user
-    
     
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
