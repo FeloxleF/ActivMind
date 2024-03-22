@@ -50,7 +50,7 @@ class RegisterUserViewSet(ModelViewSet):
     # redefinition de update pour permettre de mettre à jour les informations de l'utilisateur
         
     def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)
+            return User.objects.filter(id=self.request.user.id)
     
     def get_serializer_class(self):
         return UserSerializer
@@ -63,7 +63,7 @@ class AuthViewSet(ViewSet):
         user = authenticate(email=email, password=password)
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
