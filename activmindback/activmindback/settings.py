@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -81,6 +82,8 @@ WSGI_APPLICATION = 'activmindback.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+MYSQL_HOST = '127.0.0.1'
+
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
@@ -89,9 +92,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'activmind',
-        'HOST': 'localhost',
+        'HOST': MYSQL_HOST,
         'USER': 'root',
-        'PASSWORD': 'pedram6403'
+        'PASSWORD': 'root',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET default_storage_engine=INNODB",
+            'collation': 'utf8mb4_general_ci',
+        },
     }
 }
 
@@ -167,7 +175,11 @@ AUTH_USER_MODEL = 'core.CustomUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']

@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,19 +20,40 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .serializers import UserSerializer
+from .serializers import UserInfoSerializer, UserSerializer
 from core.models import CustomUser as User
 
 
 class RegisterUserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
         else:
             return[IsAuthenticated()]
+        
+    def create(self, request, *args, **kwargs):
+        user_serializer = UserSerializer(data=request.data)
+        user_info_serializer = UserInfoSerializer(data=request.data)
 
+        if user_serializer.is_valid(): 
+            if user_info_serializer.is_valid():
+                user_instance = user_serializer.save()
+                user_info_serializer.save(user=user_instance)
+                return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                raise ValidationError(user_info_serializer.errors)
+        else:
+            raise ValidationError(user_serializer.errors)
+    
+    # redefinition de update pour permettre de mettre à jour les informations de l'utilisateur
+        
+    def get_queryset(self):
+            return User.objects.filter(id=self.request.user.id)
+    
+    def get_serializer_class(self):
+        return UserSerializer
 
 class AuthViewSet(ViewSet):
     @action(detail=False, methods=['post'])
@@ -41,7 +63,7 @@ class AuthViewSet(ViewSet):
         user = authenticate(email=email, password=password)
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -58,8 +80,6 @@ class AuthViewSet(ViewSet):
 @permission_classes([IsAuthenticated])
 def check_token(request):
     return Response({'message': 'Token is valid'}, status=200)
-
-
 
 # class ForgotPasswordView(View):
 #     def post(self, request):
