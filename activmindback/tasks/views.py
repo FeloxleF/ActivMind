@@ -27,8 +27,6 @@ class TasksViewSet(ModelViewSet):
             user_id = int(associated_user_id)
         else:
             user_id = self.request.user.id
-        
-        # TODO: refaire les tests pour ca 
             
         serializer = CreateTaskSerializer(
             data=request.data,
@@ -78,5 +76,3 @@ class TasksViewSet(ModelViewSet):
             return True
         else:
             return False
-    
-    # TODO: faire les tests de is_associated_user

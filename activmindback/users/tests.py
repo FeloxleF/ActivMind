@@ -1,7 +1,5 @@
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
-# Create your tests here.
-
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -22,9 +20,7 @@ class CreateUserTest(TestCase):
         self.assertEqual(1, 1)
         
     def test_create_user(self):
-    
-        associated_users_ids = [self.user.id, self.user1.id]
-        print(associated_users_ids)
+
         # Pour l'instant on ne teste que la création d'un utilisateur pas du user_info
         user_data = {
             'email': 'test@example.com',
@@ -32,29 +28,23 @@ class CreateUserTest(TestCase):
             'user_type': 'A',
             'first_name': 'John',
             'last_name': 'Doe',
-            'date_of_birth': '1990-01-01',
-            'associated_user': associated_users_ids
+            'date_of_birth': '1990-01-01'
             # Autres champs requis pour la création de l'utilisateur...
         }
 
         # Envoyer une requête POST pour créer un nouvel utilisateur
         response = self.client.post('/register/', user_data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
         user = User.objects.get(email='test@example.com')
         
         self.assertIsNotNone(user)
         self.assertEqual(response.data['email'], user.email)            
         self.assertTrue(user.check_password('password123'))
         self.assertEqual(user.user_type, 'A')
-        self.assertEqual(user.associated_user, [1,2])
         self.assertEqual(user.user_info.first_name, 'John')
         self.assertEqual(user.user_info.last_name , 'Doe')
         self.assertEqual(str(user.user_info.date_of_birth), '1990-01-01')
         # TODO: Add more assertions to test additional fields in user_info
-
-        
 
     def test_login(self):
         url = '/auth/login/'
@@ -87,5 +77,37 @@ class CreateUserTest(TestCase):
         self.assertEqual(adresse.street, "Main St")
         self.assertEqual(adresse.city, "City")
         self.assertEqual(adresse.postal_code, "12345")
+        
+        
+        
+        
+        ### tests pour les associations entre utilisateurs ###
+    
+class AssociateUserTest(TestCase):
+    
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(email='test1@example.com', password='password1234')
+        self.user_info = UserInfo.objects.create(user=self.user, first_name='John', last_name='Doe', date_of_birth='1990-01-01')
+        self.client.force_authenticate(user=self.user)
+        self.user1 = User.objects.create_user( email='test2@example.coml', password='password1234', user_type='A')
+        self.user_info1 = UserInfo.objects.create(user=self.user1, first_name='John', last_name='Doe', date_of_birth='1990-01-01')
+    
+    def test_associate_user(self):
+        url = '/associate/'
+        response = self.client.post(url, {'associated_user_id': self.user1.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_get_associate_user(self):
+        url = '/associate/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_dissociate_user(self):
+        asso_user_id = self.user1.id
+        url = '/associate/+{}/'.format(asso_user_id)
+        response = self.client.delete(url, {'associated_user_id': self.user1.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
         
     

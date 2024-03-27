@@ -125,8 +125,6 @@ class AssociateUserViewSet(viewsets.ViewSet):
 
 
 
-
-
 # class ForgotPasswordView(View):
 #     def post(self, request):
 #         email = request.POST.get('email')
