@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const MyAppBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -16,12 +18,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.alarm),
+          icon: const Icon(Icons.alarm),
           onPressed: () {},
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.notifications_none),
+            icon: const Icon(Icons.notifications_none),
             onPressed: () {},
           ),
         ],
@@ -29,7 +31,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 
@@ -132,7 +134,7 @@ class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  BottomNavBar({required this.currentIndex, required this.onTap});
+  const BottomNavBar({super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
