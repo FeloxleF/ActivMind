@@ -11,7 +11,7 @@ class MyFormDialog extends StatefulWidget {
   final Map<String, dynamic>? taskData;
   final bool create; 
 
-  MyFormDialog({required this.formKey, required this.taskData, required this.create});
+  const MyFormDialog({super.key, required this.formKey, required this.taskData, required this.create});
 
   @override
   _MyFormDialogState createState() => _MyFormDialogState();
@@ -59,7 +59,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final String apiUrl = 'http://10.0.2.2:8000/tasks/'; // Update the URL with your API endpoint
+    const String apiUrl = 'http://10.0.2.2:8000/tasks/'; // Update the URL with your API endpoint
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -107,7 +107,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Color.fromARGB(255, 209, 193, 238),
+      backgroundColor: const Color.fromARGB(255, 209, 193, 238),
       content: Stack(
         clipBehavior: Clip.none,
         children: <Widget>[
@@ -137,7 +137,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                     controller: titleController,
                     keyboardType: TextInputType.text,
                     maxLines: null,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "title",
                       hintText: 'Veuillez entrer un nom de l\'activité ',
                       border: OutlineInputBorder(),
@@ -161,7 +161,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                     controller: descriptionController,
                     keyboardType: TextInputType.multiline,
                     maxLines: 3,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "description",
                       hintText: 'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
                       border: OutlineInputBorder(),
@@ -179,7 +179,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                     controller: dodateController,
                     keyboardType: TextInputType.datetime,
                     // maxLines: 3,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "date de fair",
                       hintText: 'Veuillez entrer un date de fair ',
                       border: OutlineInputBorder(),
@@ -197,7 +197,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                     controller: strtimeController,
                     keyboardType: TextInputType.datetime,
                     // maxLines: 3,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "Heure de début",
                       hintText: 'Veuillez entrer une heure de début ',
                       border: OutlineInputBorder(),
@@ -216,7 +216,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                     controller: endtimeController,
                     keyboardType: TextInputType.datetime,
                     // maxLines: 3,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "Heure de fin",
                       hintText: 'Veuillez entrer une heure de fin ',
                       border: OutlineInputBorder(),
@@ -241,7 +241,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                         });
                       },
                     ),
-                    Text("Alarm"),
+                    const Text("Alarm"),
                   ],
                 ),
                 // Other form fields...
@@ -255,7 +255,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                         });
                       },
                     ),
-                    Text("Repetation"),
+                    const Text("Repetation"),
                   ],
                 ),
                 // Other form fields...
@@ -269,7 +269,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                         });
                       },
                     ),
-                    Text("Done"),
+                    const Text("Done"),
                   ],
                 ),
                 // Other form fields...
@@ -280,8 +280,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                       padding: const EdgeInsets.only(left: 10, top: 10),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 65, 64, 155),
-                          onPrimary: Color.fromARGB(255, 255, 255, 255),
+                          foregroundColor: const Color.fromARGB(255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 65, 64, 155),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -289,13 +288,12 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                         child: const Text('Annuler'),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 255, 181, 70),
-                          onPrimary: Color.fromARGB(255, 44, 41, 223),
+                          foregroundColor: const Color.fromARGB(255, 44, 41, 223), backgroundColor: const Color.fromARGB(255, 255, 181, 70),
                         ),
                         onPressed: () {
                           if (widget.formKey.currentState!.validate()) {

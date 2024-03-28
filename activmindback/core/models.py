@@ -29,15 +29,13 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def is_valid_password(self, password):
-            
-         
-            min_length = 8
-            # regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*\d)[A-Za-z\d@$!%*?&]{" + str(int(min_length)) + r",}$"
-            regex = r"^[^\s]{8,}$"
-            password_regex = re.compile(regex)
+    def is_valid_password(self, password):      
+        #min_length = 8
+        # regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])(?=.*\d)[A-Za-z\d@$!%*?&]{" + str(int(min_length)) + r",}$"
+        regex = r"^[^\s]{8,}$"
+        password_regex = re.compile(regex)
 
-            return re.match(password_regex, password) is not None
+        return re.match(password_regex, password) is not None
 
     def create_superuser(self,email,password,**extra_fields):
          user = self.create_user(email=email,password=password,**extra_fields)
@@ -59,17 +57,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
        (SUPPORT, 'support'),
        (ASSITANT, 'assistent')
     ]
-    email = models.EmailField(_('email address'), unique=True)
-    type = models.IntegerField(null=True, blank=True )
+    email = models.EmailField(_('email address'),max_length=100, unique=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     user_type = models.CharField(max_length=1, choices= type_choise, default=PATIENT)
+    associated_user = models.ManyToManyField('core.CustomUser', related_name="associated_profiles", blank=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+    
+    @property
+    def user_info(self):
+        return self.userinfo_set.first()
 
     class Meta:
         verbose_name = _('user')
@@ -85,7 +87,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserInfo(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True, related_name='user_info')
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -99,26 +101,6 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return f"{self.user.email}'s info"
-    
-    def update_first_name(self, new_first_name):
-        self.first_name = new_first_name
-        self.save()
-        
-    def update_last_name(self, new_last_name):
-        self.last_name = new_last_name
-        self.save()
-
-    def update_date_of_birth(self, new_date_of_birth):
-        self.date_of_birth = new_date_of_birth
-        self.save()
-
-    def update_address_number(self, new_address_number):
-        self.address_number = new_address_number
-        self.save()
-
-    def update_address_street(self, new_address_street):
-        self.address_street = new_address_street
-        self.save()
 
 
 class Task(models.Model):
@@ -138,7 +120,7 @@ class Sport(models.Model):
     Sporttype = models.CharField(max_length=20)
     repeatation_number = models.IntegerField()
     info = models.CharField(max_length=100)
-    task= models.ForeignKey(Task,on_delete=models.CASCADE)
+    task= models.ForeignKey(Task,on_delete=models.CASCADE, related_name='task_id')
 
 
 class Activity(models.Model):

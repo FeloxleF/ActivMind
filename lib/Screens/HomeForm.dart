@@ -17,21 +17,21 @@ class _HomeFormState extends State<HomeForm> {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => TaskList()),
+        MaterialPageRoute(builder: (context) => const TaskList()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Calendar()),
+        MaterialPageRoute(builder: (context) => const Calendar()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeForm()),
+        MaterialPageRoute(builder: (context) => const HomeForm()),
       );
       return; // Return here to prevent further execution
     }
@@ -60,8 +60,8 @@ class _HomeFormState extends State<HomeForm> {
         currentPage = const TaskList(); // Default to the first page
     }
     return Scaffold(
-      appBar: MyAppBar(), // Use MyAppBar for header
-      body: Text('welcom to ActivMind'),
+      appBar: const MyAppBar(), // Use MyAppBar for header
+      body: const Text('welcom to ActivMind'),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,

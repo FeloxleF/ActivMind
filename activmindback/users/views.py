@@ -1,3 +1,5 @@
+import logging
+from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -19,18 +21,40 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .serializers import UserSerializer
+from .serializers import UserInfoSerializer, UserSerializer
 from core.models import CustomUser as User
+from django.contrib.auth import get_user_model
+from rest_framework import viewsets
 
+logger = logging.getLogger('user_view')
 
 class RegisterUserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
         else:
             return[IsAuthenticated()]
+        
+    def create(self, request, *args, **kwargs):
+        user_serializer = UserSerializer(data=request.data)
+        user_info_serializer = UserInfoSerializer(data=request.data)
+        if user_serializer.is_valid(): 
+            if user_info_serializer.is_valid():
+                user_instance = user_serializer.save()
+                user_info_serializer.save(user=user_instance)
+                return Response(user_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                raise ValidationError(user_info_serializer.errors)
+        else:
+            raise ValidationError(user_serializer.errors)
+        
+    def get_queryset(self):
+            return User.objects.filter(id=self.request.user.id)
+    
+    def get_serializer_class(self):
+        return UserSerializer
 
 
 class AuthViewSet(ViewSet):
@@ -41,7 +65,7 @@ class AuthViewSet(ViewSet):
         user = authenticate(email=email, password=password)
         if user:
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -58,6 +82,46 @@ class AuthViewSet(ViewSet):
 @permission_classes([IsAuthenticated])
 def check_token(request):
     return Response({'message': 'Token is valid'}, status=200)
+
+
+# API endpoints to associate and dissociate users
+
+class AssociateUserViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        associated_users = user.associated_user.all()
+        logger.info(associated_users)
+        logger.info(f"User {user.email} has associated users: {[user.email for user in associated_users]}")
+        data = [{'email': user.email} for user in associated_users]
+        return Response(data)
+
+    def create(self, request):
+        user_id = request.user.id
+        associated_user_id = int(request.data.get('associated_user_id')) if request.data.get('associated_user_id') else ValidationError('associated_user_id is required')
+        try:
+            user = User.objects.get(id=user_id)
+            associated_user = User.objects.get(id=associated_user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'One or both of the users do not exist'}, status=status.HTTP_404_NOT_FOUND)
+        user.associated_user.add(associated_user)
+        user.save()
+        return Response({'message': 'Users associated successfully'}, status=status.HTTP_200_OK)
+
+    def destroy(self, request, pk=None):
+        user_id = request.user.id
+        associated_user_id = pk
+        try:
+            user = User.objects.get(id=user_id)
+            associated_user = User.objects.get(id=associated_user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'One or both of the users do not exist'}, status=status.HTTP_404_NOT_FOUND)
+        user.associated_user.remove(associated_user)
+        user.save()
+        return Response({'message': 'Users dissociated successfully'}, status=status.HTTP_200_OK)
+
 
 
 
