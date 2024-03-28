@@ -38,7 +38,7 @@ class __CalendarState extends State<Calendar> {
   showDialog<void>(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(backgroundColor: Color.fromARGB(255, 209, 193, 238),
+      return AlertDialog(backgroundColor: const Color.fromARGB(255, 209, 193, 238),
                       content: Stack(
                         clipBehavior: Clip.none,
                         children: <Widget>[
@@ -121,10 +121,8 @@ class __CalendarState extends State<Calendar> {
                                           left: 10, top: 10),
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Color.fromARGB(255, 65, 64, 155),
-                                          onPrimary: Color.fromARGB(
-                                              255, 255, 255, 255),
+                                          foregroundColor: const Color.fromARGB(
+                                              255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 65, 64, 155),
                                         ),
                                         onPressed: () {
                                           if (_formKey.currentState!
@@ -136,15 +134,12 @@ class __CalendarState extends State<Calendar> {
                                         child: const Text('Annuler'),
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10),
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Color.fromARGB(255, 255, 181, 70),
-                                          onPrimary:
-                                              Color.fromARGB(255, 44, 41, 223),
+                                          foregroundColor: const Color.fromARGB(255, 44, 41, 223), backgroundColor: const Color.fromARGB(255, 255, 181, 70),
                                         ),
                                         onPressed: () {
                                           if (_formKey.currentState!
@@ -174,21 +169,21 @@ class __CalendarState extends State<Calendar> {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => TaskList()),
+        MaterialPageRoute(builder: (context) => const TaskList()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Calendar()),
+        MaterialPageRoute(builder: (context) => const Calendar()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeForm()),
+        MaterialPageRoute(builder: (context) => const HomeForm()),
       );
       return; // Return here to prevent further execution
     }
@@ -219,7 +214,7 @@ class __CalendarState extends State<Calendar> {
         currentPage = const TaskList(); // Default to the first page
     }
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: const MyAppBar(),
       // appBar: AppBar(
       //   title: const Center(
       //     child: Text(
@@ -263,13 +258,12 @@ class __CalendarState extends State<Calendar> {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 240, 169, 37),
-                      onPrimary: Color.fromARGB(255, 255, 255, 255),
+                      foregroundColor: const Color.fromARGB(255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 240, 169, 37),
                     ),
                     onPressed: () {},
                     child: const Text('jour'),
@@ -279,12 +273,12 @@ class __CalendarState extends State<Calendar> {
             ),
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 5,
-                  margin: EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(5),
                   child: ListTile(
                     title: Text(items[index]["title"]!),
                     subtitle: Text(items[index]["description"]!),
@@ -295,11 +289,11 @@ class __CalendarState extends State<Calendar> {
                         content: Text(items[index]["description"]!),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('Modifier'),
+                            child: const Text('Modifier'),
                             onPressed: () => showFormDialog(context, _formKey),
                           ),
                           TextButton(
-                            child: Text('ّFermer'),
+                            child: const Text('ّFermer'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
@@ -313,7 +307,7 @@ class __CalendarState extends State<Calendar> {
               padding: const EdgeInsets.only(top: 8),
               child: FloatingActionButton(
                 onPressed: () => showFormDialog(context, _formKey),
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
               ),
             ),
           ],

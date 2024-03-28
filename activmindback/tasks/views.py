@@ -20,15 +20,12 @@ class TasksViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # on ajoute task_user_id dans le body de la requête pour pouvoir créer une tâche pour un autre utilisateur
-        # donc pour les requetes post, put, delete
         associated_user_id = self.request.data.get('task_user_id')
         
         if associated_user_id and self.is_associated_user(int(associated_user_id)):
             user_id = int(associated_user_id)
         else:
             user_id = self.request.user.id
-        
-        # TODO: refaire les tests pour ca 
             
         serializer = CreateTaskSerializer(
             data=request.data,
@@ -78,5 +75,3 @@ class TasksViewSet(ModelViewSet):
             return True
         else:
             return False
-    
-    # TODO: faire les tests de is_associated_user

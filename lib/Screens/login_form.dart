@@ -46,7 +46,7 @@ class _LoginFormState extends State<LoginForm> {
     } else {
       // print('Failed to login');
       ScaffoldMessenger.of(currentContext).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please enter a valid username.'),
           backgroundColor: Colors.red,
         ),

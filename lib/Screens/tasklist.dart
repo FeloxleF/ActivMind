@@ -147,21 +147,21 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => TaskList()),
+        MaterialPageRoute(builder: (context) => const TaskList()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Calendar()),
+        MaterialPageRoute(builder: (context) => const Calendar()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeForm()),
+        MaterialPageRoute(builder: (context) => const HomeForm()),
       );
       return; // Return here to prevent further execution
     }
@@ -203,7 +203,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
 
 
   return Scaffold(
-    appBar: MyAppBar(),
+    appBar: const MyAppBar(),
     body: FutureBuilder<List<dynamic>>(
       future: _futureData,
       builder: (context, snapshot) {
@@ -237,13 +237,13 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                 
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     var task = items[index];
                     return Card(
                       elevation: 5,
-                      margin: EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(5),
                       child: ListTile(
                         title: Text(task["title"] ?? "No title"),
                         subtitle: Text(task["discription"] ?? "No description"),
@@ -269,19 +269,19 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                             actions: <Widget>[
 
                               TextButton(
-                                child: Text('Modify'),
+                                child: const Text('Modify'),
                                 onPressed: () => modifyTask(task),
                               ),
 
                               TextButton(
-                                child: Text('Supprimer'),
+                                child: const Text('Supprimer'),
                                 onPressed: () => deleteTask(task),
                               ),
 
 
 
                               TextButton(
-                                child: Text('ّFermer'),
+                                child: const Text('ّFermer'),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                             ],
@@ -296,7 +296,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
               child: FloatingActionButton(
                 onPressed: () => createtask(),
                 // onPressed: () => showFormDialog(context, _formKey),
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
               ),
             ),
                 

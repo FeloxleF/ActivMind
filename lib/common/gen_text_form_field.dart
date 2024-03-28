@@ -36,8 +36,9 @@ class GetTextFormField extends StatelessWidget {
           if (hintName=='Email*' && !validateemail(value)){
             return 'Veuillez entrer un email valid';
           }
-          if (hintName=='mot de passe *' && !validatepass(value) )
-          return "Le format du mot de passe n'est pas correctle";
+          if (hintName=='mot de passe *' && !validatepass(value) ) {
+            return "Le format du mot de passe n'est pas correctle";
+          }
           return null;
         },
             
