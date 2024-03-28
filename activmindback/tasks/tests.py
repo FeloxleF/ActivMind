@@ -19,7 +19,14 @@ class TasksViewSetTestCase(APITestCase):
         
         self.user1 = User.objects.create_user( email='test2@example.coml', password='password1234', user_type='A')
         self.user_info1 = UserInfo.objects.create(user=self.user1, first_name='John', last_name='Doe', date_of_birth='1990-01-01')
-        self.task = Task.objects.create(user_id=self.user.id, title='Test Task user 1', discription='Test Description user 1', do_date='2024-03-23', start_time='11:00:00', end_time='13:00:00', repetation=False, alarm=True)
+        self.taskk = Task.objects.create(user_id=self.user1.id, title='Test Task user 1', discription='Test Description user 1', do_date='2024-03-23', start_time='11:00:00', end_time='13:00:00', repetation=False, alarm=True)
+        self.taskk_2 = Task.objects.create(user_id=self.user1.id, title='Test Task user 1.2', discription='Test Description user 1.2', do_date='2024-03-26', start_time='11:00:00', end_time='13:00:00', repetation=False, alarm=True)
+        
+        self.user2 = User.objects.create_user(email='test3@example.com', password='password123456', user_type='P')
+        self.user_info2 = UserInfo.objects.create(user=self.user2, first_name='Johnn', last_name='Doee', date_of_birth='1990-01-01')
+        self.taskkk = Task.objects.create(user_id=self.user2.id, title='Test Task user 3', discription='Test Description user 3', do_date='2024-03-24', start_time='12:00:00', end_time='14:00:00', repetation=False, alarm=True)
+        
+        self.user.associated_user.add(self.user1)
         
     # on test la creation d'une tache car on a redéfini la méthode create dans la view
     def test_create_task(self):
@@ -38,13 +45,13 @@ class TasksViewSetTestCase(APITestCase):
         task = Task.objects.get(user=self.user, title='Test Task')
         self.assertEqual(task.title, 'Test Task')
         self.assertEqual(task.discription, 'Test Description')
-        # self.assertEqual(task.do_date.strftime('%Y-%m-%d'), '2024-03-21')
+        self.assertEqual(task.do_date.strftime('%Y-%m-%d'), '2024-03-21')
         self.assertEqual(task.start_time.strftime('%H:%M:%S'), '10:00:00')
         self.assertEqual(task.end_time.strftime('%H:%M:%S'), '12:00:00')
         self.assertFalse(task.repetation)
         self.assertTrue(task.alarm)
         
-    def create_task_for_other_user(self):
+    def test_create_task_for_other_user(self):
         url = '/tasks/'
         data = {
             'title': 'Test Task 2 user1',
@@ -94,3 +101,56 @@ class TasksViewSetTestCase(APITestCase):
         self.assertEqual(task.end_time.strftime('%H:%M:%S'), updated_data['end_time'])
         self.assertEqual(task.repetation, updated_data['repetation'])
         self.assertEqual(task.alarm, updated_data['alarm'])
+        
+    def test_get_tasks_by_date(self):
+        url = '/tasks/?date=2024-03-22'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_data = response.json()
+        self.assertEqual(len(response_data), 1)
+        task = response_data[0]
+        self.assertEqual(task['title'], 'Test Task 1')
+        self.assertEqual(task['discription'], 'Test Description 1')
+        self.assertEqual(task['do_date'], '2024-03-22')
+        self.assertEqual(task['start_time'], '10:00:00')
+        self.assertEqual(task['end_time'], '12:00:00')
+        self.assertFalse(task['repetation'])
+        self.assertTrue(task['alarm'])
+    
+    def test_get_tasks_by_date_and_user(self):
+        url = '/tasks/?date=2024-03-23&task_user_id=' + str(self.user1.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_data = response.json()
+        self.assertEqual(len(response_data), 1)
+        task = response_data[0]
+        self.assertEqual(task['title'], 'Test Task user 1')
+        self.assertEqual(task['discription'], 'Test Description user 1')
+        self.assertEqual(task['do_date'], '2024-03-23')
+        self.assertEqual(task['start_time'], '11:00:00')
+        self.assertEqual(task['end_time'], '13:00:00')
+        self.assertFalse(task['repetation'])
+        self.assertTrue(task['alarm'])
+    
+    def test_get_tasks_by_user(self):
+        url = '/tasks/?task_user_id=' + str(self.user1.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response_data = response.json()
+        self.assertEqual(len(response_data), 2)
+        task = response_data[0]
+        self.assertEqual(task['title'], 'Test Task user 1')
+        self.assertEqual(task['discription'], 'Test Description user 1')
+        self.assertEqual(task['do_date'], '2024-03-23')
+        self.assertEqual(task['start_time'], '11:00:00')
+        self.assertEqual(task['end_time'], '13:00:00')
+        self.assertFalse(task['repetation'])
+        self.assertTrue(task['alarm'])
+        task = response_data[1]
+        self.assertEqual(task['title'], 'Test Task user 1.2')
+        self.assertEqual(task['discription'], 'Test Description user 1.2')
+        self.assertEqual(task['do_date'], '2024-03-26')
+        self.assertEqual(task['start_time'], '11:00:00')
+        self.assertEqual(task['end_time'], '13:00:00')
+        self.assertFalse(task['repetation'])
+        self.assertTrue(task['alarm'])
