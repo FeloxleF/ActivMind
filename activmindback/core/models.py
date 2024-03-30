@@ -45,7 +45,6 @@ class CustomUserManager(BaseUserManager):
          
          return user
 
-    
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 
@@ -62,7 +61,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     user_type = models.CharField(max_length=1, choices= type_choise, default=PATIENT)
-    associated_user = models.ManyToManyField('core.CustomUser', related_name="associated_profiles", blank=True)
+    associated_user = models.ManyToManyField('core.CustomUser', related_name="associated_profiles", blank=True, null=True)
 
     objects = CustomUserManager()
 
@@ -87,7 +86,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserInfo(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True, related_name='user_info')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='user_info')
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
