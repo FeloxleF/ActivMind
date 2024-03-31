@@ -154,6 +154,7 @@ class _SignupFormState extends State<SignupForm> {
                     inputtype: TextInputType.text,
                   ),
 
+
                   const SizedBox(height: 5.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
