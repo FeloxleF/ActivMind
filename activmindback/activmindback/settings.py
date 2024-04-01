@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-rvk6x0d8a!&+e!m&7ha8h%^0^5#o+!u-wg1%f0dy22+8cb7lh^
 DEBUG = True
 
 ALLOWED_HOSTS = ['10.0.2.2',
-                 '127.0.0.1']
+                 '127.0.0.1',
+                 '10.0.2.2']
 
 
 # Application definition
@@ -94,12 +95,13 @@ DATABASES = {
         'NAME': 'activmind',
         'HOST': MYSQL_HOST,
         'USER': 'root',
-        'PASSWORD': 'root',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET default_storage_engine=INNODB",
-            'collation': 'utf8mb4_general_ci',
-        },
+        'PASSWORD': 'pedram6403',
+        # 'OPTIONS': {
+        #     'charset': 'utf8mb4',
+        #     'init_command': "SET default_storage_engine=INNODB",
+        #     'collation': 'utf8mb4_general_ci',
+        # },
+
     }
 }
 
@@ -182,4 +184,4 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2']

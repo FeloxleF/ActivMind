@@ -38,6 +38,7 @@ class RegisterUserViewSet(ModelViewSet):
             return[IsAuthenticated()]
         
     def create(self, request, *args, **kwargs):
+        print (request.data)
         user_serializer = UserSerializer(data=request.data)
         user_info_serializer = UserInfoSerializer(data=request.data)
         if user_serializer.is_valid(): 

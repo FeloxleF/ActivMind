@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/common/taskform.dart';
@@ -58,6 +58,7 @@ void createtask({Map<String, dynamic>? task}) {
     if (response.statusCode == 200) {
       // Task updated successfully
       print('Task updated successfully');
+      MaterialPageRoute(builder: (context) => TaskList());
     } else {
       // Task update failed
       print('Failed to update task. Status code: ${response.statusCode}');
@@ -87,15 +88,15 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     if (response.statusCode == 204) {
       // Task delete successfully
       print('Task delete successfully');
-      Fluttertoast.showToast(
-        msg: 'Task deleted successfully',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      // Fluttertoast.showToast(
+      //   msg: 'Task deleted successfully',
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   timeInSecForIosWeb: 1,
+      //   backgroundColor: Colors.green,
+      //   textColor: Colors.white,
+      //   fontSize: 16.0,
+      // );
     } else {
       // Task update failed
       print('Failed to delete task. Status code: ${response.statusCode}');
