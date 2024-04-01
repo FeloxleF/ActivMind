@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -44,6 +45,7 @@ late TextEditingController titleController;
     if (response.statusCode == 200) {
       // Task updated successfully
       print('Task updated successfully');
+      
     } else {
       // Task update failed
       print('Failed to update task. Status code: ${response.statusCode}');
@@ -73,6 +75,8 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
     if (response.statusCode == 200) {
       // Task updated successfully
       print('Task updated successfully');
+      const TaskList();
+      // home: TaskList();
     } else {
       // Task update failed
       print('Failed to update task. Status code: ${response.statusCode}');
@@ -305,8 +309,10 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                             }
                             else{
                               updateTask(widget.taskData);
+                              
                             }
                             Navigator.of(context).pop();
+                            
                           }
                         },
                         child: const Text('Enregistrer'),
