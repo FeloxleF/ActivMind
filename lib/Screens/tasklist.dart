@@ -5,6 +5,7 @@ import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
+import 'package:activmind_app/common/csrf.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +21,6 @@ class _TaskListState extends State<TaskList> {
   
   Map<String, dynamic>? currentTask;
   
-
   void modifyTask(Map<String, dynamic> task) {
   setState(() {
     currentTask = Map.from(task); // Make a copy of the task data
@@ -43,6 +43,7 @@ void createtask({Map<String, dynamic>? task}) {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.put(
@@ -50,6 +51,7 @@ void createtask({Map<String, dynamic>? task}) {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
+        'X-CSRFToken': csrfToken,
         
       },
       body: jsonEncode(taskData), // Convert task data to JSON format
@@ -73,6 +75,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.delete(
@@ -80,6 +83,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
+        'X-CSRFToken': csrfToken,
         
       },
       // body: jsonEncode(taskData), // Convert task data to JSON format
@@ -110,18 +114,22 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
 
   Future<List<dynamic>> fetchData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-  final response = await http.get(
+    final token = prefs.getString('token');
+    // final csrfToken = await fetchCSRFToken();
+    // print(csrfToken);
+    final response = await http.get(
       Uri.parse("http://10.0.2.2:8000/tasks/"),
       headers: <String, String>{
         'Authorization': 'Token $token',
+        // 'X-CSRFToken': csrfToken,
+
       },
     );
     
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, parse the JSON
       List<dynamic> data = json.decode(response.body);
-      print(data);
+      // print(data);
       return data;
     } else {
       // If the server did not return a 200 OK response, throw an exception.
@@ -177,7 +185,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   void initState() {
     super.initState();
     _futureData = fetchData();
-    print(_futureData);
+    // print(_futureData);
   }
  
     

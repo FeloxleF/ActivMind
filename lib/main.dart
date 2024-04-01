@@ -30,7 +30,7 @@ Future<bool> getToken(BuildContext context) async {
       String username = userData['username'];
       globalVariables.setuser(username);
       // print('Username: $username');
-      print( globalVariables.setuser);
+      // print( globalVariables.setuser);
       return true;
     } else {
       print('API Error: ${response.statusCode}');

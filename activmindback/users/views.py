@@ -12,8 +12,6 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-
-
 from django.views import View
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
@@ -85,6 +83,12 @@ def check_token(request):
     user = request.user
     # You can now access user.username or any other user attributes
     return Response({'username': user.email}, status=200)
+
+
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({'csrfToken': token})
+
 
 # API endpoints to associate and dissociate users
 
