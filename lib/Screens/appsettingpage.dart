@@ -1,19 +1,18 @@
 import 'package:activmind_app/Screens/Calendar.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:flutter/material.dart';
 
-class HomeForm extends StatefulWidget {
-  const HomeForm({Key? key}) : super(key: key);
+class AppSettingPage extends StatefulWidget {
+  const AppSettingPage({Key? key}) : super(key: key);
 
   @override
-  State<HomeForm> createState() => _HomeFormState();
+  State<AppSettingPage> createState() => _AppSettingPageState();
 }
 
-class _HomeFormState extends State<HomeForm> {
-  int _currentIndex = 2;
+class _AppSettingPageState extends State<AppSettingPage> {
+  int _currentIndex = 4;
 
   void _onItemTapped(int index) {
     if (index == 0) {
@@ -33,7 +32,7 @@ class _HomeFormState extends State<HomeForm> {
     if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeForm()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
       return; // Return here to prevent further execution
     }
@@ -62,7 +61,7 @@ class _HomeFormState extends State<HomeForm> {
         currentPage = const Calendar();
         break;
       case 2:
-        currentPage = const HomeForm();
+        currentPage = const HomePage();
         break;
       case 4:
         currentPage = const AppSettingPage();

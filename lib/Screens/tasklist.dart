@@ -2,6 +2,8 @@ import 'dart:convert';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
@@ -174,6 +176,13 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       );
       return; // Return here to prevent further execution
     }
+    if (index == 4) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+      );
+      return; // Return here to prevent further execution
+    }
     setState(() {
       _currentIndex = index;
     });
@@ -202,8 +211,8 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       case 2:
         currentPage = const HomeForm();
         break;
-      case 3:
-        // currentPage = SettingsPage();
+      case 4:
+        currentPage = const SettingsPage();
         break;
       default:
         currentPage = const TaskList(); // Default to the first page
