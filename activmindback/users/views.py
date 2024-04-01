@@ -82,8 +82,9 @@ class AuthViewSet(ViewSet):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def check_token(request):
-    return Response({'message': 'Token is valid'}, status=200)
-
+    user = request.user
+    # You can now access user.username or any other user attributes
+    return Response({'username': user.email}, status=200)
 
 # API endpoints to associate and dissociate users
 
