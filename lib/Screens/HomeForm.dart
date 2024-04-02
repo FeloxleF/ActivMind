@@ -1,5 +1,6 @@
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:activmind_app/common/defftappages.dart';
@@ -38,6 +39,14 @@ class _HomeFormState extends State<HomeForm> {
       return; // Return here to prevent further execution
     }
 
+    if (index == 3) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LocationList()),
+      );
+      return; // Return here to prevent further execution
+    }
+
     if (index == 4) {
       Navigator.pushReplacement(
         context,
@@ -63,6 +72,9 @@ class _HomeFormState extends State<HomeForm> {
         break;
       case 2:
         currentPage = const HomeForm();
+        break;
+      case 3:
+        currentPage = const LocationList();
         break;
       case 4:
         currentPage = const AppSettingPage();
