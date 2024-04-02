@@ -8,10 +8,10 @@ import 'package:http/http.dart' as http;
 
 class MyFormDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final Map<String, dynamic>? taskData;
+  final Map<String, dynamic>? locationData;
   final bool create; 
 
-  const MyFormDialog({super.key, required this.formKey, required this.taskData, required this.create});
+  const MyFormDialog({super.key, required this.formKey, required this.locationData, required this.create});
 
   @override
   _MyFormDialogState createState() => _MyFormDialogState();
@@ -94,14 +94,14 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
     super.initState();
     // Initialize boolean variables based on taskData
     
-    titleController = TextEditingController(text: widget.taskData?["title"]);
-    descriptionController = TextEditingController(text: widget.taskData?["discription"]);
-    dodateController = TextEditingController(text: widget.taskData?["do_date"]);
-    strtimeController = TextEditingController(text: widget.taskData?["start_time"]);
-    endtimeController = TextEditingController(text: widget.taskData?["end_time"]);
-    alarm = widget.taskData?["alarm"] ?? false;
-    repetation = widget.taskData?["repetation"] ?? false;
-    done = widget.taskData?["done"] ?? false;
+    titleController = TextEditingController(text: widget.locationData?["title"]);
+    descriptionController = TextEditingController(text: widget.locationData?["discription"]);
+    dodateController = TextEditingController(text: widget.locationData?["do_date"]);
+    strtimeController = TextEditingController(text: widget.locationData?["start_time"]);
+    endtimeController = TextEditingController(text: widget.locationData?["end_time"]);
+    alarm = widget.locationData?["alarm"] ?? false;
+    repetation = widget.locationData?["repetation"] ?? false;
+    done = widget.locationData?["done"] ?? false;
   }
 
   @override
@@ -151,7 +151,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                       return null;
                     },
                     onSaved: (value) {
-                      widget.taskData?["title"] = value;
+                      widget.locationData?["title"] = value;
                     },
                   ),
                 ),
@@ -169,7 +169,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                       filled: true,
                     ),
                     onSaved: (value) {
-                      widget.taskData?["discription"] = value;
+                      widget.locationData?["discription"] = value;
                     },
                   ),
                 ),
@@ -187,7 +187,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                       filled: true,
                     ),
                     onSaved: (value) {
-                      widget.taskData?["do_date"] = value;
+                      widget.locationData?["do_date"] = value;
                     },
                   ),
                 ),
@@ -205,7 +205,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                       filled: true,
                     ),
                     onSaved: (value) {
-                      widget.taskData?["start_time"] = value;
+                      widget.locationData?["start_time"] = value;
                     },
                   ),
                 ),
@@ -224,7 +224,7 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                       filled: true,
                     ),
                     onSaved: (value) {
-                      widget.taskData?["end_time"] = value;
+                      widget.locationData?["end_time"] = value;
                     },
                   ),
                 ),
@@ -300,15 +300,15 @@ Future<void> createTask(Map<String, dynamic>? taskData) async {
                             widget.formKey.currentState!.save();
                             // Update taskData with the new values
                             
-                            widget.taskData?["alarm"] = alarm;
-                            widget.taskData?["repetation"] = repetation;
-                            widget.taskData?["done"] = done;
+                            widget.locationData?["alarm"] = alarm;
+                            widget.locationData?["repetation"] = repetation;
+                            widget.locationData?["done"] = done;
                             // Call your API to update the task 
                             if (widget.create){
-                              createTask(widget.taskData);
+                              createTask(widget.locationData);
                             }
                             else{
-                              updateTask(widget.taskData);
+                              updateTask(widget.locationData);
                               
                             }
                             Navigator.of(context).pop();

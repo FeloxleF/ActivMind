@@ -133,3 +133,8 @@ class Medicament(models.Model):
     infosupport = models.CharField(max_length=100)
 
 
+class Location(models.Model):
+    latitude = models.CharField(max_length=20)
+    longitude = models.CharField(max_length=20)
+    location_name = models.CharField(max_length=45)
+    user = models.ForeignKey(CustomUser, on_delete= models.CASCADE, related_name='location_id')
