@@ -2,8 +2,8 @@ import 'dart:convert';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
-import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
@@ -13,14 +13,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-class TaskList extends StatefulWidget {
-  const TaskList({super.key});
+class LocationList extends StatefulWidget {
+  const LocationList({super.key});
 
   @override
-  State<TaskList> createState() => _TaskListState();
+  State<LocationList> createState() => _LocationListState();
 }
 
-class _TaskListState extends State<TaskList> {
+class _LocationListState extends State<LocationList> {
   
   Map<String, dynamic>? currentTask;
   
@@ -63,7 +63,7 @@ void createtask({Map<String, dynamic>? task}) {
     if (response.statusCode == 200) {
       // Task updated successfully
       print('Task updated successfully');
-      MaterialPageRoute(builder: (context) => TaskList());
+      MaterialPageRoute(builder: (context) => const LocationList());
     } else {
       // Task update failed
       print('Failed to update task. Status code: ${response.statusCode}');
@@ -153,7 +153,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
 
   final _formKey = GlobalKey<FormState>();
   
-  int _currentIndex = 0;
+  int _currentIndex = 3;
 
   void _onItemTapped(int index) {
     if (index == 0) {
@@ -177,7 +177,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       );
       return; // Return here to prevent further execution
     }
-     if (index == 3) {
+    if (index == 3) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LocationList()),
@@ -219,7 +219,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       case 2:
         currentPage = const HomeForm();
         break;
-      case 3:
+       case 3:
         currentPage = const LocationList();
         break;
       case 4:
