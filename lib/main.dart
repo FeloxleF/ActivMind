@@ -12,20 +12,17 @@ Future<bool> getToken() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
 
-      final response = await http.get(
+    final response = await http.get(
       Uri.parse("http://10.0.2.2:8000/check_token"),
       headers: <String, String>{
         'Authorization': 'Token $token',
       },
     );
-
     if (response.statusCode == 200) {
       return true;
     } else {
       return false;
     }
-
-  
 }
 
 
