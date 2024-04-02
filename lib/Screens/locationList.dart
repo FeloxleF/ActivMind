@@ -34,28 +34,7 @@ class _LocationListState extends State<LocationList> {
     super.dispose();
   }
 
-  // Future<Position> _getCurrentLocation() async {
-  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     throw Exception('service de location est désactivé');
-  //   }
-
-  //   LocationPermission permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       throw Exception('Les autorisations de localisation sont refusées');
-  //     }
-  //   }
-
-  //   if (permission == LocationPermission.deniedForever) {
-  //     throw Exception(
-  //         'Les autorisations de localisation sont définitivement refusées');
-  //   }
-
-  //   return await Geolocator.getCurrentPosition();
-  // }
-
+ 
 
 
   Future<void> _getCurrentLocation(String locationName) async {
@@ -99,7 +78,9 @@ class _LocationListState extends State<LocationList> {
 
 
 
+  // Future<void> _openMap(String lat, String long) async {
   Future<void> _openMap(String lat, String long) async {
+
     final Uri googleURL =
         Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$long');
     if (await launchUrl(googleURL)) {
@@ -197,15 +178,7 @@ class _LocationListState extends State<LocationList> {
       if (response.statusCode == 204) {
         // Task delete successfully
         print('Task delete successfully');
-        // Fluttertoast.showToast(
-        //   msg: 'Task deleted successfully',
-        //   toastLength: Toast.LENGTH_SHORT,
-        //   gravity: ToastGravity.BOTTOM,
-        //   timeInSecForIosWeb: 1,
-        //   backgroundColor: Colors.green,
-        //   textColor: Colors.white,
-        //   fontSize: 16.0,
-        // );
+   
       } else {
         // Task update failed
         print('Failed to delete task. Status code: ${response.statusCode}');
@@ -394,10 +367,10 @@ class _LocationListState extends State<LocationList> {
                                 ],
                               ),
                               actions: <Widget>[
-                                // TextButton(
-                                //   child: const Text('Modify'),
-                                //   onPressed: () => modifyLocation(location),
-                                // ),
+                                TextButton(
+                                  child: const Text('Direction'),
+                                  onPressed: () => _openMap(location["latitude"],location["longitude"]),
+                                ),
                                 TextButton(
                                   child: const Text('Supprimer'),
                                   onPressed: () => deleteLocation(location),
