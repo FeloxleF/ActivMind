@@ -71,8 +71,8 @@ class BottomNavBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.gamepad_outlined),
-          label: 'Game',
+          icon: Icon(Icons.location_on),
+          label: 'Location',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings_outlined),

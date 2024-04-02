@@ -12,6 +12,7 @@ import 'package:activmind_app/common/csrf.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LocationList extends StatefulWidget {
   const LocationList({super.key});
@@ -21,32 +22,135 @@ class LocationList extends StatefulWidget {
 }
 
 class _LocationListState extends State<LocationList> {
-  Map<String, dynamic>? currentTask;
+  Map<String, dynamic>? currentLocation;
+  TextEditingController _locationNameController = TextEditingController();
 
-  void modifyTask(Map<String, dynamic> task) {
-    setState(() {
-      currentTask = Map.from(task); // Make a copy of the task data
-    });
-    // Open the form dialog to modify the task
-    _openFormDialog(context, _formKey, currentTask, false);
+  String locationMessage = 'votre localisation actuelle';
+  late String lat;
+  late String long;
+  @override
+  void dispose() {
+    _locationNameController.dispose();
+    super.dispose();
   }
 
-  void createtask({Map<String, dynamic>? task}) {
-    Map<String, dynamic> initialTaskData =
-        task ?? {}; // Use provided task, or empty map if task is null
-    setState(() {
-      currentTask = Map.from(initialTaskData); // Make a copy of the task data
-    });
-    // Open the form dialog to modify the task
-    _openFormDialog(context, _formKey, currentTask, true);
+  // Future<Position> _getCurrentLocation() async {
+  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     throw Exception('service de location est désactivé');
+  //   }
+
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       throw Exception('Les autorisations de localisation sont refusées');
+  //     }
+  //   }
+
+  //   if (permission == LocationPermission.deniedForever) {
+  //     throw Exception(
+  //         'Les autorisations de localisation sont définitivement refusées');
+  //   }
+
+  //   return await Geolocator.getCurrentPosition();
+  // }
+
+
+
+  Future<void> _getCurrentLocation(String locationName) async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      final Map<String, dynamic> locationData = {
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'location_name': locationName,
+      };
+
+    // Send a POST request to your server
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    const String apiUrl = 'http://10.0.2.2:8000/locations/';
+
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+
+      },
+      body: jsonEncode(locationData),
+    );
+    print(jsonEncode(locationData));
+    if (response.statusCode == 201) {
+      // Location saved successfully
+      print('Location saved successfully');
+    } else {
+      // Location save failed
+      print('Failed to save location. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    // Exception occurred while getting current location or sending request
+    print('Error: $error');
+  }
+}
+
+
+
+  Future<void> _openMap(String lat, String long) async {
+    final Uri googleURL =
+        Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$long');
+    if (await launchUrl(googleURL)) {
+      throw Exception('impossible de lancer URL de Google Map');
+    }
   }
 
-  Future<void> updateTask(Map<String, dynamic>? taskData) async {
+   void _liveLocation() {
+    LocationSettings locationSettings = const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position position) {
+      lat = position.latitude.toString();
+      long = position.longitude.toString();
+
+      setState(() {
+        locationMessage = 'Latitude : $lat, Longitude: $long';
+      });
+    });
+  }
+
+
+
+
+
+  void modifyLocation(Map<String, dynamic> location) {
+    setState(() {
+      currentLocation = Map.from(location); // Make a copy of the location data
+    });
+    // Open the form dialog to modify the location
+    _openFormDialog(context, _formKey, currentLocation, false);
+  }
+
+  void addlocation({Map<String, dynamic>? location}) {
+    Map<String, dynamic> initialLocationData =
+        location ?? {}; // Use provided location, or empty map if location is null
+    setState(() {
+      currentLocation = Map.from(initialLocationData); // Make a copy of the location data
+    });
+    // Open the form dialog to modify the location
+    _openFormDialog(context, _formKey, currentLocation, true);
+  }
+
+  Future<void> updatelocation(Map<String, dynamic>? locationData) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
       final csrfToken = await fetchCSRFToken();
-      final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/';
+      final String apiUrl = 'http://10.0.2.2:8000/locations/${locationData?["id"]}/';
 
       final response = await http.put(
         Uri.parse(apiUrl),
@@ -55,7 +159,7 @@ class _LocationListState extends State<LocationList> {
           'Authorization': 'Token $token',
           'X-CSRFToken': csrfToken,
         },
-        body: jsonEncode(taskData), // Convert task data to JSON format
+        body: jsonEncode(locationData), // Convert task data to JSON format
       );
 
       if (response.statusCode == 200) {
@@ -72,19 +176,20 @@ class _LocationListState extends State<LocationList> {
     }
   }
 
-  Future<void> deleteTask(Map<String, dynamic>? taskData) async {
+  Future<void> deleteLocation(Map<String, dynamic>? locationData) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
-      final csrfToken = await fetchCSRFToken();
-      final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/';
+      // final csrfToken = await fetchCSRFToken();
+      final String apiUrl = 'http://10.0.2.2:8000/locations/${locationData?["id"]}/';
+      print(locationData);
 
       final response = await http.delete(
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Token $token',
-          'X-CSRFToken': csrfToken,
+          // 'X-CSRFToken': csrfToken,
         },
         // body: jsonEncode(taskData), // Convert task data to JSON format
       );
@@ -117,7 +222,7 @@ class _LocationListState extends State<LocationList> {
     // final csrfToken = await fetchCSRFToken();
     // print(csrfToken);
     final response = await http.get(
-      Uri.parse("http://10.0.2.2:8000/tasks/"),
+      Uri.parse("http://10.0.2.2:8000/locations/"),
       headers: <String, String>{
         'Authorization': 'Token $token',
         // 'X-CSRFToken': csrfToken,
@@ -136,12 +241,12 @@ class _LocationListState extends State<LocationList> {
   }
 
   void _openFormDialog(BuildContext context, GlobalKey<FormState> formKey,
-      Map<String, dynamic>? taskData, bool create) {
+      Map<String, dynamic>? locationData, bool create) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return MyFormDialog(
-            formKey: formKey, taskData: taskData, create: create);
+            formKey: formKey, locationData: locationData, create: create);
       },
     );
   }
@@ -250,7 +355,7 @@ class _LocationListState extends State<LocationList> {
               child: Column(
                 children: <Widget>[
                   const Text(
-                    'Emploi du temps de la semaine',
+                    'list de location',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -262,46 +367,40 @@ class _LocationListState extends State<LocationList> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: items.length,
                     itemBuilder: (context, index) {
-                      var task = items[index];
+                      var location = items[index];
                       return Card(
                         elevation: 5,
                         margin: const EdgeInsets.all(5),
                         child: ListTile(
-                          title: Text(task["title"] ?? "No title"),
+                          title: Text(location["location_name"] ?? "No title"),
                           subtitle:
-                              Text(task["discription"] ?? "No description"),
+                              Text(location["latitude"] + " , " + location["longitude"] ?? "No description"),
+                              
                           onTap: () => showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: Text(task["title"] ?? "No title"),
+                              title: Text(location["location_name"] ?? "No title"),
                               // content: Text(task["discription"] ?? "No description"),
                               content: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                      "Description: ${task["discription"] ?? "No description"}"),
-                                  Text("Date: ${task["do_date"] ?? "No date"}"),
+                                      "latitude: ${location["latitude"] ?? "No latitude"}"),
+                                  
                                   Text(
-                                      "Start Time: ${task["start_time"] ?? "No start time"}"),
-                                  Text(
-                                      "End Time: ${task["end_time"] ?? "No end time"}"),
-                                  Text(
-                                      "Alarm: ${task["alarm"] == true ? 'Yes' : task["alarm"] == false ? 'No' : 'No'}"),
-                                  Text(
-                                      "repetation: ${task["repetation"] == true ? 'Yes' : task["repetation"] == false ? 'No' : 'No'}"),
-                                  Text(
-                                      "termine: ${task["done"] == true ? 'Yes' : task["done"] == false ? 'No' : 'No'}"),
+                                      "longitude: ${location["longitude"] ?? "No longitude"}"),
+                                  
                                 ],
                               ),
                               actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Modify'),
-                                  onPressed: () => modifyTask(task),
-                                ),
+                                // TextButton(
+                                //   child: const Text('Modify'),
+                                //   onPressed: () => modifyLocation(location),
+                                // ),
                                 TextButton(
                                   child: const Text('Supprimer'),
-                                  onPressed: () => deleteTask(task),
+                                  onPressed: () => deleteLocation(location),
                                 ),
                                 TextButton(
                                   child: const Text('ّFermer'),
@@ -314,21 +413,54 @@ class _LocationListState extends State<LocationList> {
                       );
                     },
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: TextField(
-                decoration: InputDecoration(
-                   hintText: 'Entrez nom de cette location'),)
+                //   const Padding(
+                //     padding: EdgeInsets.only(top: 8),
+                //     child: TextField(
+                // decoration: InputDecoration(
+                //    hintText: 'Entrez nom de cette location'),)
+
             
-                  ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: FloatingActionButton(
-                      onPressed: () => createtask(),
-                      // onPressed: () => showFormDialog(context, _formKey),
-                      child: const Icon(Icons.add),
+                    child: TextField(
+                      controller: _locationNameController,
+                      decoration: InputDecoration(
+                        hintText: 'Entrez le nom de cette location',
+                      ),
                     ),
                   ),
+
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 8),
+                  //   child: FloatingActionButton(
+                    // onPressed: () {
+                    //   _getCurrentLocation().then((value) {
+                    //     lat = '${value.latitude}';
+                    //     long = '${value.longitude}';
+
+                    //     setState(() {
+                    //       locationMessage = 'Latitude : $lat, Longitude: $long';
+                    //       print(locationMessage);
+                    //     });
+                    //     _liveLocation();
+                    //   }
+                    //   );
+                    // },
+
+                      // onPressed: () => _getCurrentLocation(context, _formKey),
+                      // child: const Icon(Icons.add),
+                      Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _getCurrentLocation(
+                            _locationNameController.text.trim());
+                      },
+                      child: Text('Obtenir la localisation actuelle'),
+                    ),
+                    ),
+                  
                 ],
               ),
             );
@@ -342,3 +474,20 @@ class _LocationListState extends State<LocationList> {
     );
   }
 }
+
+// Future<void> _getCurrentLocation(String locationName) async {
+//     try {
+//       Position position = await Geolocator.getCurrentPosition(
+//           desiredAccuracy: LocationAccuracy.high);
+
+//       final Map<String, dynamic> locationData = {
+//         'latitude': position.latitude,
+//         'longitude': position.longitude,
+//         'location_name': locationName,
+//       };
+
+//       // Rest of your code to send location data to server...
+//     } catch (error) {
+//       print('Error: $error');
+//     }
+//   }
