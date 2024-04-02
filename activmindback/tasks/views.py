@@ -15,7 +15,7 @@ from datetime import datetime
 class TasksViewSet(ModelViewSet):
     date = datetime.now()
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # authentication_classes = [SessionAuthentication, BasicAuthentication] 
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):

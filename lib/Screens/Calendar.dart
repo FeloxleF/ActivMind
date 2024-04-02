@@ -1,6 +1,9 @@
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
+import 'package:activmind_app/common/defftappages.dart';
 import 'package:flutter/material.dart';
 
 
@@ -187,6 +190,20 @@ class __CalendarState extends State<Calendar> {
       );
       return; // Return here to prevent further execution
     }
+    if (index == 3) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LocationList()),
+      );
+      return; // Return here to prevent further execution
+    }
+    if (index == 4) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+      );
+      return; // Return here to prevent further execution
+    }
     setState(() {
       _currentIndex = index;
     });
@@ -207,37 +224,15 @@ class __CalendarState extends State<Calendar> {
       case 2:
         currentPage = const HomeForm();
         break;
-      case 3:
-        // currentPage = SettingsPage();
+     case 3:
+        currentPage = const LocationList();
         break;
       default:
         currentPage = const TaskList(); // Default to the first page
     }
     return Scaffold(
       appBar: const MyAppBar(),
-      // appBar: AppBar(
-      //   title: const Center(
-      //     child: Text(
-      //       'Activ\'Mind',
-      //       style: TextStyle(
-      //         fontWeight: FontWeight.bold,
-      //         color: Colors.indigoAccent,
-      //         fontSize: 24,
-      //         fontFamily: 'Arial',
-      //       ),
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(Icons.alarm),
-      //     onPressed: () {},
-      //   ),
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(Icons.notifications_none),
-      //       onPressed: () {},
-      //     ),
-      //   ],
-      // ),
+      
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

@@ -21,11 +21,13 @@ from django.urls import include, path
 from django.contrib.auth.views import LoginView, LogoutView
 from tasks.urls import router as rou_tasks
 
+
 task_routeur = rou_tasks
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
+    path('locations/', include('locations.urls')),
     path('', include(task_routeur.urls)),
 ]
 

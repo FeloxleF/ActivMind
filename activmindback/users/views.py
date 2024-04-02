@@ -12,8 +12,6 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-
-
 from django.views import View
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
@@ -38,6 +36,7 @@ class RegisterUserViewSet(ModelViewSet):
             return[IsAuthenticated()]
         
     def create(self, request, *args, **kwargs):
+        print (request.data)
         user_serializer = UserSerializer(data=request.data)
         user_info_serializer = UserInfoSerializer(data=request.data)
         if user_serializer.is_valid(): 
@@ -66,7 +65,7 @@ class AuthViewSet(ViewSet):
         if user:
             login(request, user)
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+            return Response({'token': token.key, 'username': user.email}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -81,7 +80,14 @@ class AuthViewSet(ViewSet):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def check_token(request):
-    return Response({'message': 'Token is valid'}, status=200)
+    user = request.user
+    # You can now access user.username or any other user attributes
+    return Response({'username': user.email}, status=200)
+
+
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({'csrfToken': token})
 
 
 # API endpoints to associate and dissociate users
