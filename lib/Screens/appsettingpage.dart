@@ -1,4 +1,6 @@
 import 'package:activmind_app/Screens/Calendar.dart';
+import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:activmind_app/common/defftappages.dart';
@@ -32,7 +34,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const HomeForm()),
       );
       return; // Return here to prevent further execution
     }
@@ -61,7 +63,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
         currentPage = const Calendar();
         break;
       case 2:
-        currentPage = const HomePage();
+        currentPage = const HomeForm();
         break;
       case 4:
         currentPage = const AppSettingPage();
@@ -70,12 +72,31 @@ class _AppSettingPageState extends State<AppSettingPage> {
         currentPage = const TaskList(); // Default to the first page
     }
     return Scaffold(
-      appBar: const MyAppBar(), // Use MyAppBar for header
-      body: const Text('welcom to ActivMind'),
+      appBar: const MyAppBar(), 
+      
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const ProfilePage()));
+                          },
+              child: const Text('Open Profile Page'),
+            ),
+          ),
+          const SizedBox(height: 20), // Add some space between button and footer
+          const Text('Welcome to ActivMind'),
+        ],
+      ),
+      
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-      ), // Use MyFooter for footer
+      ), 
     );
   }
 }
