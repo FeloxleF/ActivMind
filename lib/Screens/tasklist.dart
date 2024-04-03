@@ -1,10 +1,14 @@
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/Screens/locationList.dart';
+import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
+import 'package:activmind_app/common/csrf.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +24,6 @@ class _TaskListState extends State<TaskList> {
   
   Map<String, dynamic>? currentTask;
   
-
   void modifyTask(Map<String, dynamic> task) {
   setState(() {
     currentTask = Map.from(task); // Make a copy of the task data
@@ -43,6 +46,7 @@ void createtask({Map<String, dynamic>? task}) {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.put(
@@ -50,6 +54,7 @@ void createtask({Map<String, dynamic>? task}) {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
+        'X-CSRFToken': csrfToken,
         
       },
       body: jsonEncode(taskData), // Convert task data to JSON format
@@ -58,6 +63,7 @@ void createtask({Map<String, dynamic>? task}) {
     if (response.statusCode == 200) {
       // Task updated successfully
       print('Task updated successfully');
+      MaterialPageRoute(builder: (context) => TaskList());
     } else {
       // Task update failed
       print('Failed to update task. Status code: ${response.statusCode}');
@@ -72,6 +78,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.delete(
@@ -79,6 +86,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
+        'X-CSRFToken': csrfToken,
         
       },
       // body: jsonEncode(taskData), // Convert task data to JSON format
@@ -87,15 +95,15 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     if (response.statusCode == 204) {
       // Task delete successfully
       print('Task delete successfully');
-      Fluttertoast.showToast(
-        msg: 'Task deleted successfully',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      // Fluttertoast.showToast(
+      //   msg: 'Task deleted successfully',
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   timeInSecForIosWeb: 1,
+      //   backgroundColor: Colors.green,
+      //   textColor: Colors.white,
+      //   fontSize: 16.0,
+      // );
     } else {
       // Task update failed
       print('Failed to delete task. Status code: ${response.statusCode}');
@@ -109,18 +117,22 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
 
   Future<List<dynamic>> fetchData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-  final response = await http.get(
+    final token = prefs.getString('token');
+    // final csrfToken = await fetchCSRFToken();
+    // print(csrfToken);
+    final response = await http.get(
       Uri.parse("http://10.0.2.2:8000/tasks/"),
       headers: <String, String>{
         'Authorization': 'Token $token',
+        // 'X-CSRFToken': csrfToken,
+
       },
     );
     
     if (response.statusCode == 200) {
       // If the server returns a 200 OK response, parse the JSON
       List<dynamic> data = json.decode(response.body);
-      print(data);
+      // print(data);
       return data;
     } else {
       // If the server did not return a 200 OK response, throw an exception.
@@ -133,7 +145,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return MyFormDialog(formKey: formKey, taskData: taskData, create: create);
+        return MyFormDialog(formKey: formKey, locationData: taskData, create: create);
       },
     );
   }
@@ -147,21 +159,35 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => TaskList()),
+        MaterialPageRoute(builder: (context) => const TaskList()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Calendar()),
+        MaterialPageRoute(builder: (context) => const Calendar()),
       );
       return; // Return here to prevent further execution
     }
     if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeForm()),
+        MaterialPageRoute(builder: (context) => const HomeForm()),
+      );
+      return; // Return here to prevent further execution
+    }
+     if (index == 3) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LocationList()),
+      );
+      return; // Return here to prevent further execution
+    }
+    if (index == 4) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AppSettingPage()),
       );
       return; // Return here to prevent further execution
     }
@@ -176,7 +202,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   void initState() {
     super.initState();
     _futureData = fetchData();
-    print(_futureData);
+    // print(_futureData);
   }
  
     
@@ -194,7 +220,10 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
         currentPage = const HomeForm();
         break;
       case 3:
-        // currentPage = SettingsPage();
+        currentPage = const LocationList();
+        break;
+      case 4:
+        currentPage = const SettingsPage();
         break;
       default:
         currentPage = const TaskList(); // Default to the first page
@@ -203,7 +232,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
 
 
   return Scaffold(
-    appBar: MyAppBar(),
+    appBar: const MyAppBar(),
     body: FutureBuilder<List<dynamic>>(
       future: _futureData,
       builder: (context, snapshot) {
@@ -237,13 +266,13 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                 
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     var task = items[index];
                     return Card(
                       elevation: 5,
-                      margin: EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(5),
                       child: ListTile(
                         title: Text(task["title"] ?? "No title"),
                         subtitle: Text(task["discription"] ?? "No description"),
@@ -269,19 +298,19 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                             actions: <Widget>[
 
                               TextButton(
-                                child: Text('Modify'),
+                                child: const Text('Modify'),
                                 onPressed: () => modifyTask(task),
                               ),
 
                               TextButton(
-                                child: Text('Supprimer'),
+                                child: const Text('Supprimer'),
                                 onPressed: () => deleteTask(task),
                               ),
 
 
 
                               TextButton(
-                                child: Text('ّFermer'),
+                                child: const Text('ّFermer'),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                             ],
@@ -296,7 +325,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
               child: FloatingActionButton(
                 onPressed: () => createtask(),
                 // onPressed: () => showFormDialog(context, _formKey),
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
               ),
             ),
                 

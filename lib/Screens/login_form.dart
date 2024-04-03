@@ -8,7 +8,8 @@ import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
+import 'package:activmind_app/common/globalvariable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
@@ -40,13 +41,21 @@ class _LoginFormState extends State<LoginForm> {
     final token = jsonDecode(response.body)['token'];
     await saveToken(token);
 
+    // Extract username from response
+    final Map<String, dynamic> userData = jsonDecode(response.body);
+    final String username = userData['username'];
+
+    // Update global variable with the username
+    var globalVariables = Provider.of<GlobalVariables>(context, listen: false);
+    globalVariables.user = username;
+    
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
     } else {
       // print('Failed to login');
       ScaffoldMessenger.of(currentContext).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please enter a valid username.'),
           backgroundColor: Colors.red,
         ),
