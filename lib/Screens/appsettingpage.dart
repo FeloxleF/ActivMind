@@ -4,7 +4,6 @@ import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
-import 'package:activmind_app/common/defftappages.dart';
 import 'package:flutter/material.dart';
 
 class AppSettingPage extends StatefulWidget {

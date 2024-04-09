@@ -13,17 +13,12 @@
 //     return Container();
 //   }
 // }
-import 'dart:convert';
-import 'package:activmind_app/Screens/login_form.dart';
 import 'package:activmind_app/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
-import 'package:activmind_app/common/csrf.dart';
-import 'package:activmind_app/common/defftappages.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
   SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
-    final String apiUrl = 'http://10.0.2.2:8000/auth/logout/'; 
+    const String apiUrl = 'http://10.0.2.2:8000/auth/logout/'; 
 
     final response = await http.post(
       Uri.parse(apiUrl),

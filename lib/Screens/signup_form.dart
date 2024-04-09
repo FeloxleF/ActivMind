@@ -33,9 +33,9 @@ class _SignupFormState extends State<SignupForm> {
     String email = _conemail.text;
     String password1= _conpassword.text;
     String password2 = _conconfpassword.text;
-    String first_name = _confirstname.text;
-    String last_name = _conlastname.text;
-    String birth_date = _conbirthdate.text;
+    String firstName = _confirstname.text;
+    String lastName = _conlastname.text;
+    String birthDate = _conbirthdate.text;
 
 
 
