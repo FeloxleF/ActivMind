@@ -61,7 +61,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     user_type = models.CharField(max_length=1, choices= type_choise, default=PATIENT)
-    associated_user = models.ManyToManyField('core.CustomUser', related_name="associated_profiles", blank=True, null=True)
+    associated_user = models.ManyToManyField('core.CustomUser', related_name="associated_profiles", blank=True)
 
     objects = CustomUserManager()
 

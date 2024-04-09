@@ -16,13 +16,12 @@ Future<bool> getToken(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
 
-      final response = await http.get(
+    final response = await http.get(
       Uri.parse("http://10.0.2.2:8000/check_token"),
       headers: <String, String>{
         'Authorization': 'Token $token',
       },
     );
-
     if (response.statusCode == 200) {
       Map<String, dynamic> userData = json.decode(response.body);
       // ignore: use_build_context_synchronously
@@ -36,8 +35,6 @@ Future<bool> getToken(BuildContext context) async {
       print('API Error: ${response.statusCode}');
       return false;
     }
-
-  
 }
 
 

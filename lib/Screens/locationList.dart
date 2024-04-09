@@ -23,7 +23,7 @@ class LocationList extends StatefulWidget {
 
 class _LocationListState extends State<LocationList> {
   Map<String, dynamic>? currentLocation;
-  TextEditingController _locationNameController = TextEditingController();
+  final TextEditingController _locationNameController = TextEditingController();
 
   String locationMessage = 'votre localisation actuelle';
   late String lat;
@@ -398,7 +398,7 @@ class _LocationListState extends State<LocationList> {
                     padding: const EdgeInsets.only(top: 8),
                     child: TextField(
                       controller: _locationNameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Entrez le nom de cette location',
                       ),
                     ),
@@ -430,7 +430,7 @@ class _LocationListState extends State<LocationList> {
                         _getCurrentLocation(
                             _locationNameController.text.trim());
                       },
-                      child: Text('Obtenir la localisation actuelle'),
+                      child: const Text('Obtenir la localisation actuelle'),
                     ),
                     ),
                   

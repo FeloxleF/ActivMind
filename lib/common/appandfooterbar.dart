@@ -23,7 +23,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       leading: IconButton(
-        icon: Icon(Icons.alarm),
+        icon: const Icon(Icons.alarm),
         onPressed: () {},
       ),
       actions: <Widget>[

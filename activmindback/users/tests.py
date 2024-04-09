@@ -65,7 +65,7 @@ class CreateUserTest(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
         response = self.client.get('/check_token/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, {'message': 'Token is valid'})
+        self.assertEqual(response.data, {'username': 'test1@example.com'})
 
     def test_check_token_unauthenticated(self):
         response = self.client.get('/check_token/')
