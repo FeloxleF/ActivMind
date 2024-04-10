@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class createTask extends StatefulWidget {
   final Map<String, dynamic>? taskData; 
-  final String operation;
+  final String? operation;
   const createTask({Key? key, this.taskData, required this.operation}) : super(key: key);
 
   @override
@@ -19,25 +19,16 @@ class createTask extends StatefulWidget {
 
 class _createTaskState extends State<createTask> {
 
-  // final _titleController = TextEditingController() ;
-  // final _descriptionController = TextEditingController() ;
-  // final dodateController = TextEditingController() ;
-  // final strtimeController = TextEditingController() ;
-  // final endtimeController = TextEditingController() ;
-  // late bool alarm = false;
-  // late bool repetation = false ;
-  // late bool done = false ;
+
   final _formKey = GlobalKey<FormState>();
-  // DateTime _selectedDate = DateTime.now();
-  // TextEditingController _dateController = TextEditingController();
-  // TimeOfDay _selectedTime = TimeOfDay.now();
-  // TextEditingController _timeController = TextEditingController();
-  // TextEditingController _timeendController = TextEditingController();
+
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _dateController;
   late final TextEditingController _timeController;
   late final TextEditingController _timeendController;
+  late final String operation;
+  late final Map<String, dynamic> taskData;
   late DateTime _selectedDate;
   late TimeOfDay _selectedTime;
   late bool alarm;
@@ -48,7 +39,7 @@ class _createTaskState extends State<createTask> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.taskData?['title'] ?? '');
-    _descriptionController = TextEditingController(text: widget.taskData?['description'] ?? '');
+    _descriptionController = TextEditingController(text: widget.taskData?['discription'] ?? '');
     _dateController = TextEditingController(text: widget.taskData?['do_date'] ?? '');
     _timeController = TextEditingController(text: widget.taskData?['start_time'] ?? '');
     _timeendController = TextEditingController(text: widget.taskData?['end_time'] ?? '');
@@ -57,6 +48,10 @@ class _createTaskState extends State<createTask> {
     alarm = widget.taskData?['alarm'] ?? false;
     repetation = widget.taskData?['repetition'] ?? false;
     done = widget.taskData?['done'] ?? false;
+    
+    operation = widget.operation ?? ''; 
+    taskData = widget.taskData ?? {};
+
   }
   
 
@@ -66,6 +61,18 @@ class _createTaskState extends State<createTask> {
       final formatter = DateFormat.Hms(); // 'H' for 24-hour format, 'm' for minutes
       return formatter.format(dt);
     }
+
+
+Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) async {
+  print(operation);
+    if (operation == 'creat'){
+      createTask();
+    }
+    else {
+      updateTask(taskData);
+    }
+  }
+
 
   Future<void> createTask() async {
     try {
@@ -94,7 +101,8 @@ class _createTaskState extends State<createTask> {
       if (form!.validate()){
         SharedPreferences prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
-        const String apiUrl = 'http://10.0.2.2:8000/tasks/'; // create the URL with your API endpoint
+        const String apiUrl = 'http://10.0.2.2:8000/tasks/'; 
+      print(apiUrl);
 
         final response = await http.post(
           Uri.parse(apiUrl),
@@ -102,7 +110,7 @@ class _createTaskState extends State<createTask> {
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token $token',
           },
-          body: jsonEncode(taskData), // Convert task data to JSON format
+          body: jsonEncode(taskData), 
         );
         print(jsonEncode(taskData));
         print(response.headers);
@@ -128,36 +136,60 @@ class _createTaskState extends State<createTask> {
     }
   }
 
-  Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) async {
-    if (operation == 'creat'){
-      createTask();
-    }
-    else {
-      updateTask(taskData);
-    }
-  }
-  Future<void> updateTask(Map<String, dynamic>? taskData) async {
+  
+  Future<void> updateTask(task) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-      final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; // Update the URL with your API endpoint
+      final form = _formKey.currentState;
+      String title = _titleController.text;
+      String description = _descriptionController.text;
+      String dodate = _dateController.text;
+      String strtime = _timeController.text;
+      String endtime = _timeendController.text;
 
-      final response = await http.put(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $token',
-        },
-        body: jsonEncode(taskData), // Convert task data to JSON format
-      );
+      
+      if(endtime==''){
+        endtime = strtime;
+      }
 
-      if (response.statusCode == 200) {
-        // Task updated successfully
-        print('Task updated successfully');
-        
-      } else {
-        // Task update failed
-        print('Failed to update task. Status code: ${response.statusCode}');
+      Map<String, dynamic> taskData = {
+        "title":title,
+        "discription":description,
+        "do_date":dodate,
+        "start_time":strtime,
+        "end_time":endtime,
+        "alarm":alarm,
+        "repetation":repetation,
+        "id":task["id"]
+      
+      }; 
+      if (form!.validate()){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token');
+        final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
+        print(apiUrl);
+        final response = await http.put(
+          Uri.parse(apiUrl),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Token $token',
+          },
+          body: jsonEncode(taskData), // Convert task data to JSON format
+        );
+
+        if (response.statusCode == 200) {
+          // Task updated successfully
+          print('Task updated successfully');
+          Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const TaskList(),
+                                        ),
+                                        (Route<dynamic> route) => false);
+          
+        } else {
+          // Task update failed
+          print('Failed to update task. Status code: ${response.statusCode}');
+        }
       }
     } catch (error) {
       // Exception occurred while updating task
@@ -370,7 +402,7 @@ class _createTaskState extends State<createTask> {
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 76, 77, 166),
                               ),
-                              onPressed: createTask, 
+                              onPressed:() => selectOperation(operation, taskData), 
                               child: const Text('soumettre'),
                             ),
                             SizedBox(width: 20),
