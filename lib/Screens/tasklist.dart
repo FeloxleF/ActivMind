@@ -153,14 +153,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     );
   }
 
-// void _openFormPage(BuildContext context, bool create) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => MyFormPage(create: create, formKey: null,),
-//     ),
-//   );
-// }
+
 
   final _formKey = GlobalKey<FormState>();
   
@@ -310,7 +303,16 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
 
                               TextButton(
                                 child: const Text('Modify'),
-                                onPressed: () => modifyTask(task),
+                                // onPressed: () => modifyTask(task),
+                                onPressed: () {
+                               Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => createTask(taskData: task, operation: 'edit',), // Pass the task data
+                              ),
+                            );
+                            },
+                               
                               ),
 
                               TextButton(
@@ -338,7 +340,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                               Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const createTask(),
+                                    builder: (_) => const createTask(operation: 'creat'),
                                   ),
                                   (Route<dynamic> route) => false);
                             },

@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class createTask extends StatefulWidget {
-  const createTask({super.key});
+  final Map<String, dynamic>? taskData; 
+  final String operation;
+  const createTask({Key? key, this.taskData, required this.operation}) : super(key: key);
 
   @override
   State<createTask> createState() => _createTaskState();
@@ -17,21 +19,45 @@ class createTask extends StatefulWidget {
 
 class _createTaskState extends State<createTask> {
 
-  final _titleController = TextEditingController() ;
-  final _descriptionController = TextEditingController() ;
-  final dodateController = TextEditingController() ;
-  final strtimeController = TextEditingController() ;
-  final endtimeController = TextEditingController() ;
-  late bool alarm = false;
-  late bool repetation = false ;
-  late bool done = false ;
+  // final _titleController = TextEditingController() ;
+  // final _descriptionController = TextEditingController() ;
+  // final dodateController = TextEditingController() ;
+  // final strtimeController = TextEditingController() ;
+  // final endtimeController = TextEditingController() ;
+  // late bool alarm = false;
+  // late bool repetation = false ;
+  // late bool done = false ;
   final _formKey = GlobalKey<FormState>();
-  DateTime _selectedDate = DateTime.now();
-  TextEditingController _dateController = TextEditingController();
-  TimeOfDay _selectedTime = TimeOfDay.now();
-  TextEditingController _timeController = TextEditingController();
-  TextEditingController _timeendController = TextEditingController();
+  // DateTime _selectedDate = DateTime.now();
+  // TextEditingController _dateController = TextEditingController();
+  // TimeOfDay _selectedTime = TimeOfDay.now();
+  // TextEditingController _timeController = TextEditingController();
+  // TextEditingController _timeendController = TextEditingController();
+  late final TextEditingController _titleController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _dateController;
+  late final TextEditingController _timeController;
+  late final TextEditingController _timeendController;
+  late DateTime _selectedDate;
+  late TimeOfDay _selectedTime;
+  late bool alarm;
+  late bool repetation;
+  late bool done;
 
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.taskData?['title'] ?? '');
+    _descriptionController = TextEditingController(text: widget.taskData?['description'] ?? '');
+    _dateController = TextEditingController(text: widget.taskData?['do_date'] ?? '');
+    _timeController = TextEditingController(text: widget.taskData?['start_time'] ?? '');
+    _timeendController = TextEditingController(text: widget.taskData?['end_time'] ?? '');
+    _selectedDate = DateTime.now();
+    _selectedTime = TimeOfDay.now();
+    alarm = widget.taskData?['alarm'] ?? false;
+    repetation = widget.taskData?['repetition'] ?? false;
+    done = widget.taskData?['done'] ?? false;
+  }
   
 
   String _formatTimeOfDay(TimeOfDay time) {
@@ -42,35 +68,81 @@ class _createTaskState extends State<createTask> {
     }
 
   Future<void> createTask() async {
-  try {
-    final form = _formKey.currentState;
-    String title = _titleController.text;
-    String description = _descriptionController.text;
-    String dodate = _dateController.text;
-    String strtime = _timeController.text;
-    String endtime = _timeendController.text;
+    try {
+      final form = _formKey.currentState;
+      String title = _titleController.text;
+      String description = _descriptionController.text;
+      String dodate = _dateController.text;
+      String strtime = _timeController.text;
+      String endtime = _timeendController.text;
 
-    
-    if(endtime==''){
-      endtime = strtime;
+      
+      if(endtime==''){
+        endtime = strtime;
+      }
+
+      Map<String, dynamic> taskData = {
+        "title":title,
+        "discription":description,
+        "do_date":dodate,
+        "start_time":strtime,
+        "end_time":endtime,
+        "alarm":alarm,
+        "repetation":repetation,
+      
+      }; 
+      if (form!.validate()){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token');
+        const String apiUrl = 'http://10.0.2.2:8000/tasks/'; // create the URL with your API endpoint
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Token $token',
+          },
+          body: jsonEncode(taskData), // Convert task data to JSON format
+        );
+        print(jsonEncode(taskData));
+        print(response.headers);
+
+        if (response.statusCode == 201 ) {
+          // Task created successfully
+          print('Task updated successfully');
+          Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const TaskList(),
+                                      ),
+                                      (Route<dynamic> route) => false);
+
+        } else {
+          // Task creation failed
+          print('Failed to create task. Status code: ${response.statusCode}');
+        }
+      }
+    } catch (error) {
+      // Exception occurred while creating task
+      print('Error creting task: $error');
     }
+  }
 
-    Map<String, dynamic> taskData = {
-      "title":title,
-      "discription":description,
-      "do_date":dodate,
-      "start_time":strtime,
-      "end_time":endtime,
-      "alarm":alarm,
-      "repetation":repetation,
-    
-    }; 
-    if (form!.validate()){
+  Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) async {
+    if (operation == 'creat'){
+      createTask();
+    }
+    else {
+      updateTask(taskData);
+    }
+  }
+  Future<void> updateTask(Map<String, dynamic>? taskData) async {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
-      const String apiUrl = 'http://10.0.2.2:8000/tasks/'; // create the URL with your API endpoint
+      final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; // Update the URL with your API endpoint
 
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -78,31 +150,24 @@ class _createTaskState extends State<createTask> {
         },
         body: jsonEncode(taskData), // Convert task data to JSON format
       );
-      print(jsonEncode(taskData));
-      print(response.headers);
 
-      if (response.statusCode == 201 ) {
-        // Task created successfully
+      if (response.statusCode == 200) {
+        // Task updated successfully
         print('Task updated successfully');
-        Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const TaskList(),
-                                    ),
-                                    (Route<dynamic> route) => false);
-
+        
       } else {
-        // Task creation failed
-        print('Failed to create task. Status code: ${response.statusCode}');
+        // Task update failed
+        print('Failed to update task. Status code: ${response.statusCode}');
       }
+    } catch (error) {
+      // Exception occurred while updating task
+      print('Error updating task: $error');
     }
-  } catch (error) {
-    // Exception occurred while creating task
-    print('Error creting task: $error');
   }
-}
 
-  @override
+
+
+ @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
