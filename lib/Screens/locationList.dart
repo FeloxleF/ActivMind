@@ -246,35 +246,35 @@ class _LocationListState extends State<LocationList> {
         context,
         MaterialPageRoute(builder: (context) => const TaskList()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 1) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Calendar()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 2) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeForm()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 3) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LocationList()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 4) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const AppSettingPage()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     setState(() {
       _currentIndex = index;
