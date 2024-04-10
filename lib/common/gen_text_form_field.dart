@@ -29,7 +29,7 @@ class GetTextFormField extends StatelessWidget {
 
 
         validator: (value) {
-          if (value==null || value.isEmpty){
+          if (value==null || value.isEmpty || value==''){
             return "Veuillez entrer $hintName";
 
           }else

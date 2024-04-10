@@ -386,14 +386,7 @@ class _LocationListState extends State<LocationList> {
                       );
                     },
                   ),
-                //   const Padding(
-                //     padding: EdgeInsets.only(top: 8),
-                //     child: TextField(
-                // decoration: InputDecoration(
-                //    hintText: 'Entrez nom de cette location'),)
 
-            
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: TextField(
@@ -404,25 +397,7 @@ class _LocationListState extends State<LocationList> {
                     ),
                   ),
 
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 8),
-                  //   child: FloatingActionButton(
-                    // onPressed: () {
-                    //   _getCurrentLocation().then((value) {
-                    //     lat = '${value.latitude}';
-                    //     long = '${value.longitude}';
-
-                    //     setState(() {
-                    //       locationMessage = 'Latitude : $lat, Longitude: $long';
-                    //       print(locationMessage);
-                    //     });
-                    //     _liveLocation();
-                    //   }
-                    //   );
-                    // },
-
-                      // onPressed: () => _getCurrentLocation(context, _formKey),
-                      // child: const Icon(Icons.add),
+                 
                       Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: ElevatedButton(
@@ -447,20 +422,3 @@ class _LocationListState extends State<LocationList> {
     );
   }
 }
-
-// Future<void> _getCurrentLocation(String locationName) async {
-//     try {
-//       Position position = await Geolocator.getCurrentPosition(
-//           desiredAccuracy: LocationAccuracy.high);
-
-//       final Map<String, dynamic> locationData = {
-//         'latitude': position.latitude,
-//         'longitude': position.longitude,
-//         'location_name': locationName,
-//       };
-
-//       // Rest of your code to send location data to server...
-//     } catch (error) {
-//       print('Error: $error');
-//     }
-//   }
