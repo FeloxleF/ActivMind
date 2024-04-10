@@ -49,7 +49,7 @@ void createtask({Map<String, dynamic>? task}) {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final csrfToken = await fetchCSRFToken();
+    // final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.put(
@@ -57,7 +57,7 @@ void createtask({Map<String, dynamic>? task}) {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
         
       },
       body: jsonEncode(taskData), // Convert task data to JSON format
@@ -81,7 +81,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final csrfToken = await fetchCSRFToken();
+    // final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.delete(
@@ -89,10 +89,10 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
         
       },
-      // body: jsonEncode(taskData), // Convert task data to JSON format
+     
     );
 
     if (response.statusCode == 204) {
@@ -104,15 +104,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                                           builder: (_) => const TaskList(),
                                         ),
                                         (Route<dynamic> route) => false);
-      // Fluttertoast.showToast(
-      //   msg: 'Task deleted successfully',
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.BOTTOM,
-      //   timeInSecForIosWeb: 1,
-      //   backgroundColor: Colors.green,
-      //   textColor: Colors.white,
-      //   fontSize: 16.0,
-      // );
+
     } else {
       // Task update failed
       print('Failed to delete task. Status code: ${response.statusCode}');
