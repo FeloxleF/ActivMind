@@ -66,6 +66,12 @@ class _LocationListState extends State<LocationList> {
     if (response.statusCode == 201) {
       // Location saved successfully
       print('Location saved successfully');
+      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const LocationList(),
+                                        ),
+                                        (Route<dynamic> route) => false);
     } else {
       // Location save failed
       print('Failed to save location. Status code: ${response.statusCode}');
@@ -178,6 +184,12 @@ class _LocationListState extends State<LocationList> {
       if (response.statusCode == 204) {
         // Task delete successfully
         print('Task delete successfully');
+        Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const LocationList(),
+                                        ),
+                                        (Route<dynamic> route) => false);
    
       } else {
         // Task update failed
@@ -234,35 +246,35 @@ class _LocationListState extends State<LocationList> {
         context,
         MaterialPageRoute(builder: (context) => const TaskList()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 1) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Calendar()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 2) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeForm()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 3) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LocationList()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     if (index == 4) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const AppSettingPage()),
       );
-      return; // Return here to prevent further execution
+      return; 
     }
     setState(() {
       _currentIndex = index;
@@ -386,14 +398,7 @@ class _LocationListState extends State<LocationList> {
                       );
                     },
                   ),
-                //   const Padding(
-                //     padding: EdgeInsets.only(top: 8),
-                //     child: TextField(
-                // decoration: InputDecoration(
-                //    hintText: 'Entrez nom de cette location'),)
 
-            
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: TextField(
@@ -404,25 +409,7 @@ class _LocationListState extends State<LocationList> {
                     ),
                   ),
 
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 8),
-                  //   child: FloatingActionButton(
-                    // onPressed: () {
-                    //   _getCurrentLocation().then((value) {
-                    //     lat = '${value.latitude}';
-                    //     long = '${value.longitude}';
-
-                    //     setState(() {
-                    //       locationMessage = 'Latitude : $lat, Longitude: $long';
-                    //       print(locationMessage);
-                    //     });
-                    //     _liveLocation();
-                    //   }
-                    //   );
-                    // },
-
-                      // onPressed: () => _getCurrentLocation(context, _formKey),
-                      // child: const Icon(Icons.add),
+                 
                       Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: ElevatedButton(
@@ -447,20 +434,3 @@ class _LocationListState extends State<LocationList> {
     );
   }
 }
-
-// Future<void> _getCurrentLocation(String locationName) async {
-//     try {
-//       Position position = await Geolocator.getCurrentPosition(
-//           desiredAccuracy: LocationAccuracy.high);
-
-//       final Map<String, dynamic> locationData = {
-//         'latitude': position.latitude,
-//         'longitude': position.longitude,
-//         'location_name': locationName,
-//       };
-
-//       // Rest of your code to send location data to server...
-//     } catch (error) {
-//       print('Error: $error');
-//     }
-//   }
