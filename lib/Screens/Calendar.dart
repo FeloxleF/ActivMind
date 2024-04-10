@@ -317,7 +317,7 @@ class __CalendarState extends State<Calendar> {
             ),
             ListView.builder(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 return Card(
