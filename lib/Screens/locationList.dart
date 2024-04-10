@@ -66,6 +66,12 @@ class _LocationListState extends State<LocationList> {
     if (response.statusCode == 201) {
       // Location saved successfully
       print('Location saved successfully');
+      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const LocationList(),
+                                        ),
+                                        (Route<dynamic> route) => false);
     } else {
       // Location save failed
       print('Failed to save location. Status code: ${response.statusCode}');
@@ -178,6 +184,12 @@ class _LocationListState extends State<LocationList> {
       if (response.statusCode == 204) {
         // Task delete successfully
         print('Task delete successfully');
+        Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const LocationList(),
+                                        ),
+                                        (Route<dynamic> route) => false);
    
       } else {
         // Task update failed
