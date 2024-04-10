@@ -1,4 +1,5 @@
 import logging
+import re
 from django.forms import ValidationError
 from rest_framework import status
 from rest_framework.response import Response
@@ -88,6 +89,25 @@ def check_token(request):
 def get_csrf_token(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
+
+
+@api_view(['POST'])
+def forgot_password(request):
+    email = request.data.get('email')
+    new_password = request.data.get('password')
+    if not email:
+        return JsonResponse({'error': 'Email and password required'}, status=400)
+    if not User.objects.filter(email=email).exists():
+        return JsonResponse({'error': 'No user found with this email'}, status=400)
+    else :
+        user = User.objects.filter(email=email).first()
+        regex = r"^[^\s]{8,}$"
+        password_regex = re.compile(regex)
+        if re.match(password_regex, new_password) is None:
+            return JsonResponse({'error': 'Password must be at least 8 characters long'}, status=400)
+        user.set_password(new_password)
+        user.save()
+        return JsonResponse({'message': 'Password reset successfully'}, status=200)
 
 
 # API endpoints to associate and dissociate users
