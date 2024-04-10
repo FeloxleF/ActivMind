@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/Screens/createtask.dart';
 import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
@@ -11,6 +12,8 @@ import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:activmind_app/common/csrf.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../common/myformpage.dart';
 
 
 class TaskList extends StatefulWidget {
@@ -150,6 +153,14 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     );
   }
 
+// void _openFormPage(BuildContext context, bool create) {
+//   Navigator.push(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => MyFormPage(create: create, formKey: null,),
+//     ),
+//   );
+// }
 
   final _formKey = GlobalKey<FormState>();
   
@@ -323,7 +334,14 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                 Padding(
               padding: const EdgeInsets.only(top: 8),
               child: FloatingActionButton(
-                onPressed: () => createtask(),
+                onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const createTask(),
+                                  ),
+                                  (Route<dynamic> route) => false);
+                            },
                 // onPressed: () => showFormDialog(context, _formKey),
                 child: const Icon(Icons.add),
               ),
