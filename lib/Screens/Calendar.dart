@@ -6,12 +6,17 @@ import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../common/csrf.dart';
 import '../common/task_class.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
-var logger = Logger();
-logger.d("Logger is working!");
+var logger = Logger(
+  level: Level.all
+);
+
+
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -20,7 +25,22 @@ class Calendar extends StatefulWidget {
   State<Calendar> createState() => __CalendarState();
 }
 
+
+
+
+
 class __CalendarState extends State<Calendar> {
+
+  DateTime selectedDay = DateTime.now();
+  String selectedDayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+  void _selectDay(DateTime day) {
+    setState(() {
+      selectedDay = day;
+      selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+    });
+    fetchTasks(selectedDayFormatted);
+  }
 
   final _formKey = GlobalKey<FormState>();
   List<Task> items = [];
@@ -37,7 +57,17 @@ class __CalendarState extends State<Calendar> {
 
   Future<void> fetchTasks(String date) async {
 
-    final response = await http.get(Uri.parse('http://10.0.0.2:8000/tasks/?date=$date'));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/tasks/?date=$date'),
+      headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+      'X-CSRFToken': csrfToken,
+      }
+    );
 
     if (response.statusCode == 200) {
       final jsonBody = jsonDecode(response.body);
@@ -47,7 +77,6 @@ class __CalendarState extends State<Calendar> {
 
       setState(() {
         items = taskList;
-        print('Items après la mise à jour: $items'); // Ajoutez cette ligne
       });
     } else {
       throw Exception('Failed to load tasks');
@@ -55,133 +84,133 @@ class __CalendarState extends State<Calendar> {
   }
 
 
-  void showFormDialog(BuildContext context, GlobalKey<FormState> formKey) {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(backgroundColor: const Color.fromARGB(255, 209, 193, 238),
-          content: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              Positioned(
-                right: -40,
-                top: -40,
-                child: InkResponse(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const CircleAvatar(
-                    backgroundColor: Colors.red,
-                    child: Icon(Icons.close),
-                  ),
-                ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'Nom de l’activité',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Color.fromARGB(255, 23, 79, 124),
-                        ),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: TextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                          hintText:
-                          'Veuillez entrer un nom de l\'activité ',
-                          border: OutlineInputBorder(),
-                          fillColor:
-                          Color.fromARGB(255, 232, 217, 255),
-                          filled: true,
-                        ),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'Description (optionnel)',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Color.fromARGB(255, 23, 79, 124),
-                        ),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: TextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText:
-                          'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
-                          border: OutlineInputBorder(),
-                          fillColor:
-                          Color.fromARGB(255, 232, 217, 255),
-                          filled: true,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, top: 10),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: const Color.fromARGB(
-                                  255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 65, 64, 155),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState!
-                                  .validate()) {
-                                _formKey.currentState!.save();
-                                Navigator.of(context).pop();
-                              }
-                            },
-                            child: const Text('Annuler'),
-                          ),
-                        ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: const Color.fromARGB(255, 44, 41, 223), backgroundColor: const Color.fromARGB(255, 255, 181, 70),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState!
-                                  .validate()) {
-                                _formKey.currentState!.save();
-                              }
-                            },
-                            child: const Text('Enregistrer'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // void showFormDialog(BuildContext context, GlobalKey<FormState> formKey) {
+  //   showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(backgroundColor: const Color.fromARGB(255, 209, 193, 238),
+  //         content: Stack(
+  //           clipBehavior: Clip.none,
+  //           children: <Widget>[
+  //             Positioned(
+  //               right: -40,
+  //               top: -40,
+  //               child: InkResponse(
+  //                 onTap: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: const CircleAvatar(
+  //                   backgroundColor: Colors.red,
+  //                   child: Icon(Icons.close),
+  //                 ),
+  //               ),
+  //             ),
+  //             Form(
+  //               key: _formKey,
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: <Widget>[
+  //                   const Padding(
+  //                     padding: EdgeInsets.all(8),
+  //                     child: Text(
+  //                       'Nom de l’activité',
+  //                       textAlign: TextAlign.left,
+  //                       style: TextStyle(
+  //                         fontSize: 16.0,
+  //                         color: Color.fromARGB(255, 23, 79, 124),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   const Padding(
+  //                     padding: EdgeInsets.all(8),
+  //                     child: TextField(
+  //                       keyboardType: TextInputType.multiline,
+  //                       maxLines: null,
+  //                       decoration: InputDecoration(
+  //                         hintText:
+  //                         'Veuillez entrer un nom de l\'activité ',
+  //                         border: OutlineInputBorder(),
+  //                         fillColor:
+  //                         Color.fromARGB(255, 232, 217, 255),
+  //                         filled: true,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   const Padding(
+  //                     padding: EdgeInsets.all(8),
+  //                     child: Text(
+  //                       'Description (optionnel)',
+  //                       textAlign: TextAlign.left,
+  //                       style: TextStyle(
+  //                         fontSize: 16.0,
+  //                         color: Color.fromARGB(255, 23, 79, 124),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   const Padding(
+  //                     padding: EdgeInsets.all(8),
+  //                     child: TextField(
+  //                       keyboardType: TextInputType.multiline,
+  //                       maxLines: 3,
+  //                       decoration: InputDecoration(
+  //                         hintText:
+  //                         'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
+  //                         border: OutlineInputBorder(),
+  //                         fillColor:
+  //                         Color.fromARGB(255, 232, 217, 255),
+  //                         filled: true,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Row(
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     children: [
+  //                       Padding(
+  //                         padding: const EdgeInsets.only(
+  //                             left: 10, top: 10),
+  //                         child: ElevatedButton(
+  //                           style: ElevatedButton.styleFrom(
+  //                             foregroundColor: const Color.fromARGB(
+  //                                 255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 65, 64, 155),
+  //                           ),
+  //                           onPressed: () {
+  //                             if (_formKey.currentState!
+  //                                 .validate()) {
+  //                               _formKey.currentState!.save();
+  //                               Navigator.of(context).pop();
+  //                             }
+  //                           },
+  //                           child: const Text('Annuler'),
+  //                         ),
+  //                       ),
+  //                       const Spacer(),
+  //                       Padding(
+  //                         padding: const EdgeInsets.only(top: 10),
+  //                         child: ElevatedButton(
+  //                           style: ElevatedButton.styleFrom(
+  //                             foregroundColor: const Color.fromARGB(255, 44, 41, 223), backgroundColor: const Color.fromARGB(255, 255, 181, 70),
+  //                           ),
+  //                           onPressed: () {
+  //                             if (_formKey.currentState!
+  //                                 .validate()) {
+  //                               _formKey.currentState!.save();
+  //                             }
+  //                           },
+  //                           child: const Text('Enregistrer'),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
 
   int _currentIndex = 1;
@@ -228,7 +257,6 @@ class __CalendarState extends State<Calendar> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     Widget currentPage;
@@ -254,9 +282,9 @@ class __CalendarState extends State<Calendar> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const Text(
-              'Emploi du temps de la semaine',
-              style: TextStyle(
+            Text(
+              'Emploi du temps du $selectedDayFormatted',
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
                 fontFamily: 'Arial',
@@ -264,23 +292,26 @@ class __CalendarState extends State<Calendar> {
             ),
             Row(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0, left: 5),
-                  child: Text(
-                    'passer à votre emploi du temps de la journée',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectDay(DateTime(selectedDay.year, selectedDay.month, selectedDay.day - 1));
+                      },
+                      child: const Text('<'),
+                    )
+
                 ),
                 const Spacer(),
                 Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 240, 169, 37),
-                    ),
-                    onPressed: () {},
-                    child: const Text('jour'),
-                  ),
+                    padding: const EdgeInsets.only(top: 8.0, left: 5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectDay(DateTime(selectedDay.year, selectedDay.month, selectedDay.day + 1));
+                      },
+                      child: const Text('>'),
+                    )
+
                 ),
               ],
             ),
@@ -291,20 +322,22 @@ class __CalendarState extends State<Calendar> {
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 5,
-                  margin: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(10),
                   child: ListTile(
+                    leading: Text(items[index].startTime.format(context)),
                     title: Text(items[index].title),
                     subtitle: Text(items[index].discription),
+                    trailing: items[index].endTime == null ? null : Text(items[index].endTime!.format(context)),
                     onTap: () => showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text(items[index].title),
                         content: Text(items[index].discription),
                         actions: <Widget>[
-                          TextButton(
-                            child: const Text('Modifier'),
-                            onPressed: () => showFormDialog(context, _formKey),
-                          ),
+                          // TextButton(
+                          //   // child: const Text('Modifier'),
+                          //   // onPressed: () => showFormDialog(context, _formKey),
+                          // ),
                           TextButton(
                             child: const Text('ّFermer'),
                             onPressed: () => Navigator.of(context).pop(),
@@ -316,13 +349,15 @@ class __CalendarState extends State<Calendar> {
                 );
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: FloatingActionButton(
-                onPressed: () => showFormDialog(context, _formKey),
-                child: const Icon(Icons.add),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 8),
+            //   child: FloatingActionButton(
+            //     onPressed: () => showFormDialog(context, _formKey),
+            //     child: const Icon(Icons.add),
+            //   ),
+
+
+            // ),
           ],
         ),
       ),
