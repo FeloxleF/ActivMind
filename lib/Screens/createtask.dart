@@ -19,20 +19,9 @@ class createTask extends StatefulWidget {
 
 class _createTaskState extends State<createTask> {
 
-  // final _titleController = TextEditingController() ;
-  // final _descriptionController = TextEditingController() ;
-  // final dodateController = TextEditingController() ;
-  // final strtimeController = TextEditingController() ;
-  // final endtimeController = TextEditingController() ;
-  // late bool alarm = false;
-  // late bool repetation = false ;
-  // late bool done = false ;
+
   final _formKey = GlobalKey<FormState>();
-  // DateTime _selectedDate = DateTime.now();
-  // TextEditingController _dateController = TextEditingController();
-  // TimeOfDay _selectedTime = TimeOfDay.now();
-  // TextEditingController _timeController = TextEditingController();
-  // TextEditingController _timeendController = TextEditingController();
+
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _dateController;
@@ -59,18 +48,8 @@ class _createTaskState extends State<createTask> {
     alarm = widget.taskData?['alarm'] ?? false;
     repetation = widget.taskData?['repetition'] ?? false;
     done = widget.taskData?['done'] ?? false;
-    // operation = widget.taskData!['operation'];
-    // taskData = {
-    //     "title":widget.taskData?['title'],
-    //     "discription":widget.taskData?['description'],
-    //     "do_date":widget.taskData?['do_date'],
-    //     "start_time":widget.taskData?['start_time'],
-    //     "end_time":widget.taskData?['end_time'],
-    //     "alarm":widget.taskData?['alarm'],
-    //     "repetation":widget.taskData?['repetition'],
-      
-    //   }; 
-    operation = widget.operation ?? ''; // Initialize operation variable
+    
+    operation = widget.operation ?? ''; 
     taskData = widget.taskData ?? {};
 
   }
@@ -131,7 +110,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token $token',
           },
-          body: jsonEncode(taskData), // Convert task data to JSON format
+          body: jsonEncode(taskData), 
         );
         print(jsonEncode(taskData));
         print(response.headers);
@@ -199,7 +178,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
 
         if (response.statusCode == 200) {
           // Task updated successfully
-          print('Task updated successfullyyyyyyy');
+          print('Task updated successfully');
           Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
