@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/Screens/createtask.dart';
 import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
@@ -11,6 +12,8 @@ import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:activmind_app/common/csrf.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../common/myformpage.dart';
 
 
 class TaskList extends StatefulWidget {
@@ -46,7 +49,7 @@ void createtask({Map<String, dynamic>? task}) {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final csrfToken = await fetchCSRFToken();
+    // final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.put(
@@ -54,7 +57,7 @@ void createtask({Map<String, dynamic>? task}) {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
         
       },
       body: jsonEncode(taskData), // Convert task data to JSON format
@@ -78,7 +81,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final csrfToken = await fetchCSRFToken();
+    // final csrfToken = await fetchCSRFToken();
     final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/'; 
 
     final response = await http.delete(
@@ -86,24 +89,22 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
         
       },
-      // body: jsonEncode(taskData), // Convert task data to JSON format
+     
     );
 
     if (response.statusCode == 204) {
       // Task delete successfully
       print('Task delete successfully');
-      // Fluttertoast.showToast(
-      //   msg: 'Task deleted successfully',
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.BOTTOM,
-      //   timeInSecForIosWeb: 1,
-      //   backgroundColor: Colors.green,
-      //   textColor: Colors.white,
-      //   fontSize: 16.0,
-      // );
+      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const TaskList(),
+                                        ),
+                                        (Route<dynamic> route) => false);
+
     } else {
       // Task update failed
       print('Failed to delete task. Status code: ${response.statusCode}');
@@ -149,6 +150,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
       },
     );
   }
+
 
 
   final _formKey = GlobalKey<FormState>();
@@ -206,30 +208,29 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
   }
  
     
-  @override
-  Widget build(BuildContext context) {
-    Widget currentPage;
-    switch (_currentIndex) {
-      case 0:
-        currentPage = const TaskList();
-        break;
-      case 1:
-        currentPage = const Calendar();
-        break;
-      case 2:
-        currentPage = const HomeForm();
-        break;
-      case 3:
-        currentPage = const LocationList();
-        break;
-      case 4:
-        currentPage = const SettingsPage();
-        break;
-      default:
-        currentPage = const TaskList(); // Default to the first page
-    }
-  
 
+@override
+Widget build(BuildContext context) {
+  Widget currentPage;
+  switch (_currentIndex) {
+    case 0:
+      currentPage = const TaskList();
+      break;
+    case 1:
+      currentPage = const Calendar();
+      break;
+    case 2:
+      currentPage = const HomeForm();
+      break;
+    case 3:
+      currentPage = const LocationList();
+      break;
+    case 4:
+      currentPage = const SettingsPage();
+      break;
+    default:
+      currentPage = const TaskList(); // Default to the first page
+  }
 
   return Scaffold(
     appBar: const MyAppBar(),
@@ -240,31 +241,30 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
           return const Center(
             child: CircularProgressIndicator(), // Show a loading indicator while waiting for data
           );
-        } else if(snapshot.data == null){
-           return const Center(
+        } else if (snapshot.data == null) {
+          return const Center(
             child: Text('Error: Failed to load data'), //// Show an error message if data is null
           );
-        
-        } else if (snapshot.hasError ) {
+        } else if (snapshot.hasError) {
           return Center(
             child: Text('Error: ${snapshot.error}'), // Show an error message if data fetching fails
           );
         } else {
           // Data fetched successfully, display it
           List<dynamic> items = snapshot.data!;
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                const Text(
-                  'Emploi du temps de la semaine',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    fontFamily: 'Arial',
-                  ),
+          return Column(
+            children: <Widget>[
+              const Text(
+                'Emploi du temps de la semaine',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontFamily: 'Arial',
                 ),
-                
-                ListView.builder(
+              ),
+
+              Expanded(
+                child: ListView.builder(
                   shrinkWrap: true,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: items.length,
@@ -280,35 +280,35 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                           context: context,
                           builder: (context) => AlertDialog(
                             title: Text(task["title"] ?? "No title"),
-                            // content: Text(task["discription"] ?? "No description"),
                             content: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text("Description: ${task["discription"] ?? "No description"}"),
-                              Text("Date: ${task["do_date"] ?? "No date"}"),
-                              Text("Start Time: ${task["start_time"] ?? "No start time"}"),
-                              Text("End Time: ${task["end_time"] ?? "No end time"}"),
-                              Text("Alarm: ${task["alarm"] == true ? 'Yes' : task["alarm"] == false ? 'No' : 'No'}"),
-                              Text("repetation: ${task["repetation"] == true ? 'Yes' : task["repetation"] == false ? 'No' : 'No'}"),
-                              Text("termine: ${task["done"] == true ? 'Yes' : task["done"] == false ? 'No' : 'No'}"),
-
-                            ],
-                          ),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text("Description: ${task["discription"] ?? "No description"}"),
+                                Text("Date: ${task["do_date"] ?? "No date"}"),
+                                Text("Start Time: ${task["start_time"] ?? "No start time"}"),
+                                Text("End Time: ${task["end_time"] ?? "No end time"}"),
+                                Text("Alarm: ${task["alarm"] == true ? 'Yes' : task["alarm"] == false ? 'No' : 'No'}"),
+                                Text("repetation: ${task["repetation"] == true ? 'Yes' : task["repetation"] == false ? 'No' : 'No'}"),
+                                Text("termine: ${task["done"] == true ? 'Yes' : task["done"] == false ? 'No' : 'No'}"),
+                              ],
+                            ),
                             actions: <Widget>[
-
                               TextButton(
                                 child: const Text('Modify'),
-                                onPressed: () => modifyTask(task),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => createTask(taskData: task, operation: 'edit',), // Pass the task data
+                                    ),
+                                  );
+                                },
                               ),
-
                               TextButton(
                                 child: const Text('Supprimer'),
                                 onPressed: () => deleteTask(task),
                               ),
-
-
-
                               TextButton(
                                 child: const Text('ّFermer'),
                                 onPressed: () => Navigator.of(context).pop(),
@@ -320,17 +320,23 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
                     );
                   },
                 ),
-                Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: FloatingActionButton(
-                onPressed: () => createtask(),
-                // onPressed: () => showFormDialog(context, _formKey),
-                child: const Icon(Icons.add),
               ),
-            ),
-                
-              ],
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const createTask(operation: 'creat'),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                ),
+              ),
+            ],
           );
         }
       },
@@ -341,4 +347,5 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     ),
   );
 }
+
 }
