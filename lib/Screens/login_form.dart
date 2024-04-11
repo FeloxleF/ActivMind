@@ -157,21 +157,6 @@ class _LoginFormState extends State<LoginForm> {
                                 color: Color.fromARGB(255, 197, 198, 243)),
                           ))),
                 ),
-                Center(
-                  child: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>  const Calendar()));
-                          },
-                          child: const Text(
-                            'calendar',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 197, 198, 243)),
-                          ))),
-                ),
               ],
             ),
           ),

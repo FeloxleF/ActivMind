@@ -1,13 +1,9 @@
 // ignore_for_file: avoid_print
-
-import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/login_form.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:provider/provider.dart';
-import 'package:activmind_app/common/globalvariable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
@@ -21,52 +17,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final _conemail = TextEditingController();
   final _conpassword = TextEditingController();
   final _conconfpassword = TextEditingController();
-
-  Future<void> login() async {
-    final response = await http.post(
-      Uri.parse("http://10.0.2.2:8000/auth/login/"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': _conemail.text,
-        'password': _conpassword.text,
-      }),
-    );
-
-    final BuildContext currentContext = context;
-    if (response.statusCode == 200) {
-      // Save token to local storage
-      final token = jsonDecode(response.body)['token'];
-      await saveToken(token);
-
-      // Extract username from response
-      final Map<String, dynamic> userData = jsonDecode(response.body);
-      final String username = userData['username'];
-
-      // Update global variable with the username
-      var globalVariables = Provider.of<GlobalVariables>(context, listen: false);
-      globalVariables.user = username;
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
-    } else {
-      // print('Failed to login');
-      ScaffoldMessenger.of(currentContext).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid username.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-
-    // if (response.statusCode == 200) {
-    //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeForm()));
-    // } else {
-    //   print('Failed to login');
-    // }
-  }
 
   Future<bool> resetPassword() async {
     if (_conpassword.text != _conconfpassword.text) {
@@ -99,7 +49,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           ),
         );
         return true;
-      } else {
+      }
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Erreur lors de la réinitialisation du mot de passe: ${response.statusCode}'),
@@ -119,8 +70,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     }
   }
 
-
-
   void onResetPasswordSuccess(BuildContext context) {
     if (mounted) {
       Navigator.pushReplacement(
@@ -130,22 +79,10 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     }
   }
 
-
-
-
-
-  Future<void> saveToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: const Text('Log In to ActivMine'),
-        // titleTextStyle: const TextStyle(
-        //     color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25.0),
         backgroundColor: const Color.fromARGB(255, 139, 140, 242),
       ),
       backgroundColor: const Color.fromARGB(255, 139, 140, 242),
