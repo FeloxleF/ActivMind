@@ -2,9 +2,6 @@
 
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/login_form.dart';
-// import 'package:activmind_app/Screens/home.dart';
-import 'package:activmind_app/Screens/signup_form.dart';
-import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
