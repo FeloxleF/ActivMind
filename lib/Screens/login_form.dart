@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:activmind_app/common/globalvariable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:activmind_app/Screens/forgot_password.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -118,8 +119,14 @@ class _LoginFormState extends State<LoginForm> {
                   hintName: 'mot de passe',
                   isObscureText: true,
                 ),
-                Container(
-                  child: const Center(child: Text('mot de pass oublié')),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ForgotPasswordForm()),
+                    );
+                  },
+                  child: Text('Mot de passe oublié ?'),
                 ),
                 Container(
                   margin: const EdgeInsets.all(30.0),
@@ -146,21 +153,6 @@ class _LoginFormState extends State<LoginForm> {
                           },
                           child: const Text(
                             'Inscrivez-vous',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 197, 198, 243)),
-                          ))),
-                ),
-                Center(
-                  child: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>  const Calendar()));
-                          },
-                          child: const Text(
-                            'calendar',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 197, 198, 243)),
                           ))),
