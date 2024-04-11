@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/login_form.dart';
 // import 'package:activmind_app/Screens/home.dart';
 import 'package:activmind_app/Screens/signup_form.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
@@ -11,18 +12,18 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:activmind_app/common/globalvariable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:activmind_app/Screens/forgot_password.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class ForgotPasswordForm extends StatefulWidget {
+  const ForgotPasswordForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<ForgotPasswordForm> createState() => _ForgotPasswordFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final _conemail = TextEditingController();
   final _conpassword = TextEditingController();
+  final _conconfpassword = TextEditingController();
 
   Future<void> login() async {
     final response = await http.post(
@@ -39,17 +40,17 @@ class _LoginFormState extends State<LoginForm> {
     final BuildContext currentContext = context;
     if (response.statusCode == 200) {
       // Save token to local storage
-    final token = jsonDecode(response.body)['token'];
-    await saveToken(token);
+      final token = jsonDecode(response.body)['token'];
+      await saveToken(token);
 
-    // Extract username from response
-    final Map<String, dynamic> userData = jsonDecode(response.body);
-    final String username = userData['username'];
+      // Extract username from response
+      final Map<String, dynamic> userData = jsonDecode(response.body);
+      final String username = userData['username'];
 
-    // Update global variable with the username
-    var globalVariables = Provider.of<GlobalVariables>(context, listen: false);
-    globalVariables.user = username;
-    
+      // Update global variable with the username
+      var globalVariables = Provider.of<GlobalVariables>(context, listen: false);
+      globalVariables.user = username;
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
@@ -70,11 +71,76 @@ class _LoginFormState extends State<LoginForm> {
     // }
   }
 
+  Future<bool> resetPassword() async {
+    if (_conpassword.text != _conconfpassword.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Les mots de passe ne correspondent pas.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.0.2.2:8000/forgot_password/"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': _conemail.text,
+          'password': _conpassword.text,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Réinitialisation du mot de passe réussie.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erreur lors de la réinitialisation du mot de passe: ${response.statusCode}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return false;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Une erreur s\'est produite. Veuillez réessayer plus tard.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+  }
+
+
+
+  void onResetPasswordSuccess(BuildContext context) {
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginForm()),
+      );
+    }
+  }
+
+
+
+
 
   Future<void> saveToken(String token) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-}
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,13 +166,15 @@ class _LoginFormState extends State<LoginForm> {
                   height: 100.0,
                   width: 100.0,
                 ),
+                const SizedBox(height: 10.0),
                 const Text(
-                  'se connecter',
+                  'Reinitialiser le mot de passe',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 25.0),
                 ),
+                const SizedBox(height: 30.0),
                 GetTextFormField(
                     controller: _conemail,
                     icon: Icons.person,
@@ -119,14 +187,22 @@ class _LoginFormState extends State<LoginForm> {
                   hintName: 'mot de passe',
                   isObscureText: true,
                 ),
+                const SizedBox(height: 5.0),
+                GetTextFormField(
+                  controller: _conconfpassword,
+                  icon: Icons.lock,
+                  hintName: 'confirmer mot de passe',
+                  isObscureText: true,
+                ),
+                const SizedBox(height: 20.0),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ForgotPasswordForm()),
+                      MaterialPageRoute(builder: (context) => const LoginForm()),
                     );
                   },
-                  child: Text('Mot de passe oublié ?'),
+                  child: const Text('Retourner à la page de connexion'),
                 ),
                 Container(
                   margin: const EdgeInsets.all(30.0),
@@ -135,42 +211,18 @@ class _LoginFormState extends State<LoginForm> {
                       color: const Color.fromARGB(255, 76, 77, 166),
                       borderRadius: BorderRadius.circular(30.0)),
                   child: TextButton(
-                      onPressed: login,
-                      child: const Text(
-                        'connexion',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 197, 198, 243)),
-                      )),
-                ),
-                Center(
-                  child: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SignupForm()));
-                          },
-                          child: const Text(
-                            'Inscrivez-vous',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 197, 198, 243)),
-                          ))),
-                ),
-                Center(
-                  child: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>  const Calendar()));
-                          },
-                          child: const Text(
-                            'calendar',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 197, 198, 243)),
-                          ))),
+                    onPressed: () async {
+                      if (await resetPassword()) {
+                        await Future.delayed(const Duration(seconds: 1)); // Attendez 1 seconde
+                        onResetPasswordSuccess(context); // Redirigez vers LoginForm uniquement si la réinitialisation du mot de passe a réussi
+                      }
+                    },
+                    child: const Text(
+                      'Reinitialiser le mot de passe',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 197, 198, 243)),
+                    ),
+                  ),
                 ),
               ],
             ),
