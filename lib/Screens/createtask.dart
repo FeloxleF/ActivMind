@@ -3,8 +3,6 @@ import 'dart:ffi';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -120,11 +118,11 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
           // Task created successfully
           print('Task updated successfully');
           Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => const TaskList(),
-                                      ),
-                                      (Route<dynamic> route) => false);
+            context,
+            MaterialPageRoute(
+              builder: (_) => const Calendar(),
+            ),
+            (Route<dynamic> route) => false);
 
         } else {
           // Task creation failed
@@ -181,11 +179,11 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
           // Task updated successfully
           print('Task updated successfully');
           Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => const TaskList(),
-                                        ),
-                                        (Route<dynamic> route) => false);
+            context,
+            MaterialPageRoute(
+              builder: (_) => const Calendar(),
+            ),
+            (Route<dynamic> route) => false);
           
         } else {
           // Task update failed
@@ -417,7 +415,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => const TaskList(),
+                                        builder: (_) => const Calendar(),
                                       ),
                                       (Route<dynamic> route) => false);
                                 

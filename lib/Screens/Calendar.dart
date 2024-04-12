@@ -40,11 +40,13 @@ class __CalendarState extends State<Calendar> {
 
   DateTime selectedDay = DateTime.now();
   String selectedDayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(DateTime.now());
 
   void _selectDay(DateTime day) {
     setState(() {
       selectedDay = day;
       selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+      selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(selectedDay);
     });
     fetchTasks(selectedDayFormatted);
   }
@@ -180,8 +182,9 @@ class __CalendarState extends State<Calendar> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            const SizedBox(height: 15),
             Text(
-              'Emploi du temps du $selectedDayFormatted',
+              'Emploi du temps du $selectedDayFormatted2',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -191,28 +194,41 @@ class __CalendarState extends State<Calendar> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 5),
+                  padding: const EdgeInsets.only(top: 15.0, left: 8, bottom: 8),
                     child: ElevatedButton(
                       onPressed: () {
                         _selectDay(DateTime(selectedDay.year, selectedDay.month, selectedDay.day - 1));
                       },
-                      child: const Text('<'),
+                      child: const Text(
+                          '<',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
                     )
 
                 ),
                 const Spacer(),
                 Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 5),
+                    padding: const EdgeInsets.only(top: 15.0, right: 8, bottom: 8),
                     child: ElevatedButton(
                       onPressed: () {
                         _selectDay(DateTime(selectedDay.year, selectedDay.month, selectedDay.day + 1));
                       },
-                      child: const Text('>'),
+                      child: const Text(
+                        '>',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
                     )
 
                 ),
               ],
             ),
+            const SizedBox(height: 15),
             ListView.builder(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
@@ -220,7 +236,7 @@ class __CalendarState extends State<Calendar> {
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 5,
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                   child: ListTile(
                     leading: Text(items[index].startTime.formatHHmm24()),
                     title: Text(items[index].title),
