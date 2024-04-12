@@ -34,6 +34,8 @@ class _createTaskState extends State<createTask> {
   late bool repetation;
   late bool done;
 
+  late final TextEditingController _dateIfCancel;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +49,8 @@ class _createTaskState extends State<createTask> {
     alarm = widget.taskData?['alarm'] ?? false;
     repetation = widget.taskData?['repetition'] ?? false;
     done = widget.taskData?['done'] ?? false;
+
+    _dateIfCancel = TextEditingController(text: widget.taskData?['do_date'] ?? '');
     
     operation = widget.operation ?? ''; 
     taskData = widget.taskData ?? {};
@@ -415,7 +419,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => Calendar(selectedDay: DateFormat('yyyy-MM-dd').parse(_dateController.text)),
+                                        builder: (_) => Calendar(selectedDay: DateFormat('yyyy-MM-dd').parse(_dateIfCancel.text)),
                                       ),
                                       (Route<dynamic> route) => false);
                                 
