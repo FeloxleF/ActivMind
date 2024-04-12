@@ -120,7 +120,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const Calendar(),
+              builder: (_) => Calendar(selectedDay: DateFormat('yyyy-MM-dd').parse(_dateController.text)),
             ),
             (Route<dynamic> route) => false);
 
@@ -181,7 +181,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (_) => const Calendar(),
+              builder: (_) => Calendar(selectedDay: DateFormat('yyyy-MM-dd').parse(_dateController.text)),
             ),
             (Route<dynamic> route) => false);
           
@@ -415,7 +415,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => const Calendar(),
+                                        builder: (_) => Calendar(selectedDay: DateFormat('yyyy-MM-dd').parse(_dateController.text)),
                                       ),
                                       (Route<dynamic> route) => false);
                                 

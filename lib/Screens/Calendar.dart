@@ -26,7 +26,9 @@ extension TimeOfDayExtension on TimeOfDay {
 }
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+
+  final DateTime? selectedDay;
+  const Calendar({super.key, this.selectedDay});
 
   @override
   State<Calendar> createState() => __CalendarState();
@@ -58,10 +60,17 @@ class __CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String formattedDate = formatter.format(now);
-    fetchTasks(formattedDate);
+    if (widget.selectedDay != null) {
+      selectedDay = widget.selectedDay!;
+      selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+      selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(selectedDay);
+      fetchTasks(selectedDayFormatted);
+    } else {
+      final DateTime now = DateTime.now();
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      final String formattedDate = formatter.format(now);
+      fetchTasks(formattedDate);
+    }
   }
 
 
