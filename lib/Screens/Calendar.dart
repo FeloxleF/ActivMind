@@ -16,10 +16,14 @@ import 'package:logger/logger.dart';
 import 'createtask.dart';
 
 var logger = Logger(
-  level: Level.all
+    level: Level.all
 );
 
-
+extension TimeOfDayExtension on TimeOfDay {
+  String formatHHmm24() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+}
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -218,10 +222,10 @@ class __CalendarState extends State<Calendar> {
                   elevation: 5,
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
-                    leading: Text(items[index].startTime.format(context)),
+                    leading: Text(items[index].startTime.formatHHmm24()),
                     title: Text(items[index].title),
                     subtitle: Text(items[index].discription),
-                    trailing: items[index].endTime == null ? null : Text(items[index].endTime!.format(context)),
+                    trailing: items[index].endTime == null ? null : Text(items[index].endTime!.formatHHmm24()),
                     onTap: () => showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -232,8 +236,8 @@ class __CalendarState extends State<Calendar> {
                           children: [
                             Text("Description: ${items[index].discription}"),
                             Text("Date: ${DateFormat('yyyy-MM-dd').format(items[index].doDate)}"),
-                            Text("Start Time: ${items[index].startTime.format(context)}"),
-                            Text("End Time: ${items[index].endTime?.format(context)}"),
+                            Text("Start Time: ${items[index].startTime.formatHHmm24()}"),
+                            Text("End Time: ${items[index].endTime?.formatHHmm24()}"),
                             Text("Alarm: ${items[index].alarm ? 'Yes' : 'No'}",),
                             Text("repetation: ${items[index].repetation ? 'Yes' : 'No'}"),
                             Text("termine: ${items[index].done ? 'Yes' : 'No'}"),
@@ -268,6 +272,21 @@ class __CalendarState extends State<Calendar> {
                   ),
                 );
               },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => createTask(taskData: {"do_date": selectedDayFormatted},operation: 'creat'),
+                    ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+                child: const Icon(Icons.add),
+              ),
             ),
 
 
