@@ -14,7 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/myformpage.dart';
-
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -24,10 +25,14 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  
+  late AudioPlayer audioPlayer;
+  Timer? timer;
+
+  int year = 0, month = 0, day = 0, hour = 0,minute = 0;
+ 
   Map<String, dynamic>? currentTask;
   
-  void modifyTask(Map<String, dynamic> task) {
+ void modifyTask(Map<String, dynamic> task) {
   setState(() {
     currentTask = Map.from(task); // Make a copy of the task data
   });
@@ -45,7 +50,7 @@ void createtask({Map<String, dynamic>? task}) {
 }
 
 
-  Future<void> updateTask(Map<String, dynamic>? taskData) async {
+Future<void> updateTask(Map<String, dynamic>? taskData) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -114,7 +119,24 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     print('Error delete task: $error');
   }
 }
+  
+List<int> parseDateTime(String dateString, String timeString) {
+  
+      List<String> dateParts = dateString.split('-');
+      List<String> timeParts = timeString.split(':');
 
+      
+      int year1 = int.parse(dateParts[0]);
+      int month1 = int.parse(dateParts[1]);
+      int day1 = int.parse(dateParts[2]);
+
+      
+      int hour1 = int.parse(timeParts[0]);
+      int minute1 = int.parse(timeParts[1]);
+
+      
+      return [year1, month1, day1, hour1, minute1];
+    }
 
   Future<List<dynamic>> fetchData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -205,12 +227,67 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     super.initState();
     _futureData = fetchData();
     // print(_futureData);
+    audioPlayer = AudioPlayer();
   }
- 
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+ void scheduleAlarm(int year, int month, int day, int hour, int minute, String title, String description) {
+    DateTime now = DateTime.now();
+    DateTime scheduledTime = DateTime(year, month, day, hour, minute);
+    Duration difference = scheduledTime.difference(now);
+
+    if (difference.isNegative) {
+      return;
+    }
+
+    timer = Timer(difference, () {
+      playMusic();
+      _showAlertDialog(context, title, description);
+    });
+  }
+   void _showAlertDialog(BuildContext context, String title, String description){
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          
+          title: Text(title),
+          
+          content: Text(description),
+          
+          actions: [
+           TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await audioPlayer.stop();
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 193, 179, 255)),
+              ),
+              child: Center(
+                child: Text('Arrêt'),
+              ),
+            ),
+
+          ],
+        );
+      },
+    );
+  }
+  Future<void> playMusic() async {
+    await audioPlayer.setSource(AssetSource('audio/alarm_audio.mp3'));
+    await audioPlayer.resume();
+  }
     
 
 @override
 Widget build(BuildContext context) {
+  
   Widget currentPage;
   switch (_currentIndex) {
     case 0:
@@ -262,14 +339,27 @@ Widget build(BuildContext context) {
                   fontFamily: 'Arial',
                 ),
               ),
-
+              
               Expanded(
+                
                 child: ListView.builder(
+                  
                   shrinkWrap: true,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     var task = items[index];
+                    String date = task["do_date"];
+                    String time = task["start_time"];
+
+                    List<int> dateTimeList = parseDateTime(date, time);
+                    year = dateTimeList[0];
+                    month = dateTimeList[1];
+                    day = dateTimeList[2];
+                    hour = dateTimeList[3];
+                    minute = dateTimeList[4];
+                    scheduleAlarm(year, month,day,hour,minute,task["title"], task["discription"]);
+
                     return Card(
                       elevation: 5,
                       margin: const EdgeInsets.all(5),
@@ -291,8 +381,10 @@ Widget build(BuildContext context) {
                                 Text("Alarm: ${task["alarm"] == true ? 'Yes' : task["alarm"] == false ? 'No' : 'No'}"),
                                 Text("repetation: ${task["repetation"] == true ? 'Yes' : task["repetation"] == false ? 'No' : 'No'}"),
                                 Text("termine: ${task["done"] == true ? 'Yes' : task["done"] == false ? 'No' : 'No'}"),
+                                
                               ],
                             ),
+                            
                             actions: <Widget>[
                               TextButton(
                                 child: const Text('Modify'),
@@ -347,5 +439,4 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }

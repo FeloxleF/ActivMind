@@ -96,7 +96,7 @@ DATABASES = {
         'NAME': 'activmind',
         'HOST': MYSQL_HOST,
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': 'pedram6403',
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET default_storage_engine=INNODB",
