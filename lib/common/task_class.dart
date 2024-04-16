@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
+extension TimeOfDayExtension on TimeOfDay {
+  String formatHHmm() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+}
+
 class Task {
   int? id;
   String title;
@@ -13,7 +20,8 @@ class Task {
   bool done;
   int userId;
 
-  Task({
+
+Task({
     this.id,
     required this.title,
     required this.discription,
@@ -25,6 +33,8 @@ class Task {
     this.done = false,
     required this.userId,
   });
+
+
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
@@ -50,10 +60,10 @@ class Task {
       'id': id,
       'title': title,
       'discription': discription,
-      'do_date': doDate.toIso8601String(),
-      'start_time': startTime.toString(),
-      'end_time': endTime?.toString(),
-      'repetition': repetation,
+      'do_date': DateFormat('yyyy-MM-dd').format(doDate),
+      'start_time': startTime.formatHHmm(),
+      'end_time': endTime?.formatHHmm(),
+      'repetation': repetation,
       'alarm': alarm,
       'done': done,
       'user': userId,

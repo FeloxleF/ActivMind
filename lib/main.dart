@@ -12,6 +12,8 @@ import 'package:activmind_app/common/globalvariable.dart';
 // import 'Screens/username.dart';
 // import 'Screens/inscrire.dart';
 // import 'Screens/adresse.dart';
+
+
 Future<bool> getToken(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');

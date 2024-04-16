@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:core';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/locationList.dart';
@@ -11,15 +13,22 @@ import '../common/csrf.dart';
 import '../common/task_class.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'createtask.dart';
 
 var logger = Logger(
-  level: Level.all
+    level: Level.all
 );
 
-
+extension TimeOfDayExtension on TimeOfDay {
+  String formatHHmm24() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+}
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+
+  final DateTime? selectedDay;
+  const Calendar({super.key, this.selectedDay});
 
   @override
   State<Calendar> createState() => __CalendarState();
@@ -33,11 +42,13 @@ class __CalendarState extends State<Calendar> {
 
   DateTime selectedDay = DateTime.now();
   String selectedDayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(DateTime.now());
 
   void _selectDay(DateTime day) {
     setState(() {
       selectedDay = day;
       selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+      selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(selectedDay);
     });
     fetchTasks(selectedDayFormatted);
   }
@@ -49,11 +60,19 @@ class __CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String formattedDate = formatter.format(now);
-    fetchTasks(formattedDate);
+    if (widget.selectedDay != null) {
+      selectedDay = widget.selectedDay!;
+      selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+      selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(selectedDay);
+      fetchTasks(selectedDayFormatted);
+    } else {
+      final DateTime now = DateTime.now();
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      final String formattedDate = formatter.format(now);
+      fetchTasks(formattedDate);
+    }
   }
+
 
   Future<void> fetchTasks(String date) async {
 
@@ -83,135 +102,24 @@ class __CalendarState extends State<Calendar> {
     }
   }
 
-
-  // void showFormDialog(BuildContext context, GlobalKey<FormState> formKey) {
-  //   showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(backgroundColor: const Color.fromARGB(255, 209, 193, 238),
-  //         content: Stack(
-  //           clipBehavior: Clip.none,
-  //           children: <Widget>[
-  //             Positioned(
-  //               right: -40,
-  //               top: -40,
-  //               child: InkResponse(
-  //                 onTap: () {
-  //                   Navigator.of(context).pop();
-  //                 },
-  //                 child: const CircleAvatar(
-  //                   backgroundColor: Colors.red,
-  //                   child: Icon(Icons.close),
-  //                 ),
-  //               ),
-  //             ),
-  //             Form(
-  //               key: _formKey,
-  //               child: Column(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: <Widget>[
-  //                   const Padding(
-  //                     padding: EdgeInsets.all(8),
-  //                     child: Text(
-  //                       'Nom de l’activité',
-  //                       textAlign: TextAlign.left,
-  //                       style: TextStyle(
-  //                         fontSize: 16.0,
-  //                         color: Color.fromARGB(255, 23, 79, 124),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   const Padding(
-  //                     padding: EdgeInsets.all(8),
-  //                     child: TextField(
-  //                       keyboardType: TextInputType.multiline,
-  //                       maxLines: null,
-  //                       decoration: InputDecoration(
-  //                         hintText:
-  //                         'Veuillez entrer un nom de l\'activité ',
-  //                         border: OutlineInputBorder(),
-  //                         fillColor:
-  //                         Color.fromARGB(255, 232, 217, 255),
-  //                         filled: true,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   const Padding(
-  //                     padding: EdgeInsets.all(8),
-  //                     child: Text(
-  //                       'Description (optionnel)',
-  //                       textAlign: TextAlign.left,
-  //                       style: TextStyle(
-  //                         fontSize: 16.0,
-  //                         color: Color.fromARGB(255, 23, 79, 124),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   const Padding(
-  //                     padding: EdgeInsets.all(8),
-  //                     child: TextField(
-  //                       keyboardType: TextInputType.multiline,
-  //                       maxLines: 3,
-  //                       decoration: InputDecoration(
-  //                         hintText:
-  //                         'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
-  //                         border: OutlineInputBorder(),
-  //                         fillColor:
-  //                         Color.fromARGB(255, 232, 217, 255),
-  //                         filled: true,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Row(
-  //                     crossAxisAlignment: CrossAxisAlignment.center,
-  //                     children: [
-  //                       Padding(
-  //                         padding: const EdgeInsets.only(
-  //                             left: 10, top: 10),
-  //                         child: ElevatedButton(
-  //                           style: ElevatedButton.styleFrom(
-  //                             foregroundColor: const Color.fromARGB(
-  //                                 255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 65, 64, 155),
-  //                           ),
-  //                           onPressed: () {
-  //                             if (_formKey.currentState!
-  //                                 .validate()) {
-  //                               _formKey.currentState!.save();
-  //                               Navigator.of(context).pop();
-  //                             }
-  //                           },
-  //                           child: const Text('Annuler'),
-  //                         ),
-  //                       ),
-  //                       const Spacer(),
-  //                       Padding(
-  //                         padding: const EdgeInsets.only(top: 10),
-  //                         child: ElevatedButton(
-  //                           style: ElevatedButton.styleFrom(
-  //                             foregroundColor: const Color.fromARGB(255, 44, 41, 223), backgroundColor: const Color.fromARGB(255, 255, 181, 70),
-  //                           ),
-  //                           onPressed: () {
-  //                             if (_formKey.currentState!
-  //                                 .validate()) {
-  //                               _formKey.currentState!.save();
-  //                             }
-  //                           },
-  //                           child: const Text('Enregistrer'),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
+  Future<void> deleteTask(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
+    final response = await http.delete(
+      Uri.parse('http://10.0.2.2:8000/tasks/$id/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+        'X-CSRFToken': csrfToken,
+      }
+    );
+    if (response.statusCode == 204) {
+      fetchTasks(selectedDayFormatted);
+    } else {
+      throw Exception('Failed to delete task');
+    }
+  }
 
   int _currentIndex = 1;
 
@@ -257,7 +165,8 @@ class __CalendarState extends State<Calendar> {
   }
 
 
-  @override
+
+@override
   Widget build(BuildContext context) {
     Widget currentPage;
     switch (_currentIndex) {
@@ -282,8 +191,9 @@ class __CalendarState extends State<Calendar> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            const SizedBox(height: 15),
             Text(
-              'Emploi du temps du $selectedDayFormatted',
+              'Emploi du temps du $selectedDayFormatted2',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -293,28 +203,41 @@ class __CalendarState extends State<Calendar> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 5),
+                  padding: const EdgeInsets.only(top: 15.0, left: 8, bottom: 8),
                     child: ElevatedButton(
                       onPressed: () {
                         _selectDay(DateTime(selectedDay.year, selectedDay.month, selectedDay.day - 1));
                       },
-                      child: const Text('<'),
+                      child: const Text(
+                          '<',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
                     )
 
                 ),
                 const Spacer(),
                 Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 5),
+                    padding: const EdgeInsets.only(top: 15.0, right: 8, bottom: 8),
                     child: ElevatedButton(
                       onPressed: () {
                         _selectDay(DateTime(selectedDay.year, selectedDay.month, selectedDay.day + 1));
                       },
-                      child: const Text('>'),
+                      child: const Text(
+                        '>',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
                     )
 
                 ),
               ],
             ),
+            const SizedBox(height: 15),
             ListView.builder(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
@@ -322,25 +245,51 @@ class __CalendarState extends State<Calendar> {
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 5,
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                   child: ListTile(
-                    leading: Text(items[index].startTime.format(context)),
+                    leading: Text(items[index].startTime.formatHHmm24()),
                     title: Text(items[index].title),
                     subtitle: Text(items[index].discription),
-                    trailing: items[index].endTime == null ? null : Text(items[index].endTime!.format(context)),
+                    trailing: items[index].endTime == null ? null : Text(items[index].endTime!.formatHHmm24()),
                     onTap: () => showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text(items[index].title),
-                        content: Text(items[index].discription),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("Description: ${items[index].discription}"),
+                            Text("Date: ${DateFormat('yyyy-MM-dd').format(items[index].doDate)}"),
+                            Text("Start Time: ${items[index].startTime.formatHHmm24()}"),
+                            Text("End Time: ${items[index].endTime?.formatHHmm24()}"),
+                            Text("Alarm: ${items[index].alarm ? 'Yes' : 'No'}",),
+                            Text("repetation: ${items[index].repetation ? 'Yes' : 'No'}"),
+                            Text("termine: ${items[index].done ? 'Yes' : 'No'}"),
+                          ],
+                        ),
                         actions: <Widget>[
-                          // TextButton(
-                          //   // child: const Text('Modifier'),
-                          //   // onPressed: () => showFormDialog(context, _formKey),
-                          // ),
                           TextButton(
                             child: const Text('ّFermer'),
                             onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          TextButton(
+                            child: const Text('Supprimer'),
+                            onPressed: () {
+                              deleteTask(items[index].id!);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Modify'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => createTask(taskData: items[index].toJson(), operation: 'edit',), // Pass the task data
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -349,12 +298,21 @@ class __CalendarState extends State<Calendar> {
                 );
               },
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 8),
-            //   child: FloatingActionButton(
-            //     onPressed: () => showFormDialog(context, _formKey),
-            //     child: const Icon(Icons.add),
-            //   ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => createTask(taskData: {"do_date": selectedDayFormatted},operation: 'creat'),
+                    ),
+                        (Route<dynamic> route) => false,
+                  );
+                },
+                child: const Icon(Icons.add),
+              ),
+            ),
 
 
             // ),
