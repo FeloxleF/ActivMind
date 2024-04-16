@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:activmind_app/Screens/Calendar.dart';
+import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -10,8 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class createTask extends StatefulWidget {
   final Map<String, dynamic>? taskData;
   final String? operation;
+  final String? sender;
 
-  const createTask({Key? key, this.taskData, required this.operation})
+  const createTask(
+      {Key? key, this.taskData, required this.operation, required this.sender})
       : super(key: key);
 
   @override
@@ -33,6 +36,7 @@ class _createTaskState extends State<createTask> {
   late bool alarm;
   late bool repetation;
   late bool done;
+  late final String sender;
 
   late final TextEditingController _dateIfCancel;
 
@@ -59,6 +63,7 @@ class _createTaskState extends State<createTask> {
         TextEditingController(text: widget.taskData?['do_date'] ?? '');
 
     operation = widget.operation ?? '';
+    sender = widget.sender ?? '';
     taskData = widget.taskData ?? {};
   }
 
@@ -71,16 +76,16 @@ class _createTaskState extends State<createTask> {
   }
 
   Future<void> selectOperation(
-      String? operation, Map<String, dynamic>? taskData) async {
+      String? operation, Map<String, dynamic>? taskData, String? sender) async {
     print(operation);
     if (operation == 'creat') {
-      createTask();
+      createTask(sender);
     } else {
-      updateTask(taskData);
+      updateTask(taskData, sender);
     }
   }
 
-  Future<void> createTask() async {
+  Future<void> createTask(sender) async {
     try {
       final form = _formKey.currentState;
       String title = _titleController.text;
@@ -121,15 +126,25 @@ class _createTaskState extends State<createTask> {
 
         if (response.statusCode == 201) {
           // Task created successfully
+          print(sender);
           print('Task updated successfully');
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (_) => Calendar(
-                    selectedDay:
-                        DateFormat('yyyy-MM-dd').parse(_dateController.text)),
-              ),
-              (Route<dynamic> route) => false);
+          if (sender == 'calendar') {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => Calendar(
+                      selectedDay:
+                          DateFormat('yyyy-MM-dd').parse(_dateController.text)),
+                ),
+                (Route<dynamic> route) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TaskList(),
+                ),
+                (Route<dynamic> route) => false);
+          }
         } else {
           // Task creation failed
           print('Failed to create task. Status code: ${response.statusCode}');
@@ -141,7 +156,7 @@ class _createTaskState extends State<createTask> {
     }
   }
 
-  Future<void> updateTask(task) async {
+  Future<void> updateTask(task, sender) async {
     try {
       final form = _formKey.currentState;
       String title = _titleController.text;
@@ -181,14 +196,23 @@ class _createTaskState extends State<createTask> {
         if (response.statusCode == 200) {
           // Task updated successfully
           print('Task updated successfully');
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (_) => Calendar(
-                    selectedDay:
-                        DateFormat('yyyy-MM-dd').parse(_dateController.text)),
-              ),
-              (Route<dynamic> route) => false);
+          if (sender == 'calendar') {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => Calendar(
+                      selectedDay:
+                          DateFormat('yyyy-MM-dd').parse(_dateController.text)),
+                ),
+                (Route<dynamic> route) => false);
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TaskList(),
+                ),
+                (Route<dynamic> route) => false);
+          }
         } else {
           // Task update failed
           print('Failed to update task. Status code: ${response.statusCode}');
@@ -367,12 +391,13 @@ class _createTaskState extends State<createTask> {
                                 });
                               },
                             ),
-                             Text("Alarm",
-                               style: GoogleFonts.nunito(
-                                 fontSize: 15,
-                                 fontWeight: FontWeight.w600,
-                               ),
-                             ),
+                            Text(
+                              "Alarm",
+                              style: GoogleFonts.nunito(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -411,11 +436,13 @@ class _createTaskState extends State<createTask> {
                                 });
                               },
                             ),
-                            Text("Terminée",
+                            Text(
+                              "Terminée",
                               style: GoogleFonts.nunito(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
-                              ),),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -430,7 +457,7 @@ class _createTaskState extends State<createTask> {
                                   const Color.fromARGB(255, 76, 77, 166),
                             ),
                             onPressed: () =>
-                                selectOperation(operation, taskData),
+                                selectOperation(operation, taskData, sender),
                             child: const Text('Enregistrer'),
                           ),
                           SizedBox(width: 20),

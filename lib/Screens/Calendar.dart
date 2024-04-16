@@ -245,8 +245,9 @@ class __CalendarState extends State<Calendar> {
             ),
             const SizedBox(height: 15),
             if (items.isEmpty)
-               Padding(
-                padding: const EdgeInsets.all(16.0), // Ajustez la valeur selon vos besoins
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                // Ajustez la valeur selon vos besoins
                 child: Center(
                   child: Text(
                     "Vous n'avez pas encore d'activitées prévues à cette date",
@@ -259,159 +260,168 @@ class __CalendarState extends State<Calendar> {
                 ),
               )
             else
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 5,
-                    margin:
-                        const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-                    child: ListTile(
-                      leading: Text(items[index].startTime.formatHHmm24(),
-                        style: GoogleFonts.nunito(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 5,
+                      margin: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 15),
+                      child: ListTile(
+                        leading: Text(
+                          items[index].startTime.formatHHmm24(),
+                          style: GoogleFonts.nunito(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      title: Text(items[index].title,
-                      textAlign: TextAlign.center,
-                        style: GoogleFonts.nunito(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text(items[index].discription,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.nunito(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      trailing: items[index].endTime == null
-                          ? null
-                          : Text(items[index].endTime!.formatHHmm24(),
-                        style: GoogleFonts.nunito(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(items[index].title,
-                            style: GoogleFonts.nunito(
-                            fontSize: 25,
+                        title: Text(
+                          items[index].title,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.nunito(
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                          content: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text("Description : ${items[index].discription}",
+                        subtitle: Text(
+                          items[index].discription,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.nunito(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: items[index].endTime == null
+                            ? null
+                            : Text(
+                                items[index].endTime!.formatHHmm24(),
                                 style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              items[index].title,
+                              style: GoogleFonts.nunito(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Description : ${items[index].discription}",
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Text(
                                   "Date : ${DateFormat('MM-dd-yyyy').format(items[index].doDate)}",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              Text(
+                                Text(
                                   "Heure de début : ${items[index].startTime.formatHHmm24()}",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              Text(
+                                Text(
                                   "Heure de fin : ${items[index].endTime?.formatHHmm24()}",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Alarme : ${items[index].alarm ? 'Oui' : 'Non'}",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                Text(
+                                  "Alarme : ${items[index].alarm ? 'Oui' : 'Non'}",
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              // Text(
-                              //     "repetition: ${items[index].repetation ? 'Oui' : 'Non'}",
-                              //   style: GoogleFonts.nunito(
-                              //     fontSize: 20,
-                              //     fontWeight: FontWeight.w400,
-                              //   ),
-                              // ),
+                                // Text(
+                                //     "repetition: ${items[index].repetation ? 'Oui' : 'Non'}",
+                                //   style: GoogleFonts.nunito(
+                                //     fontSize: 20,
+                                //     fontWeight: FontWeight.w400,
+                                //   ),
+                                // ),
 
-                              Text(
+                                Text(
                                   "terminée: ${items[index].done ? 'Oui' : 'Non'}",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
+                              ],
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(
+                                  'Supprimer',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  deleteTask(items[index].id!);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text(
+                                  'Modifier',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => createTask(
+                                        taskData: items[index].toJson(),
+                                        operation: 'edit',
+                                        sender: 'calendar',
+                                      ), // Pass the task data
+                                    ),
+                                  );
+                                },
+                              ),
+                              TextButton(
+                                child: Text(
+                                  'ّFermer',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
                               ),
                             ],
                           ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('Supprimer',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              onPressed: () {
-                                deleteTask(items[index].id!);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            TextButton(
-                              child: Text('Modifier',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => createTask(
-                                      taskData: items[index].toJson(),
-                                      operation: 'edit',
-                                    ), // Pass the task data
-                                  ),
-                                );
-                              },
-                            ),
-                            TextButton(
-                              child: Text('ّFermer',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-
-
-                          ],
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: FloatingActionButton(
@@ -420,8 +430,10 @@ class __CalendarState extends State<Calendar> {
                     context,
                     MaterialPageRoute(
                       builder: (_) => createTask(
-                          taskData: {"do_date": selectedDayFormatted},
-                          operation: 'creat'),
+                        taskData: {"do_date": selectedDayFormatted},
+                        operation: 'creat',
+                        sender: 'calendar'
+                      ),
                     ),
                     (Route<dynamic> route) => false,
                   );

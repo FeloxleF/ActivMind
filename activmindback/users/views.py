@@ -109,6 +109,22 @@ def forgot_password(request):
         user.save()
         return JsonResponse({'message': 'Password reset successfully'}, status=200)
 
+# @login_required
+@api_view(['POST'])
+def reset_password(request):
+
+    new_password = request.data.get('password')
+    user = User.objects.get(pk=request.user.id) if request.user else None
+    if not user:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+    regex = r"^[^\s]{8,}$"
+    password_regex = re.compile(regex)
+    if re.match(password_regex, new_password) is None:
+        return JsonResponse({'error': 'Password must be at least 8 characters long'}, status=400)
+    user.set_password(new_password)
+    user.save()
+    return JsonResponse({'message': 'Password reset successfully'}, status=200)
+
 
 # API endpoints to associate and dissociate users
 

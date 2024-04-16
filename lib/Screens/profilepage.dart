@@ -26,6 +26,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/globalvariable.dart';
+import 'change_password.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -150,6 +151,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 signOut(); // Call signOut function when the button is pressed
               },
               child: const Text('Se déconnecter'),
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ChangePasswordForm()));
+              },
+              child: const Text('Changer le mot de passe'),
             ),
           ),
 
