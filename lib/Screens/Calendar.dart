@@ -1,173 +1,145 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:core';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/locationList.dart';
+import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../common/csrf.dart';
+import '../common/task_class.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
+import 'createtask.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 
+var logger = Logger(level: Level.all);
+
+extension TimeOfDayExtension on TimeOfDay {
+  String formatHHmm24() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+}
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+  final DateTime? selectedDay;
+
+  const Calendar({super.key, this.selectedDay});
 
   @override
   State<Calendar> createState() => __CalendarState();
 }
 
 class __CalendarState extends State<Calendar> {
- 
-  final _formKey = GlobalKey<FormState>();
-  final List<Map<String, String>> items = [
-    {
-      "title": "médicament",
-      "description": "n'oubliez pas de prendre de médicament"
-    },
-    {
-      "title": "visit le médecin",
-      "description": "n'oubliez pas aller chez médecin"
-    },
-    {
-      "title": "médicament",
-      "description":
-          "n'oubliez pas de prendre de médicament, n'oubliez pas de prendre de médicament,n'oubliez pas de prendre de médicament,n'oubliez pas de prendre de médicament,n'oubliez pas de prendre de médicament,"
-    },
-    {
-      "title": "visit le médecin",
-      "description": "n'oubliez pas aller chez médecin"
-    },
-  ];
 
-  void showFormDialog(BuildContext context, GlobalKey<FormState> formKey) {
-  showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(backgroundColor: const Color.fromARGB(255, 209, 193, 238),
-                      content: Stack(
-                        clipBehavior: Clip.none,
-                        children: <Widget>[
-                          Positioned(
-                            right: -40,
-                            top: -40,
-                            child: InkResponse(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const CircleAvatar(
-                                backgroundColor: Colors.red,
-                                child: Icon(Icons.close),
-                              ),
-                            ),
-                          ),
-                          Form(
-                            key: _formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    'Nom de l’activité',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Color.fromARGB(255, 23, 79, 124),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: TextField(
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: null,
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          'Veuillez entrer un nom de l\'activité ',
-                                      border: OutlineInputBorder(),
-                                      fillColor:
-                                          Color.fromARGB(255, 232, 217, 255),
-                                      filled: true,
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text(
-                                    'Description (optionnel)',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Color.fromARGB(255, 23, 79, 124),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: TextField(
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 3,
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          'Si vous voulez, vous pouvez entrer votre description (c\'est optionnel)',
-                                      border: OutlineInputBorder(),
-                                      fillColor:
-                                          Color.fromARGB(255, 232, 217, 255),
-                                      filled: true,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, top: 10),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: const Color.fromARGB(
-                                              255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 65, 64, 155),
-                                        ),
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            _formKey.currentState!.save();
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                        child: const Text('Annuler'),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: const Color.fromARGB(255, 44, 41, 223), backgroundColor: const Color.fromARGB(255, 255, 181, 70),
-                                        ),
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            _formKey.currentState!.save();
-                                          }
-                                        },
-                                        child: const Text('Enregistrer'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-    },
-  );
-}
+  late AudioPlayer audioPlayer;
+  Timer? timer;
+  int year = 0, month = 0, day = 0, hour = 0,minute = 0;
 
+  DateTime selectedDay = DateTime.now();
+  String selectedDayFormatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String selectedDayFormatted2 =
+      DateFormat('MM-dd-yyyy').format(DateTime.now());
+
+  void _selectDay(DateTime day) {
+    setState(() {
+      selectedDay = day;
+      selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+      selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(selectedDay);
+    });
+    fetchTasks(selectedDayFormatted);
+  }
+
+  List<Task> items = [];
+
+  // on charge les tâches de la date du jour lors de l'initialisation du calendrier
+  @override
+  void initState() {
+    super.initState();
+     audioPlayer = AudioPlayer();
+    if (widget.selectedDay != null) {
+      selectedDay = widget.selectedDay!;
+      selectedDayFormatted = DateFormat('yyyy-MM-dd').format(selectedDay);
+      selectedDayFormatted2 = DateFormat('MM-dd-yyyy').format(selectedDay);
+      fetchTasks(selectedDayFormatted);
+    } else {
+      final DateTime now = DateTime.now();
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      final String formattedDate = formatter.format(now);
+      fetchTasks(formattedDate);
+     
+
+    }
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchTasks(String date) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/tasks/?date=$date'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token $token',
+          'X-CSRFToken': csrfToken,
+        });
+
+    if (response.statusCode == 200) {
+      final jsonBody = jsonDecode(response.body);
+      final tasks = jsonBody as List<dynamic>;
+
+      List<Task> taskList = tasks.map((task) => Task.fromJson(task)).toList();
+
+      setState(() {
+        items = taskList;
+      });
+    } else {
+      throw Exception('Failed to load tasks');
+    }
+  }
+
+  Future<void> deleteTask(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final csrfToken = await fetchCSRFToken();
+    final response = await http.delete(
+        Uri.parse('http://10.0.2.2:8000/tasks/$id/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token $token',
+          'X-CSRFToken': csrfToken,
+        });
+    if (response.statusCode == 204) {
+      fetchTasks(selectedDayFormatted);
+    } else {
+      throw Exception('Failed to delete task');
+    }
+  }
+
+  Map<String, String> weekdays = {
+    'Monday': 'Lundi',
+    'Tuesday': 'Mardi',
+    'Wednesday': 'Mercredi',
+    'Thursday': 'Jeudi',
+    'Friday': 'Vendredi',
+    'Saturday': 'Samedi',
+    'Sunday': 'Dimanche',
+  };
 
   int _currentIndex = 1;
 
- void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
@@ -199,7 +171,7 @@ class __CalendarState extends State<Calendar> {
     if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
       return; // Return here to prevent further execution
     }
@@ -207,12 +179,87 @@ class __CalendarState extends State<Calendar> {
       _currentIndex = index;
     });
   }
+  
+  List<int> parseDateTime(String dateString, String timeString) {
+      print('testttttttttttttttttt time ${timeString}');
+      List<String> dateParts = dateString.split('-');
+      timeString = timeString.replaceAll('TimeOfDay(', '');
+      timeString = timeString.replaceAll(')', '');
+      
+      List<String> timeParts = timeString.split(':');
 
- 
+      print('testttttttttttttttttt time ${timeString}');
+
+      
+      int year1 = int.parse(dateParts[2]);
+      int month1 = int.parse(dateParts[0]);
+      int day1 = int.parse(dateParts[1]);
+      print('daattttttttttttttteeee${year1}${month1}${day1}');
+      
+      int hour1 = int.parse(timeParts[0]);
+      int minute1 = int.parse(timeParts[1]);
+
+      
+      return [year1, month1, day1, hour1, minute1];
+    }
+
+    void scheduleAlarm(int year, int month, int day, int hour, int minute, String title, String description) {
+    DateTime now = DateTime.now();
+    DateTime scheduledTime = DateTime(year, month, day, hour, minute);
+    Duration difference = scheduledTime.difference(now);
+
+    if (difference.isNegative) {
+      return;
+    }
+
+    timer = Timer(difference, () {
+      playMusic();
+      _showAlertDialog(context, title, description);
+    });
+  }
+  
+  void _showAlertDialog(BuildContext context, String title, String description){
     
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          
+          title: Text(title),
+          
+          content: Text(description),
+          
+          actions: [
+           TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await audioPlayer.stop();
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 193, 179, 255)),
+              ),
+              child: Center(
+                child: Text('Arrêt'),
+              ),
+            ),
+
+          ],
+        );
+      },
+    );
+  }
+  Future<void> playMusic() async {
+    await audioPlayer.setSource(AssetSource('audio/alarm_audio.mp3'));
+    await audioPlayer.resume();
+  }
+   
+
+
+
+
   @override
   Widget build(BuildContext context) {
-     Widget currentPage;
+    Widget currentPage;
     switch (_currentIndex) {
       case 0:
         currentPage = const TaskList();
@@ -223,87 +270,284 @@ class __CalendarState extends State<Calendar> {
       case 2:
         currentPage = const HomeForm();
         break;
-     case 3:
+      case 3:
         currentPage = const LocationList();
         break;
       default:
         currentPage = const TaskList(); // Default to the first page
     }
+
     return Scaffold(
       appBar: const MyAppBar(),
-      
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(0),
         child: Column(
           children: <Widget>[
-            const Text(
-              'Emploi du temps de la semaine',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: 'Arial',
+            const SizedBox(height: 20),
+            Text(
+              'Activités du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
+              style: GoogleFonts.nunito(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              selectedDayFormatted2,
+              style: GoogleFonts.nunito(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
               ),
             ),
             Row(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0, left: 5),
-                  child: Text(
-                    'passer à votre emploi du temps de la journée',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
+                Padding(
+                    padding:
+                        const EdgeInsets.only(top: 15.0, left: 8, bottom: 8),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectDay(DateTime(selectedDay.year, selectedDay.month,
+                            selectedDay.day - 1));
+                      },
+                      child: const Text(
+                        '<',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )),
                 const Spacer(),
                 Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color.fromARGB(255, 255, 255, 255), backgroundColor: const Color.fromARGB(255, 240, 169, 37),
-                    ),
-                    onPressed: () {},
-                    child: const Text('jour'),
-                  ),
-                ),
+                    padding:
+                        const EdgeInsets.only(top: 15.0, right: 8, bottom: 8),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectDay(DateTime(selectedDay.year, selectedDay.month,
+                            selectedDay.day + 1));
+                      },
+                      child: const Text(
+                        '>',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )),
               ],
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 5,
-                  margin: const EdgeInsets.all(5),
-                  child: ListTile(
-                    title: Text(items[index]["title"]!),
-                    subtitle: Text(items[index]["description"]!),
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(items[index]["title"]!),
-                        content: Text(items[index]["description"]!),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('Modifier'),
-                            onPressed: () => showFormDialog(context, _formKey),
+            const SizedBox(height: 15),
+            if (items.isEmpty)
+               Padding(
+                padding: const EdgeInsets.all(16.0), // Ajustez la valeur selon vos besoins
+                child: Center(
+                  child: Text(
+                    "Vous n'avez pas encore d'activitées prévues à cette date",
+                    style: GoogleFonts.nunito(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            else
+            Expanded(
+              child: ListView.builder(
+                    
+                    
+
+                    
+                    
+                    
+                    
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  // String date = items[index].doDate.toString();
+                  
+                  String date = DateFormat('MM-dd-yyyy').format(items[index].doDate);
+                  // String time = Time('yyyy-mm-dd').format(items[index].doDate);
+                  
+                  String time = items[index].startTime.toString();
+                  // print('paiiiiinnnnnnnn${time}');
+                  // print('paiiiiinnnnnnnn=>${date}');
+                  List<int> dateTimeList = parseDateTime(date, time);
+                  year = dateTimeList[0];
+                  month = dateTimeList[1];
+                  day = dateTimeList[2];
+                  hour = dateTimeList[3];
+                  minute = dateTimeList[4];
+                  scheduleAlarm(year, month,day,hour,minute,items[index].title, items[index].discription);
+                  
+                  return Card(
+                    elevation: 5,
+                    margin:
+                        const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                    child: ListTile(
+                      leading: Text(items[index].startTime.formatHHmm24(),
+                        style: GoogleFonts.nunito(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      title: Text(items[index].title,
+                      textAlign: TextAlign.center,
+                        style: GoogleFonts.nunito(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(items[index].discription,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.nunito(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      trailing: items[index].endTime == null
+                          ? null
+                          : Text(items[index].endTime!.formatHHmm24(),
+                        style: GoogleFonts.nunito(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(items[index].title,
+                            style: GoogleFonts.nunito(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
                           ),
-                          TextButton(
-                            child: const Text('ّFermer'),
-                            onPressed: () => Navigator.of(context).pop(),
+                        ),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Description : ${items[index].discription}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                  "Date : ${DateFormat('MM-dd-yyyy').format(items[index].doDate)}",
+                                  // "Date : ${DateFormat('yyyy-mm-dd').format(items[index].doDate)}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                  "Heure de début : ${items[index].startTime.formatHHmm24()}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                  "Heure de fin : ${items[index].endTime?.formatHHmm24()}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                "Alarme : ${items[index].alarm ? 'Oui' : 'Non'}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                  "repetition: ${items[index].repetation ? 'Oui' : 'Non'}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+
+                              Text(
+                                  "terminée: ${items[index].done ? 'Oui' : 'Non'}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('Supprimer',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                deleteTask(items[index].id!);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text('Modifier',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => createTask(
+                                      taskData: items[index].toJson(),
+                                      operation: 'edit',
+                                    ), // Pass the task data
+                                  ),
+                                );
+                              },
+                            ),
+                            TextButton(
+                              child: Text('ّFermer',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+
+
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: FloatingActionButton(
-                onPressed: () => showFormDialog(context, _formKey),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => createTask(
+                          taskData: {"do_date": selectedDayFormatted},
+                          operation: 'creat'),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                },
                 child: const Icon(Icons.add),
               ),
             ),
+
+            // ),
           ],
         ),
       ),
@@ -343,5 +587,4 @@ class __CalendarState extends State<Calendar> {
       // ),
     );
   }
-  
 }

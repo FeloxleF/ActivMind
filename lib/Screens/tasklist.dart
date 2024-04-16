@@ -1,21 +1,22 @@
 import 'dart:convert';
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/createtask.dart';
 import 'package:activmind_app/Screens/locationList.dart';
+import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
-import 'package:activmind_app/common/csrf.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/myformpage.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+
+
 
 class TaskList extends StatefulWidget {
   const TaskList({super.key});
@@ -32,22 +33,22 @@ class _TaskListState extends State<TaskList> {
  
   Map<String, dynamic>? currentTask;
   
- void modifyTask(Map<String, dynamic> task) {
-  setState(() {
-    currentTask = Map.from(task); // Make a copy of the task data
-  });
-  // Open the form dialog to modify the task
-  _openFormDialog(context, _formKey, currentTask,false);
-}
+  void modifyTask(Map<String, dynamic> task) {
+    setState(() {
+      currentTask = Map.from(task); // Make a copy of the task data
+    });
+    // Open the form dialog to modify the task
+    _openFormDialog(context, _formKey, currentTask,false);
+  }
 
-void createtask({Map<String, dynamic>? task}) {
-  Map<String, dynamic> initialTaskData = task ?? {}; // Use provided task, or empty map if task is null
-  setState(() {
-    currentTask = Map.from(initialTaskData); // Make a copy of the task data
-  });
-  // Open the form dialog to modify the task
-  _openFormDialog(context, _formKey, currentTask,true);
-}
+  void createtask({Map<String, dynamic>? task}) {
+    Map<String, dynamic> initialTaskData = task ?? {}; // Use provided task, or empty map if task is null
+    setState(() {
+      currentTask = Map.from(initialTaskData); // Make a copy of the task data
+    });
+    // Open the form dialog to modify the task
+    _openFormDialog(context, _formKey, currentTask,true);
+  }
 
 
 Future<void> updateTask(Map<String, dynamic>? taskData) async {
@@ -211,7 +212,7 @@ List<int> parseDateTime(String dateString, String timeString) {
     if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
       return; // Return here to prevent further execution
     }

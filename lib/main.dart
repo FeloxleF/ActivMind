@@ -1,7 +1,7 @@
 //import 'package:activmind_app/Screens/inscrire.dart';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'Screens/homeform.dart';
@@ -12,6 +12,8 @@ import 'package:activmind_app/common/globalvariable.dart';
 // import 'Screens/username.dart';
 // import 'Screens/inscrire.dart';
 // import 'Screens/adresse.dart';
+
+
 Future<bool> getToken(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
@@ -78,9 +80,12 @@ class MyApp extends StatelessWidget {
             );
           } else {
             // Token is invalid or not present, navigate to login page
-            return const MaterialApp(
+            return MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: LoginForm(),
+              theme: ThemeData(
+                textTheme: GoogleFonts.nunitoTextTheme(), // Ajoutez cette ligne
+              ),
+              home: const LoginForm(),
             );
           }
         }

@@ -5,6 +5,10 @@ import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../common/globalvariable.dart';
 
 class AppSettingPage extends StatefulWidget {
   const AppSettingPage({Key? key}) : super(key: key);
@@ -38,7 +42,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
       );
       return; // Return here to prevent further execution
     }
-     if (index == 3) {
+    if (index == 3) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LocationList()),
@@ -49,7 +53,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
       return; // Return here to prevent further execution
     }
@@ -61,7 +65,8 @@ class _AppSettingPageState extends State<AppSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-     final Widget currentPage;
+    var globalVariables = Provider.of<GlobalVariables>(context);
+    final Widget currentPage;
     switch (_currentIndex) {
       case 0:
         currentPage = const TaskList();
@@ -82,31 +87,34 @@ class _AppSettingPageState extends State<AppSettingPage> {
         currentPage = const TaskList(); // Default to the first page
     }
     return Scaffold(
-      appBar: const MyAppBar(), 
-      
+      appBar: const MyAppBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
             child: ElevatedButton(
               onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const ProfilePage()));
-                          },
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const ProfilePage()));
+              },
               child: const Text('Open Profile Page'),
             ),
           ),
-          const SizedBox(height: 20), // Add some space between button and footer
-          const Text('Welcome to ActivMind'),
+          const SizedBox(height: 20),
+          // Add some space between button and footer
+          Text('Vous êtes sur le profil de ${globalVariables.user ?? ''}',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunito(
+              fontSize: 22,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         ],
       ),
-      
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-      ), 
+      ),
     );
   }
 }
