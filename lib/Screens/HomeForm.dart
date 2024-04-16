@@ -1,5 +1,4 @@
 import 'package:activmind_app/Screens/Calendar.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';

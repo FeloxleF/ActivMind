@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:activmind_app/common/globalvariable.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var globalVariables = Provider.of<GlobalVariables>(context);
 
     return AppBar(
       title: Center(

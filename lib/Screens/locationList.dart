@@ -4,7 +4,6 @@ import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';

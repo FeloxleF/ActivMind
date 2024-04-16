@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';

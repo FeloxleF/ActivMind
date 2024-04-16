@@ -1,8 +1,6 @@
 import 'dart:convert';
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/createtask.dart';
 import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/profilepage.dart';
