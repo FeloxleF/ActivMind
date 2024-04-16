@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,7 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class createTask extends StatefulWidget {
   final Map<String, dynamic>? taskData; 
   final String? operation;
-  const createTask({Key? key, this.taskData, required this.operation}) : super(key: key);
+  final String? sender;
+
+  const createTask({Key? key, this.taskData, required this.operation, required this.sender}) : super(key: key);
 
   @override
   State<createTask> createState() => _createTaskState();
@@ -28,6 +31,8 @@ class _createTaskState extends State<createTask> {
   late final TextEditingController _timeController;
   late final TextEditingController _timeendController;
   late final String operation;
+  late final String sender;
+
   late final Map<String, dynamic> taskData;
   late DateTime _selectedDate;
   late TimeOfDay _selectedTime;
@@ -50,6 +55,8 @@ class _createTaskState extends State<createTask> {
     done = widget.taskData?['done'] ?? false;
     
     operation = widget.operation ?? ''; 
+    sender = widget.sender ?? ''; 
+
     taskData = widget.taskData ?? {};
 
   }
@@ -63,18 +70,18 @@ class _createTaskState extends State<createTask> {
     }
 
 
-Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) async {
-  print(operation);
+Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData, String?sender) async {
+  print(taskData);
     if (operation == 'creat'){
-      createTask();
+      createTask(sender);
     }
     else {
-      updateTask(taskData);
+      updateTask(taskData, sender);
     }
   }
 
 
-  Future<void> createTask() async {
+  Future<void> createTask(String?sender) async {
     try {
       final form = _formKey.currentState;
       String title = _titleController.text;
@@ -99,6 +106,8 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
       
       }; 
       if (form!.validate()){
+       
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
         const String apiUrl = 'http://10.0.2.2:8000/tasks/'; 
@@ -118,12 +127,22 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
         if (response.statusCode == 201 ) {
           // Task created successfully
           print('Task updated successfully');
-          Navigator.pushAndRemoveUntil(
+          if(sender == 'tasklist'){
+            Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                         builder: (_) => const TaskList(),
                                       ),
                                       (Route<dynamic> route) => false);
+          }
+          else if(sender == 'calendar'){
+            Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const Calendar(),
+                                      ),
+                                      (Route<dynamic> route) => false);
+          }
 
         } else {
           // Task creation failed
@@ -137,7 +156,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
   }
 
   
-  Future<void> updateTask(task) async {
+  Future<void> updateTask(task, String?sender) async {
     try {
       final form = _formKey.currentState;
       String title = _titleController.text;
@@ -179,13 +198,23 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
         if (response.statusCode == 200) {
           // Task updated successfully
           print('Task updated successfully');
-          Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => const TaskList(),
-                                        ),
-                                        (Route<dynamic> route) => false);
-          
+          print(sender);
+                    if(sender == 'tasklist'){
+            Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const TaskList(),
+                                      ),
+                                      (Route<dynamic> route) => false);
+          }
+          else if(sender == 'calendar'){
+            Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const Calendar(),
+                                      ),
+                                      (Route<dynamic> route) => false);
+          }
         } else {
           // Task update failed
           print('Failed to update task. Status code: ${response.statusCode}');
@@ -402,7 +431,7 @@ Future<void> selectOperation(String?operation, Map<String, dynamic>? taskData) a
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 76, 77, 166),
                               ),
-                              onPressed:() => selectOperation(operation, taskData), 
+                              onPressed:() => selectOperation(operation, taskData, sender), 
                               child: const Text('soumettre'),
                             ),
                             SizedBox(width: 20),

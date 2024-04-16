@@ -7,7 +7,7 @@ class Task {
   String discription;
   DateTime doDate;
   TimeOfDay startTime;
-  TimeOfDay? endTime;
+  TimeOfDay endTime;
   bool repetation;
   bool alarm;
   bool done;
@@ -19,7 +19,7 @@ class Task {
     required this.discription,
     required this.doDate,
     required this.startTime,
-    this.endTime,
+    required this.endTime,
     this.repetation = false,
     this.alarm = false,
     this.done = false,
@@ -52,7 +52,7 @@ class Task {
       'discription': discription,
       'do_date': doDate.toIso8601String(),
       'start_time': startTime.toString(),
-      'end_time': endTime?.toString(),
+      'end_time': endTime.toString(),
       'repetition': repetation,
       'alarm': alarm,
       'done': done,
