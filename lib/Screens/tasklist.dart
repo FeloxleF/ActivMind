@@ -253,14 +253,16 @@ Widget build(BuildContext context) {
           List<dynamic> items = snapshot.data!;
           return Column(
             children: <Widget>[
+              const SizedBox(height: 20),
               const Text(
-                'Emploi du temps de la semaine',
+                'Liste des activitées',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                   fontFamily: 'Arial',
                 ),
               ),
+              const SizedBox(height: 30),
 
               Expanded(
                 child: ListView.builder(
