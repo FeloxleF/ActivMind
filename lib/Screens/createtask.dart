@@ -167,7 +167,7 @@ class _createTaskState extends State<createTask> {
       if (form!.validate()) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
-        final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/';
+        final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData["id"]}/';
         print(apiUrl);
         final response = await http.put(
           Uri.parse(apiUrl),

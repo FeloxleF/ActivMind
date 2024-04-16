@@ -121,6 +121,16 @@ class __CalendarState extends State<Calendar> {
     }
   }
 
+  Map<String, String> weekdays = {
+    'Monday': 'Lundi',
+    'Tuesday': 'Mardi',
+    'Wednesday': 'Mercredi',
+    'Thursday': 'Jeudi',
+    'Friday': 'Vendredi',
+    'Saturday': 'Samedi',
+    'Sunday': 'Dimanche',
+  };
+
   int _currentIndex = 1;
 
   void _onItemTapped(int index) {
@@ -185,6 +195,7 @@ class __CalendarState extends State<Calendar> {
       default:
         currentPage = const TaskList(); // Default to the first page
     }
+
     return Scaffold(
       appBar: const MyAppBar(),
 
@@ -193,7 +204,16 @@ class __CalendarState extends State<Calendar> {
           children: <Widget>[
             const SizedBox(height: 15),
             Text(
-              'Emploi du temps du $selectedDayFormatted2',
+              'Emploie du temps du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'Nunito',
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              selectedDayFormatted2,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
