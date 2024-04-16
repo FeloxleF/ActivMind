@@ -9,6 +9,7 @@ import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:activmind_app/common/csrf.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
@@ -339,12 +340,12 @@ class _LocationListState extends State<LocationList> {
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  const Text(
-                    'list de location',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontFamily: 'Arial',
+                  const SizedBox(height: 20),
+                  Text(
+                    'Liste des localisations',
+                    style: GoogleFonts.nunito(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   ListView.builder(
@@ -400,11 +401,11 @@ class _LocationListState extends State<LocationList> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.all(20),
                     child: TextField(
                       controller: _locationNameController,
                       decoration: const InputDecoration(
-                        hintText: 'Entrez le nom de cette location',
+                        hintText: 'Nom de la localisation',
                       ),
                     ),
                   ),

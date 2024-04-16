@@ -4,6 +4,7 @@ import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeForm extends StatefulWidget {
   const HomeForm({Key? key}) : super(key: key);
@@ -61,7 +62,7 @@ class _HomeFormState extends State<HomeForm> {
 
   @override
   Widget build(BuildContext context) {
-     final Widget currentPage;
+    final Widget currentPage;
     switch (_currentIndex) {
       case 0:
         currentPage = const TaskList();
@@ -83,7 +84,20 @@ class _HomeFormState extends State<HomeForm> {
     }
     return Scaffold(
       appBar: const MyAppBar(), // Use MyAppBar for header
-      body: const Text('welcom to ActivMind'),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(children: <Widget>[
+          const SizedBox(height: 20),
+          Center(
+              child: Text(
+            "welcome to Activ'Mind",
+            style: GoogleFonts.nunito(
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+            ),
+          )),
+        ]),
+      ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,

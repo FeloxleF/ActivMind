@@ -190,11 +190,11 @@ class __CalendarState extends State<Calendar> {
         padding: const EdgeInsets.all(0),
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             Text(
               'Activités du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
               style: GoogleFonts.nunito(
-                fontSize: 30,
+                fontSize: 27,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -202,7 +202,7 @@ class __CalendarState extends State<Calendar> {
             Text(
               selectedDayFormatted2,
               style: GoogleFonts.nunito(
-                fontSize: 25,
+                fontSize: 22,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -270,12 +270,34 @@ class __CalendarState extends State<Calendar> {
                     margin:
                         const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                     child: ListTile(
-                      leading: Text(items[index].startTime.formatHHmm24()),
-                      title: Text(items[index].title),
-                      subtitle: Text(items[index].discription),
+                      leading: Text(items[index].startTime.formatHHmm24(),
+                        style: GoogleFonts.nunito(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      title: Text(items[index].title,
+                      textAlign: TextAlign.center,
+                        style: GoogleFonts.nunito(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(items[index].discription,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.nunito(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       trailing: items[index].endTime == null
                           ? null
-                          : Text(items[index].endTime!.formatHHmm24()),
+                          : Text(items[index].endTime!.formatHHmm24(),
+                        style: GoogleFonts.nunito(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       onTap: () => showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -289,36 +311,77 @@ class __CalendarState extends State<Calendar> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text("Description: ${items[index].discription}"),
-                              Text(
-                                  "Date: ${DateFormat('yyyy-MM-dd').format(items[index].doDate)}"),
-                              Text(
-                                  "Start Time: ${items[index].startTime.formatHHmm24()}"),
-                              Text(
-                                  "End Time: ${items[index].endTime?.formatHHmm24()}"),
-                              Text(
-                                "Alarm: ${items[index].alarm ? 'Yes' : 'No'}",
+                              Text("Description : ${items[index].discription}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                               Text(
-                                  "repetation: ${items[index].repetation ? 'Yes' : 'No'}"),
+                                  "Date : ${DateFormat('MM-dd-yyyy').format(items[index].doDate)}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                               Text(
-                                  "termine: ${items[index].done ? 'Yes' : 'No'}"),
+                                  "Heure de début : ${items[index].startTime.formatHHmm24()}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                  "Heure de fin : ${items[index].endTime?.formatHHmm24()}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                "Alarme : ${items[index].alarm ? 'Oui' : 'Non'}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(
+                                  "repetition: ${items[index].repetation ? 'Oui' : 'Non'}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+
+                              Text(
+                                  "terminée: ${items[index].done ? 'Oui' : 'Non'}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ],
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: const Text('ّFermer'),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                            TextButton(
-                              child: const Text('Supprimer'),
+                              child: Text('Supprimer',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               onPressed: () {
                                 deleteTask(items[index].id!);
                                 Navigator.of(context).pop();
                               },
                             ),
                             TextButton(
-                              child: const Text('Modify'),
+                              child: Text('Modifier',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -331,6 +394,16 @@ class __CalendarState extends State<Calendar> {
                                 );
                               },
                             ),
+                            TextButton(
+                              child: Text('ّFermer',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+
+
                           ],
                         ),
                       ),
