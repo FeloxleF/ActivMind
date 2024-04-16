@@ -87,21 +87,18 @@ WSGI_APPLICATION = 'activmindback.wsgi.application'
 MYSQL_HOST = '127.0.0.1'
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
+
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'activmind',
         'HOST': MYSQL_HOST,
         'USER': 'root',
-        'PASSWORD': 'root',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET default_storage_engine=INNODB",
-            'collation': 'utf8mb4_general_ci',
-        },
+        'PASSWORD': 'pedram6403',
+        # 'OPTIONS': {
+        #     'charset': 'utf8mb4',
+        #     'init_command': "SET default_storage_engine=INNODB",
+        #     'collation': 'utf8mb4_general_ci',
+        # },
 
     }
 }

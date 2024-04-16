@@ -94,6 +94,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
      
     );
 
+
     if (response.statusCode == 204) {
       // Task delete successfully
       print('Task delete successfully');
@@ -206,7 +207,6 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     // print(_futureData);
   }
  
-    
 
 @override
 Widget build(BuildContext context) {
@@ -228,7 +228,7 @@ Widget build(BuildContext context) {
       currentPage = const SettingsPage();
       break;
     default:
-      currentPage = const TaskList(); // Default to the first page
+      currentPage = const TaskList(); 
   }
 
   return Scaffold(
@@ -238,15 +238,15 @@ Widget build(BuildContext context) {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(), // Show a loading indicator while waiting for data
+            child: CircularProgressIndicator(), 
           );
         } else if (snapshot.data == null) {
           return const Center(
-            child: Text('Error: Failed to load data'), //// Show an error message if data is null
+            child: Text('Error: Failed to load data'), 
           );
         } else if (snapshot.hasError) {
           return Center(
-            child: Text('Error: ${snapshot.error}'), // Show an error message if data fetching fails
+            child: Text('Error: ${snapshot.error}'), 
           );
         } else {
           // Data fetched successfully, display it
@@ -299,7 +299,7 @@ Widget build(BuildContext context) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => createTask(taskData: task, operation: 'edit',), // Pass the task data
+                                      builder: (_) => createTask(taskData: task, operation: 'edit',sender:'tasklist'), // Pass the task data
                                     ),
                                   );
                                 },
@@ -327,7 +327,7 @@ Widget build(BuildContext context) {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const createTask(operation: 'creat'),
+                        builder: (_) => const createTask(operation: 'creat', sender:'tasklist'),
                       ),
                       (Route<dynamic> route) => false,
                     );

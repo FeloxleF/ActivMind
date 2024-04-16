@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/locationList.dart';
 import 'package:activmind_app/Screens/profilepage.dart';
+import 'package:activmind_app/Screens/createtask.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
@@ -438,36 +439,6 @@ class __CalendarState extends State<Calendar> {
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-      //   backgroundColor: Colors.white,
-      //   currentIndex: _selectedIndex,
-      //   onTap: _onItemTapped,
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.list_alt),
-      //       label: 'List',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_month),
-      //       label: 'Calendar',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.gamepad_outlined),
-      //       label: 'Game',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.settings_outlined),
-      //       label: 'Setting',
-      //     ),
-
-      //     // ...
-      //   ],
-      // ),
     );
   }
 }
