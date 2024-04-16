@@ -14,6 +14,7 @@ import '../common/task_class.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'createtask.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 var logger = Logger(level: Level.all);
 
@@ -192,19 +193,17 @@ class __CalendarState extends State<Calendar> {
             const SizedBox(height: 15),
             Text(
               'Activités du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: 'Nunito',
+              style: GoogleFonts.nunito(
+                fontSize: 30,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 3),
             Text(
               selectedDayFormatted2,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: 'Arial',
+              style: GoogleFonts.nunito(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
               ),
             ),
             Row(
@@ -246,14 +245,14 @@ class __CalendarState extends State<Calendar> {
             ),
             const SizedBox(height: 15),
             if (items.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16.0), // Ajustez la valeur selon vos besoins
+               Padding(
+                padding: const EdgeInsets.all(16.0), // Ajustez la valeur selon vos besoins
                 child: Center(
                   child: Text(
                     "Vous n'avez pas encore d'activitées prévues à cette date",
-                    style: TextStyle(
+                    style: GoogleFonts.nunito(
                       fontSize: 20,
-                      fontFamily: 'Nunito',
+                      fontWeight: FontWeight.normal,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -280,7 +279,12 @@ class __CalendarState extends State<Calendar> {
                       onTap: () => showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text(items[index].title),
+                          title: Text(items[index].title,
+                            style: GoogleFonts.nunito(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                           content: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
