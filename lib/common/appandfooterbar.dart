@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:activmind_app/common/globalvariable.dart';
 
@@ -7,18 +8,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-
     var globalVariables = Provider.of<GlobalVariables>(context);
 
     return AppBar(
-      title: const Center(
+      title: Center(
         child: Text(
           'Activ\'Mind',
-          style: TextStyle(
+          style: GoogleFonts.passeroOne(
+            fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Colors.indigoAccent,
-            fontSize: 24,
-            fontFamily: 'Arial',
           ),
         ),
       ),
@@ -26,13 +25,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.alarm),
         onPressed: () {},
       ),
-      actions: <Widget>[
-        // IconButton(
-        //   icon: Icon(Icons.notifications_none),
-        //   onPressed: () {},
-        // ),
-        
-        Text(globalVariables.user ?? ''), 
+      actions: const <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 18.0),
+          child: Text('V 1.0'),
+        )
       ],
     );
   }
@@ -41,13 +38,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-
-
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const BottomNavBar({super.key, required this.currentIndex, required this.onTap});
+  const BottomNavBar(
+      {super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +52,7 @@ class BottomNavBar extends StatelessWidget {
       backgroundColor: Colors.white,
       currentIndex: currentIndex,
       onTap: onTap,
-      items: 
-       const <BottomNavigationBarItem>[
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.list_alt),
           label: 'List',

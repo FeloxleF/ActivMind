@@ -2,6 +2,7 @@ import 'dart:convert';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
+import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/common/defftappages.dart';
@@ -273,7 +274,7 @@ class _LocationListState extends State<LocationList> {
     if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
       return; 
     }

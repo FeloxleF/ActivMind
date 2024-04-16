@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:activmind_app/Screens/HomeForm.dart';
 import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/locationList.dart';
+import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/Screens/tasklist.dart';
 import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,7 @@ class __CalendarState extends State<Calendar> {
     if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
       return; // Return here to prevent further execution
     }
@@ -194,7 +195,7 @@ class __CalendarState extends State<Calendar> {
             Text(
               'Activités du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
               style: GoogleFonts.nunito(
-                fontSize: 27,
+                fontSize: 25,
                 fontWeight: FontWeight.w600,
               ),
             ),
