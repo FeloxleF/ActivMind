@@ -1,11 +1,18 @@
+// ignore_for_file: avoid_print
+
 import 'package:activmind_app/Screens/HomeForm.dart';
+
 // import 'package:activmind_app/Screens/home.dart';
 import 'package:activmind_app/Screens/signup_form.dart';
+import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:provider/provider.dart';
+import 'package:activmind_app/common/globalvariable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:activmind_app/Screens/forgot_password.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -19,22 +26,55 @@ class _LoginFormState extends State<LoginForm> {
   final _conpassword = TextEditingController();
 
   Future<void> login() async {
-  final response = await http.post(
-    Uri.parse('http://127.0.0.1:8000/login/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'email': _conemail.text,
-      'password': _conpassword.text,
-    }),
-  );
+    final response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/auth/login/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': _conemail.text,
+        'password': _conpassword.text,
+      }),
+    );
 
-  if (response.statusCode == 200) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeForm()));
-  } else {
-    print('Failed to login');
+    final BuildContext currentContext = context;
+    if (response.statusCode == 200) {
+      // Save token to local storage
+      final token = jsonDecode(response.body)['token'];
+      await saveToken(token);
+
+      // Extract username from response
+      final Map<String, dynamic> userData = jsonDecode(response.body);
+      final String username = userData['username'];
+
+      // Update global variable with the username
+      var globalVariables =
+          Provider.of<GlobalVariables>(context, listen: false);
+      globalVariables.user = username;
+
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacement(
+          currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
+    } else {
+      // print('Failed to login');
+      ScaffoldMessenger.of(currentContext).showSnackBar(
+        const SnackBar(
+          content: Text('invalid mail or password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+
+    // if (response.statusCode == 200) {
+    //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeForm()));
+    // } else {
+    //   print('Failed to login');
+    // }
   }
+
+  Future<void> saveToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
   }
 
   @override
@@ -57,10 +97,11 @@ class _LoginFormState extends State<LoginForm> {
               children: [
                 const SizedBox(height: 10.0),
                 Image.asset(
-                  'assets/images/logo.png',
+                  '././assets/images/logo.png',
                   height: 100.0,
                   width: 100.0,
                 ),
+                const SizedBox(height: 20.0),
                 const Text(
                   'se connecter',
                   style: TextStyle(
@@ -68,53 +109,82 @@ class _LoginFormState extends State<LoginForm> {
                       color: Colors.white,
                       fontSize: 25.0),
                 ),
+                const SizedBox(height: 10.0),
                 GetTextFormField(
-                  controller: _conemail,
-                  icon: Icons.person,
-                  hintName: 'Email',
-                  inputtype: TextInputType.text
-                ),
-                const SizedBox(height: 5.0),
+                    controller: _conemail,
+                    icon: Icons.person,
+                    hintName: 'Email',
+                    inputtype: TextInputType.text),
+                const SizedBox(height: 10.0),
                 GetTextFormField(
                   controller: _conpassword,
                   icon: Icons.lock,
                   hintName: 'mot de passe',
                   isObscureText: true,
                 ),
-                
-                Container(
-                  child: const Center(child: Text('mot de pass oublié')),
+                const SizedBox(height: 15.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordForm()),
+                    );
+                  },
+                  child: const Text(
+                    'Mot de passe oublié ?',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-                
                 Container(
-                    margin: const EdgeInsets.all(30.0),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
+                  margin: const EdgeInsets.all(30.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 76, 77, 166),
                       borderRadius: BorderRadius.circular(30.0)),
-                    child: TextButton(
-                      onPressed: login, 
-                      child: const Text(
-                        'connexion',
-                        style: TextStyle(color: Color.fromARGB(255, 197, 198, 243)),
-                      )),
+                  child: TextButton(
+                    onPressed: login,
+                    child: const Text(
+                      'connexion',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 20.0,
+                      ),
+                    ),
                   ),
-
-                Center(
-                  child: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SignupForm()));
-                          },
-                          child: const Text(
-                            'Inscrivez-vous',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 197, 198, 243)),
-                          ))),
                 ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // Centre les éléments verticalement
+                  children: [
+                    const SizedBox(height: 100.0),
+                    const Text(
+                      "Vous n'avez pas encore de compte ?",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 76, 77, 166),
+                          fontSize: 18.0),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const SignupForm()));
+                      },
+                      child: const Text(
+                        "Inscrivez-vous",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

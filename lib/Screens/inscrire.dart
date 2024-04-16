@@ -1,18 +1,18 @@
 import 'package:activmind_app/Screens/adresse.dart';
 import 'package:flutter/material.dart';
 
-class inscrire_form extends StatefulWidget {
-  const inscrire_form({super.key});
+class InscrireForm extends StatefulWidget {
+  const InscrireForm({super.key});
 
   @override
-  State<inscrire_form> createState() => _inscrire_formState();
+  State<InscrireForm> createState() => _InscrireFormState();
 }
 
-class _inscrire_formState extends State<inscrire_form> {
+class _InscrireFormState extends State<InscrireForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      appBar: AppBar(title: const Text('Inscrir')),
       backgroundColor: const Color.fromARGB(255, 139, 140, 242),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -24,12 +24,12 @@ class _inscrire_formState extends State<inscrire_form> {
               children: [
                 const SizedBox(height: 10.0),
                 Image.asset(
-                  'assets/images/logo.png',
+                  './assets/images/logo.png',
                   height: 100.0,
                   width: 100.0,
                 ),
                 const Text(
-                  "s'inscrire",
+                  "Inscrivez-vous",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

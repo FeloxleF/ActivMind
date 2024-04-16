@@ -1,4 +1,5 @@
 import 'package:activmind_app/Screens/login_form.dart';
+import 'package:activmind_app/common/appandfooterbar.dart';
 import 'package:flutter/material.dart';
 
 class adresse_form extends StatefulWidget {
@@ -9,10 +10,19 @@ class adresse_form extends StatefulWidget {
 }
 
 class _adresse_formState extends State<adresse_form> {
+  int _currentIndex = 3;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      // appBar: AppBar(title: const Text('Log In')),
+      appBar: const MyAppBar(),
+
       backgroundColor: const Color.fromARGB(255, 139, 140, 242),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -36,8 +46,7 @@ class _adresse_formState extends State<adresse_form> {
                       fontSize: 25.0),
                 ),
                 Container(
-                  child: const Center(
-                      child: Text('Adresse postale')),
+                  child: const Center(child: Text('Adresse postale')),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -150,21 +159,23 @@ class _adresse_formState extends State<adresse_form> {
                   ),
                 ),
                 Container(
-                  child:const Center(child: Text('vous pouvez ignorer cette partie pour l’instant')),
+                  child: const Center(
+                      child: Text(
+                          'vous pouvez ignorer cette partie pour l’instant')),
                 ),
 
                 ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 76, 77, 166),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return const LoginForm();
-                          }));
-                          
-                        },
-                        child: const Text('terminer l’inscription')),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 76, 77, 166),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const LoginForm();
+                      }));
+                    },
+                    child: const Text('terminer l’inscription')),
 
                 // Container(
                 //     margin: const EdgeInsets.all(30.0),
@@ -174,7 +185,7 @@ class _adresse_formState extends State<adresse_form> {
                 //         borderRadius: BorderRadius.circular(30.0)),
                 //     child: TextButton(
                 //         onPressed: () {
-                          
+
                 //         },
                 //         child: const Text(
                 //           'suivant',
@@ -188,6 +199,10 @@ class _adresse_formState extends State<adresse_form> {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
