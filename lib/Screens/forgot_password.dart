@@ -48,11 +48,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           ),
         );
         return true;
-      }
-      else {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur lors de la réinitialisation du mot de passe: ${response.statusCode}'),
+            content: Text(
+                'Erreur lors de la réinitialisation du mot de passe: ${response.statusCode}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -61,7 +61,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Une erreur s\'est produite. Veuillez réessayer plus tard.'),
+          content:
+              Text('Une erreur s\'est produite. Veuillez réessayer plus tard.'),
           backgroundColor: Colors.red,
         ),
       );
@@ -113,30 +114,21 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                     icon: Icons.person,
                     hintName: 'Email',
                     inputtype: TextInputType.text),
-                const SizedBox(height: 5.0),
+                const SizedBox(height: 10.0),
                 GetTextFormField(
                   controller: _conpassword,
                   icon: Icons.lock,
                   hintName: 'mot de passe',
                   isObscureText: true,
                 ),
-                const SizedBox(height: 5.0),
+                const SizedBox(height: 10.0),
                 GetTextFormField(
                   controller: _conconfpassword,
                   icon: Icons.lock,
                   hintName: 'confirmer mot de passe',
                   isObscureText: true,
                 ),
-                const SizedBox(height: 20.0),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginForm()),
-                    );
-                  },
-                  child: const Text('Retourner à la page de connexion'),
-                ),
+                const SizedBox(height: 15.0),
                 Container(
                   margin: const EdgeInsets.all(30.0),
                   width: double.infinity,
@@ -146,17 +138,39 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                   child: TextButton(
                     onPressed: () async {
                       if (await resetPassword()) {
-                        await Future.delayed(const Duration(seconds: 1)); // Attendez 1 seconde
-                        onResetPasswordSuccess(context); // Redirigez vers LoginForm uniquement si la réinitialisation du mot de passe a réussi
+                        await Future.delayed(
+                            const Duration(seconds: 1)); // Attendez 1 seconde
+                        onResetPasswordSuccess(
+                            context); // Redirigez vers LoginForm uniquement si la réinitialisation du mot de passe a réussi
                       }
                     },
                     child: const Text(
                       'Reinitialiser le mot de passe',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 197, 198, 243)),
+                      style:
+                      TextStyle(color: Color.fromARGB(255, 197, 198, 243),
+                        fontSize: 18.0,
+                      ),
                     ),
                   ),
                 ),
+                const SizedBox(height: 80.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginForm()),
+                    );
+                  },
+                  child: const Text(
+                    'Retour à la page de connexion',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+
               ],
             ),
           ),
