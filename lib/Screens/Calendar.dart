@@ -372,14 +372,17 @@ class __CalendarState extends State<Calendar> {
                   
                   String time = items[index].startTime.toString();
                   // print('paiiiiinnnnnnnn${time}');
-                  // print('paiiiiinnnnnnnn=>${date}');
+                  print('paiiiiinnnnnnnn=>${items[index].alarm}');
                   List<int> dateTimeList = parseDateTime(date, time);
                   year = dateTimeList[0];
                   month = dateTimeList[1];
                   day = dateTimeList[2];
                   hour = dateTimeList[3];
                   minute = dateTimeList[4];
-                  scheduleAlarm(year, month,day,hour,minute,items[index].title, items[index].discription);
+                  if (items[index].alarm == true){
+                      scheduleAlarm(year, month,day,hour,minute,items[index].title, items[index].discription);
+                  }
+                  
                   
                   return Card(
                     elevation: 5,
