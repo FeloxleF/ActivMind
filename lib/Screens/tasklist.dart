@@ -230,7 +230,7 @@ Widget build(BuildContext context) {
       currentPage = const SettingsPage();
       break;
     default:
-      currentPage = const TaskList(); // Default to the first page
+      currentPage = const TaskList(); 
   }
 
   return Scaffold(

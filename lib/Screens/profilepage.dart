@@ -13,6 +13,10 @@
 //     return Container();
 //   }
 // }
+import 'package:activmind_app/Screens/appsettingpage.dart';
+import 'package:activmind_app/Screens/change_password.dart';
+import 'package:activmind_app/Screens/locationList.dart';
+import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:activmind_app/Screens/Calendar.dart';
@@ -92,39 +96,48 @@ class _ProfilePageState extends State<ProfilePage> {
       );
       return; // Return here to prevent further execution
     }
-
-    if (index == 4) {
+     if (index == 3) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) => const LocationList()),
       );
       return; // Return here to prevent further execution
     }
-
+    if (index == 4) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+      );
+      return; // Return here to prevent further execution
+    }
     setState(() {
       _currentIndex = index;
     });
   }
 
+  
   @override
   Widget build(BuildContext context) {
      final Widget currentPage;
     switch (_currentIndex) {
-      case 0:
-        currentPage = const TaskList();
-        break;
-      case 1:
-        currentPage = const Calendar();
-        break;
-      case 2:
-        currentPage = const HomeForm();
-        break;
-      case 4:
-        currentPage = const ProfilePage();
-        break;
-      default:
-        currentPage = const TaskList(); // Default to the first page
-    }
+    case 0:
+      currentPage = const TaskList();
+      break;
+    case 1:
+      currentPage = const Calendar();
+      break;
+    case 2:
+      currentPage = const HomeForm();
+      break;
+    case 3:
+      currentPage = const LocationList();
+      break;
+    case 4:
+      currentPage = const SettingsPage();
+      break;
+    default:
+      currentPage = const TaskList(); 
+  }
     return Scaffold(
       appBar: const MyAppBar(), 
       
@@ -138,15 +151,26 @@ class _ProfilePageState extends State<ProfilePage> {
           },
               child: const Text('Se déconnecter'),
             ),
+            
           ),
-          const SizedBox(height: 20), // Add some space between button and footer
-          const Text('Welcome to ActivMind'),
+           const SizedBox(height: 20), // Add some space between buttons
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const ChangePasswordForm()));
+                          },
+            child: const Text('Changer le mot de passe'),
+            ),
+          ),
         ],
       ),
       
       bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
+      currentIndex: _currentIndex,
+      onTap: _onItemTapped,
       ), 
     );
   }

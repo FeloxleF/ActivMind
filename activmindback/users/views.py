@@ -149,6 +149,21 @@ class AssociateUserViewSet(viewsets.ViewSet):
         return Response({'message': 'Users dissociated successfully'}, status=status.HTTP_200_OK)
 
 
+@login_required
+@api_view(['POST'])
+def reset_password(request):
+
+    new_password = request.data.get('password')
+    user = User.objects.get(pk=request.user.id) if request.user else None
+    if not user:
+        return JsonResponse({'error': 'User not authenticated'}, status=401)
+    regex = r"^[^\s]{8,}$"
+    password_regex = re.compile(regex)
+    if re.match(password_regex, new_password) is None:
+        return JsonResponse({'error': 'Password must be at least 8 characters long'}, status=400)
+    user.set_password(new_password)
+    user.save()
+    return JsonResponse({'message': 'Password reset successfully'}, status=200)
 
 
 # class ForgotPasswordView(View):
@@ -169,15 +184,6 @@ class AssociateUserViewSet(viewsets.ViewSet):
 #         else:
 #             return JsonResponse({'error': 'No user found with this email'}, status=400)
 
-# @csrf_exempt
-# class ResetPasswordView(View):
-#     def get(self, request, token):
-#         # Verify token and render password reset form
-#         return JsonResponse({'message': 'Password reset form'})
-
-#     def post(self, request, token):
-#         # Reset password
-#         return JsonResponse({'message': 'Password reset successfully'})
     
 
 # @api_view(['PUT'])
