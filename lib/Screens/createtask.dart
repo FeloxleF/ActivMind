@@ -296,7 +296,7 @@ class _createTaskState extends State<createTask> {
                           onTap: () async {
                             TimeOfDay? pickedTime = await showTimePicker(
                               context: context,
-                              initialTime: _selectedTime,
+                              initialTime: TimeOfDay.now(),
                             );
                             if (pickedTime != null &&
                                 pickedTime != _selectedTime) {
