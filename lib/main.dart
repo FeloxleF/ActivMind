@@ -1,7 +1,5 @@
 //import 'package:activmind_app/Screens/inscrire.dart';
 import 'dart:convert';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';

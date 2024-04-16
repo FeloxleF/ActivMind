@@ -47,7 +47,6 @@ class __CalendarState extends State<Calendar> {
     fetchTasks(selectedDayFormatted);
   }
 
-  final _formKey = GlobalKey<FormState>();
   List<Task> items = [];
 
   // on charge les tâches de la date du jour lors de l'initialisation du calendrier
