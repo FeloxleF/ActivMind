@@ -208,7 +208,6 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     // print(_futureData);
   }
  
-    
 
 @override
 Widget build(BuildContext context) {
@@ -240,15 +239,15 @@ Widget build(BuildContext context) {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(), // Show a loading indicator while waiting for data
+            child: CircularProgressIndicator(), 
           );
         } else if (snapshot.data == null) {
           return const Center(
-            child: Text('Error: Failed to load data'), //// Show an error message if data is null
+            child: Text('Error: Failed to load data'), 
           );
         } else if (snapshot.hasError) {
           return Center(
-            child: Text('Error: ${snapshot.error}'), // Show an error message if data fetching fails
+            child: Text('Error: ${snapshot.error}'), 
           );
         } else {
           // Data fetched successfully, display it
