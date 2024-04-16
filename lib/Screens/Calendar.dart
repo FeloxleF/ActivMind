@@ -186,13 +186,13 @@ class __CalendarState extends State<Calendar> {
 
     return Scaffold(
       appBar: const MyAppBar(),
-
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(0),
         child: Column(
           children: <Widget>[
             const SizedBox(height: 15),
             Text(
-              'Emploie du temps du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
+              'Activités du ${weekdays[DateFormat('EEEE').format(selectedDay)]}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -246,81 +246,98 @@ class __CalendarState extends State<Calendar> {
               ],
             ),
             const SizedBox(height: 15),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 5,
-                  margin:
-                      const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-                  child: ListTile(
-                    leading: Text(items[index].startTime.formatHHmm24()),
-                    title: Text(items[index].title),
-                    subtitle: Text(items[index].discription),
-                    trailing: items[index].endTime == null
-                        ? null
-                        : Text(items[index].endTime!.formatHHmm24()),
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(items[index].title),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text("Description: ${items[index].discription}"),
-                            Text(
-                                "Date: ${DateFormat('yyyy-MM-dd').format(items[index].doDate)}"),
-                            Text(
-                                "Start Time: ${items[index].startTime.formatHHmm24()}"),
-                            Text(
-                                "End Time: ${items[index].endTime?.formatHHmm24()}"),
-                            Text(
-                              "Alarm: ${items[index].alarm ? 'Yes' : 'No'}",
+            if (items.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(16.0), // Ajustez la valeur selon vos besoins
+                child: Center(
+                  child: Text(
+                    "Vous n'avez pas encore d'activitées prévues à cette date",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'Nunito',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            else
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 5,
+                    margin:
+                        const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                    child: ListTile(
+                      leading: Text(items[index].startTime.formatHHmm24()),
+                      title: Text(items[index].title),
+                      subtitle: Text(items[index].discription),
+                      trailing: items[index].endTime == null
+                          ? null
+                          : Text(items[index].endTime!.formatHHmm24()),
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(items[index].title),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text("Description: ${items[index].discription}"),
+                              Text(
+                                  "Date: ${DateFormat('yyyy-MM-dd').format(items[index].doDate)}"),
+                              Text(
+                                  "Start Time: ${items[index].startTime.formatHHmm24()}"),
+                              Text(
+                                  "End Time: ${items[index].endTime?.formatHHmm24()}"),
+                              Text(
+                                "Alarm: ${items[index].alarm ? 'Yes' : 'No'}",
+                              ),
+                              Text(
+                                  "repetation: ${items[index].repetation ? 'Yes' : 'No'}"),
+                              Text(
+                                  "termine: ${items[index].done ? 'Yes' : 'No'}"),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('ّFermer'),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
-                            Text(
-                                "repetation: ${items[index].repetation ? 'Yes' : 'No'}"),
-                            Text(
-                                "termine: ${items[index].done ? 'Yes' : 'No'}"),
+                            TextButton(
+                              child: const Text('Supprimer'),
+                              onPressed: () {
+                                deleteTask(items[index].id!);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Modify'),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => createTask(
+                                      taskData: items[index].toJson(),
+                                      operation: 'edit',
+                                    ), // Pass the task data
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('ّFermer'),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                          TextButton(
-                            child: const Text('Supprimer'),
-                            onPressed: () {
-                              deleteTask(items[index].id!);
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            child: const Text('Modify'),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => createTask(
-                                    taskData: items[index].toJson(),
-                                    operation: 'edit',
-                                  ), // Pass the task data
-                                ),
-                              );
-                            },
-                          ),
-                        ],
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: FloatingActionButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
