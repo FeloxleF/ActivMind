@@ -29,7 +29,7 @@ class _InscrireFormState extends State<InscrireForm> {
                   width: 100.0,
                 ),
                 const Text(
-                  "s'inscrire",
+                  "Inscrivez-vous",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

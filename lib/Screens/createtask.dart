@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/common/gen_text_form_field.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -167,7 +167,7 @@ class _createTaskState extends State<createTask> {
       if (form!.validate()) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('token');
-        final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData?["id"]}/';
+        final String apiUrl = 'http://10.0.2.2:8000/tasks/${taskData["id"]}/';
         print(apiUrl);
         final response = await http.put(
           Uri.parse(apiUrl),
@@ -220,25 +220,26 @@ class _createTaskState extends State<createTask> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 10.0),
-                      const Text(
-                        "Ajouter une tâche",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 25.0),
+                      Text(
+                        "Ajouter une activité",
+                        style: GoogleFonts.nunito(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                       const SizedBox(height: 20.0),
                       GetTextFormField(
                         controller: _titleController,
                         icon: Icons.title,
-                        hintName: 'titre*',
+                        hintName: 'Titre*',
                         inputtype: TextInputType.text,
                       ),
                       const SizedBox(height: 10.0),
                       GetTextFormField(
                         controller: _descriptionController,
                         icon: Icons.description,
-                        hintName: 'description *',
+                        hintName: 'Description *',
                       ),
                       const SizedBox(height: 20.0),
                       Padding(
@@ -254,7 +255,7 @@ class _createTaskState extends State<createTask> {
                               builder: (BuildContext context, Widget? child) {
                                 return Theme(
                                   data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.light(
+                                    colorScheme: const ColorScheme.light(
                                       primary:
                                           Color.fromARGB(255, 107, 109, 174),
                                     ),
@@ -354,7 +355,7 @@ class _createTaskState extends State<createTask> {
                       ),
                       const SizedBox(height: 5.0),
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Row(
                           children: [
                             Checkbox(
@@ -366,12 +367,17 @@ class _createTaskState extends State<createTask> {
                                 });
                               },
                             ),
-                            const Text("Alarm"),
+                             Text("Alarm",
+                               style: GoogleFonts.nunito(
+                                 fontSize: 15,
+                                 fontWeight: FontWeight.w600,
+                               ),
+                             ),
                           ],
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Row(
                           children: [
                             Checkbox(
@@ -383,12 +389,17 @@ class _createTaskState extends State<createTask> {
                                 });
                               },
                             ),
-                            const Text("Repetation"),
+                            Text("Repetition",
+                              style: GoogleFonts.nunito(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Row(
                           children: [
                             Checkbox(
@@ -400,7 +411,11 @@ class _createTaskState extends State<createTask> {
                                 });
                               },
                             ),
-                            const Text("Done"),
+                            Text("Terminée",
+                              style: GoogleFonts.nunito(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),),
                           ],
                         ),
                       ),
@@ -416,7 +431,7 @@ class _createTaskState extends State<createTask> {
                             ),
                             onPressed: () =>
                                 selectOperation(operation, taskData),
-                            child: const Text('soumettre'),
+                            child: const Text('Enregistrer'),
                           ),
                           SizedBox(width: 20),
                           ElevatedButton(
@@ -435,7 +450,7 @@ class _createTaskState extends State<createTask> {
                                   ),
                                   (Route<dynamic> route) => false);
                             },
-                            child: const Text('Annoler'),
+                            child: const Text('Annuler'),
                           ),
                         ],
                       ),

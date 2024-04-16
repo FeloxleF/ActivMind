@@ -1,10 +1,9 @@
 import 'dart:convert';
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
 import 'package:activmind_app/Screens/HomeForm.dart';
-import 'package:activmind_app/Screens/appsettingpage.dart';
 import 'package:activmind_app/Screens/createtask.dart';
 import 'package:activmind_app/Screens/locationList.dart';
+import 'package:activmind_app/Screens/profilepage.dart';
 import 'package:activmind_app/common/defftappages.dart';
 import 'package:activmind_app/common/taskform.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +188,7 @@ Future<void> deleteTask(Map<String, dynamic>? taskData) async {
     if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AppSettingPage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
       return; // Return here to prevent further execution
     }

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:activmind_app/Screens/HomeForm.dart';
+
 // import 'package:activmind_app/Screens/home.dart';
 import 'package:activmind_app/Screens/signup_form.dart';
 import 'package:activmind_app/Screens/Calendar.dart';
@@ -39,17 +40,18 @@ class _LoginFormState extends State<LoginForm> {
     final BuildContext currentContext = context;
     if (response.statusCode == 200) {
       // Save token to local storage
-    final token = jsonDecode(response.body)['token'];
-    await saveToken(token);
+      final token = jsonDecode(response.body)['token'];
+      await saveToken(token);
 
-    // Extract username from response
-    final Map<String, dynamic> userData = jsonDecode(response.body);
-    final String username = userData['username'];
+      // Extract username from response
+      final Map<String, dynamic> userData = jsonDecode(response.body);
+      final String username = userData['username'];
 
-    // Update global variable with the username
-    var globalVariables = Provider.of<GlobalVariables>(context, listen: false);
-    globalVariables.user = username;
-    
+      // Update global variable with the username
+      var globalVariables =
+          Provider.of<GlobalVariables>(context, listen: false);
+      globalVariables.user = username;
+
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
           currentContext, MaterialPageRoute(builder: (_) => const HomeForm()));
@@ -70,11 +72,10 @@ class _LoginFormState extends State<LoginForm> {
     // }
   }
 
-
   Future<void> saveToken(String token) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-}
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +101,7 @@ class _LoginFormState extends State<LoginForm> {
                   height: 100.0,
                   width: 100.0,
                 ),
+                const SizedBox(height: 20.0),
                 const Text(
                   'se connecter',
                   style: TextStyle(
@@ -107,26 +109,35 @@ class _LoginFormState extends State<LoginForm> {
                       color: Colors.white,
                       fontSize: 25.0),
                 ),
+                const SizedBox(height: 10.0),
                 GetTextFormField(
                     controller: _conemail,
                     icon: Icons.person,
                     hintName: 'Email',
                     inputtype: TextInputType.text),
-                const SizedBox(height: 5.0),
+                const SizedBox(height: 10.0),
                 GetTextFormField(
                   controller: _conpassword,
                   icon: Icons.lock,
                   hintName: 'mot de passe',
                   isObscureText: true,
                 ),
+                const SizedBox(height: 15.0),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ForgotPasswordForm()),
+                      MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordForm()),
                     );
                   },
-                  child: Text('Mot de passe oublié ?'),
+                  child: const Text(
+                    'Mot de passe oublié ?',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.all(30.0),
@@ -135,28 +146,45 @@ class _LoginFormState extends State<LoginForm> {
                       color: const Color.fromARGB(255, 76, 77, 166),
                       borderRadius: BorderRadius.circular(30.0)),
                   child: TextButton(
-                      onPressed: login,
+                    onPressed: login,
+                    child: const Text(
+                      'connexion',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // Centre les éléments verticalement
+                  children: [
+                    const SizedBox(height: 100.0),
+                    const Text(
+                      "Vous n'avez pas encore de compte ?",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 76, 77, 166),
+                          fontSize: 18.0),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const SignupForm()));
+                      },
                       child: const Text(
-                        'connexion',
+                        "Inscrivez-vous",
                         style: TextStyle(
-                            color: Color.fromARGB(255, 197, 198, 243)),
-                      )),
-                ),
-                Center(
-                  child: Container(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SignupForm()));
-                          },
-                          child: const Text(
-                            'Inscrivez-vous',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 197, 198, 243)),
-                          ))),
-                ),
+                          color: Colors.white70,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
