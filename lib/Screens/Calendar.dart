@@ -345,13 +345,13 @@ class __CalendarState extends State<Calendar> {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              Text(
-                                  "repetition: ${items[index].repetation ? 'Oui' : 'Non'}",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
+                              // Text(
+                              //     "repetition: ${items[index].repetation ? 'Oui' : 'Non'}",
+                              //   style: GoogleFonts.nunito(
+                              //     fontSize: 20,
+                              //     fontWeight: FontWeight.w400,
+                              //   ),
+                              // ),
 
                               Text(
                                   "terminée: ${items[index].done ? 'Oui' : 'Non'}",
