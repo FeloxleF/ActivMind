@@ -52,23 +52,23 @@ class BottomNavBar extends StatelessWidget {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.list_alt),
-          label: 'List',
+          label: 'Liste',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month),
-          label: 'Calendar',
+          label: 'Calendrier',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'Acceuil',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.location_on),
-          label: 'Location',
+          label: 'Localisation',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings_outlined),
-          label: 'Setting',
+          label: 'Parametres',
         ),
       ],
     );

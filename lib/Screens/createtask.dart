@@ -376,28 +376,28 @@ class _createTaskState extends State<createTask> {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: repetation,
-                              onChanged: (value) {
-                                setState(() {
-                                  repetation = value ??
-                                      false; // Update the state variable
-                                });
-                              },
-                            ),
-                            Text("Repetition",
-                              style: GoogleFonts.nunito(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                      //   child: Row(
+                      //     children: [
+                      //       Checkbox(
+                      //         value: repetation,
+                      //         onChanged: (value) {
+                      //           setState(() {
+                      //             repetation = value ??
+                      //                 false; // Update the state variable
+                      //           });
+                      //         },
+                      //       ),
+                      //       Text("Repetition",
+                      //         style: GoogleFonts.nunito(
+                      //           fontSize: 15,
+                      //           fontWeight: FontWeight.w600,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Row(
