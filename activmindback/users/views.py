@@ -109,7 +109,8 @@ def forgot_password(request):
         user.save()
         return JsonResponse({'message': 'Password reset successfully'}, status=200)
 
-# @login_required
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def reset_password(request):
 
