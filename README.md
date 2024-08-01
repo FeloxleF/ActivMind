@@ -1,5 +1,3 @@
 # ActivMind
 
-a faire : 
-
-ennumeration pour choisir son pays
+Prototype of a mobile application to simplify the lives of people with neurodegenerative disorders, developed as part of a course at ETS Montréal.
